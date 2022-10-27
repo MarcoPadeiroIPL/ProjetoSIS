@@ -97,7 +97,9 @@ CREATE TABLE `balanceReq` (
   `decisionDate` datetime DEFAULT NULL,
   `client_id` int(11) NOT NULL,
   `employee_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_client_id` FOREIGN KEY (`client_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -199,17 +201,17 @@ CREATE TABLE `flights` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `departureDate` datetime NOT NULL,
   `arrivalDate` datetime NOT NULL,
-  `plane_id` int(11) NOT NULL,
+  `airplane_id` int(11) NOT NULL,
   `airportDeparture_id` int(11) NOT NULL,
   `airportArrival_id` int(11) NOT NULL,
   `status` enum('Available','Unavailable','Complete','Canceled') DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_plane_id` (`plane_id`),
+  KEY `fk_airplane_id` (`airplane_id`),
   KEY `fk_airportDeparture_id` (`airportDeparture_id`),
   KEY `fk_airportArrival_id` (`airportArrival_id`),
   CONSTRAINT `fk_airportArrival_id` FOREIGN KEY (`airportArrival_id`) REFERENCES `airports` (`id`),
   CONSTRAINT `fk_airportDeparture_id` FOREIGN KEY (`airportDeparture_id`) REFERENCES `airports` (`id`),
-  CONSTRAINT `fk_plane_id` FOREIGN KEY (`plane_id`) REFERENCES `airplanes` (`id`)
+  CONSTRAINT `fk_airplane_id` FOREIGN KEY (`airplane_id`) REFERENCES `airplanes` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -260,7 +262,7 @@ CREATE TABLE `receipts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `purchaseDate` datetime NOT NULL,
   `total` double(10,2) NOT NULL,
-  `status` enum('Complete','To be completed','Refunded') DEFAULT NULL,
+  `status` enum('Complete','Refunded') DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
