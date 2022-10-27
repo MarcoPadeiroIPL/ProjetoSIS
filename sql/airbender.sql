@@ -15,9 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP DATABASE IF EXISTS airbender;
-CREATE DATABASE airbender;
-USE airbender;
 --
 -- Table structure for table `airplanes`
 --
@@ -96,10 +93,9 @@ CREATE TABLE `balanceReq` (
   `requestDate` datetime NOT NULL,
   `decisionDate` datetime DEFAULT NULL,
   `client_id` int(11) NOT NULL,
-  `employee_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_client_id` FOREIGN KEY (`client_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `fk_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `user` (`id`)
+  KEY `fk_client_id` (`client_id`),
+  CONSTRAINT `fk_client_id` FOREIGN KEY (`client_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -110,6 +106,32 @@ CREATE TABLE `balanceReq` (
 LOCK TABLES `balanceReq` WRITE;
 /*!40000 ALTER TABLE `balanceReq` DISABLE KEYS */;
 /*!40000 ALTER TABLE `balanceReq` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `balanceReq_employee`
+--
+
+DROP TABLE IF EXISTS `balanceReq_employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `balanceReq_employee` (
+  `balanceReq_id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  PRIMARY KEY (`balanceReq_id`),
+  KEY `fk_employeeBalanceReq_id` (`employee_id`),
+  CONSTRAINT `fk_balanceReq_id` FOREIGN KEY (`balanceReq_id`) REFERENCES `balanceReq` (`id`),
+  CONSTRAINT `fk_employeeBalanceReq_id` FOREIGN KEY (`employee_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `balanceReq_employee`
+--
+
+LOCK TABLES `balanceReq_employee` WRITE;
+/*!40000 ALTER TABLE `balanceReq_employee` DISABLE KEYS */;
+/*!40000 ALTER TABLE `balanceReq_employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -209,9 +231,9 @@ CREATE TABLE `flights` (
   KEY `fk_airplane_id` (`airplane_id`),
   KEY `fk_airportDeparture_id` (`airportDeparture_id`),
   KEY `fk_airportArrival_id` (`airportArrival_id`),
+  CONSTRAINT `fk_airplane_id` FOREIGN KEY (`airplane_id`) REFERENCES `airplanes` (`id`),
   CONSTRAINT `fk_airportArrival_id` FOREIGN KEY (`airportArrival_id`) REFERENCES `airports` (`id`),
-  CONSTRAINT `fk_airportDeparture_id` FOREIGN KEY (`airportDeparture_id`) REFERENCES `airports` (`id`),
-  CONSTRAINT `fk_airplane_id` FOREIGN KEY (`airplane_id`) REFERENCES `airplanes` (`id`)
+  CONSTRAINT `fk_airportDeparture_id` FOREIGN KEY (`airportDeparture_id`) REFERENCES `airports` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -274,6 +296,60 @@ CREATE TABLE `receipts` (
 LOCK TABLES `receipts` WRITE;
 /*!40000 ALTER TABLE `receipts` DISABLE KEYS */;
 /*!40000 ALTER TABLE `receipts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `refund`
+--
+
+DROP TABLE IF EXISTS `refund`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `refund` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` enum('Accepted','Declined','Ongoing','Canceled') NOT NULL DEFAULT 'Ongoing',
+  `requestDate` datetime NOT NULL,
+  `decisionDate` datetime DEFAULT NULL,
+  `receipt_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_receiptRefund_id` (`receipt_id`),
+  CONSTRAINT `fk_receiptRefund_id` FOREIGN KEY (`receipt_id`) REFERENCES `receipt` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `refund`
+--
+
+LOCK TABLES `refund` WRITE;
+/*!40000 ALTER TABLE `refund` DISABLE KEYS */;
+/*!40000 ALTER TABLE `refund` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `refund_employee`
+--
+
+DROP TABLE IF EXISTS `refund_employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `refund_employee` (
+  `refund_id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  PRIMARY KEY (`refund_id`),
+  KEY `fk_refundEmployee_id` (`employee_id`),
+  CONSTRAINT `fk_refundEmployee_id` FOREIGN KEY (`employee_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_refund_id` FOREIGN KEY (`refund_id`) REFERENCES `refund` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `refund_employee`
+--
+
+LOCK TABLES `refund_employee` WRITE;
+/*!40000 ALTER TABLE `refund_employee` DISABLE KEYS */;
+/*!40000 ALTER TABLE `refund_employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -429,4 +505,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-26 17:06:25
+-- Dump completed on 2022-10-27 14:14:10
