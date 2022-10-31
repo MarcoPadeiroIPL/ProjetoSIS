@@ -473,12 +473,12 @@ DROP TABLE IF EXISTS `userData`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `userData` (
   `user_id` int(11) NOT NULL,
-  `fName` varchar(25) NOT NULL,
-  `surname` varchar(25) NOT NULL,
-  `birthdate` date NOT NULL,
-  `phone` varchar(9) NOT NULL,
-  `nif` varchar(9) NOT NULL,
-  `gender` enum('M','F') NOT NULL,
+  `fName` varchar(25) DEFAULT NULL,
+  `surname` varchar(25) DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `phone` varchar(9) DEFAULT NULL,
+  `nif` varchar(9) DEFAULT NULL,
+  `gender` enum('M','F') DEFAULT NULL,
   `accCreationDate` datetime NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `phone` (`phone`),
