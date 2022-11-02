@@ -80,6 +80,247 @@ LOCK TABLES `airports` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `auth_assignment`
+--
+
+DROP TABLE IF EXISTS `auth_assignment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_assignment` (
+  `item_name` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `user_id` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`item_name`,`user_id`),
+  KEY `idx-auth_assignment-user_id` (`user_id`),
+  CONSTRAINT `auth_assignment_ibfk_1` FOREIGN KEY (`item_name`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_assignment`
+--
+
+LOCK TABLES `auth_assignment` WRITE;
+/*!40000 ALTER TABLE `auth_assignment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_assignment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_item`
+--
+
+DROP TABLE IF EXISTS `auth_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_item` (
+  `name` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `type` smallint(6) NOT NULL,
+  `description` text COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `rule_name` varchar(64) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `data` blob DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`),
+  KEY `rule_name` (`rule_name`),
+  KEY `idx-auth_item-type` (`type`),
+  CONSTRAINT `auth_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `auth_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_item`
+--
+
+LOCK TABLES `auth_item` WRITE;
+/*!40000 ALTER TABLE `auth_item` DISABLE KEYS */;
+INSERT INTO `auth_item` VALUES
+('admin',1,NULL,NULL,NULL,1667386897,1667386897),
+('client',1,NULL,NULL,NULL,1667386897,1667386897),
+('createAdmin',2,'Create a Admin',NULL,NULL,1667386897,1667386897),
+('createAirplane',2,'Create a Airplane',NULL,NULL,1667386897,1667386897),
+('createAirport',2,'Create a Airport',NULL,NULL,1667386897,1667386897),
+('createBalanceReq',2,'Create a BalanceReq',NULL,NULL,1667386897,1667386897),
+('createClient',2,'Create a Client',NULL,NULL,1667386897,1667386897),
+('createConfig',2,'Create a Config',NULL,NULL,1667386897,1667386897),
+('createEmployee',2,'Create a Employee',NULL,NULL,1667386897,1667386897),
+('createFlight',2,'Create a Flight',NULL,NULL,1667386897,1667386897),
+('createRefund',2,'Create a Refund',NULL,NULL,1667386897,1667386897),
+('createTariff',2,'Create a Tariff',NULL,NULL,1667386897,1667386897),
+('createTicket',2,'Create a Ticket',NULL,NULL,1667386897,1667386897),
+('deleteAdmin',2,'Delete a Admin',NULL,NULL,1667386897,1667386897),
+('deleteAirplane',2,'Delete a Airplane',NULL,NULL,1667386897,1667386897),
+('deleteAirport',2,'Delete a Airport',NULL,NULL,1667386897,1667386897),
+('deleteBalanceReq',2,'Delete a BalanceReq',NULL,NULL,1667386897,1667386897),
+('deleteClient',2,'Delete a Client',NULL,NULL,1667386897,1667386897),
+('deleteConfig',2,'Delete a Config',NULL,NULL,1667386897,1667386897),
+('deleteEmployee',2,'Delete a Employee',NULL,NULL,1667386897,1667386897),
+('deleteFlight',2,'Delete a Flight',NULL,NULL,1667386897,1667386897),
+('deleteRefund',2,'Delete a Refund',NULL,NULL,1667386897,1667386897),
+('deleteTariff',2,'Delete a Tariff',NULL,NULL,1667386897,1667386897),
+('deleteTicket',2,'Delete a Ticket',NULL,NULL,1667386897,1667386897),
+('listAdmin',2,'List a Admin',NULL,NULL,1667386897,1667386897),
+('listAirplane',2,'List a Airplane',NULL,NULL,1667386897,1667386897),
+('listAirport',2,'List a Airport',NULL,NULL,1667386897,1667386897),
+('listBalanceReq',2,'List a BalanceReq',NULL,NULL,1667386897,1667386897),
+('listClient',2,'List a Client',NULL,NULL,1667386897,1667386897),
+('listConfig',2,'List a Config',NULL,NULL,1667386897,1667386897),
+('listEmployee',2,'List a Employee',NULL,NULL,1667386897,1667386897),
+('listFlight',2,'List a Flight',NULL,NULL,1667386897,1667386897),
+('listRefund',2,'List a Refund',NULL,NULL,1667386897,1667386897),
+('listTariff',2,'List a Tariff',NULL,NULL,1667386897,1667386897),
+('listTicket',2,'List a Ticket',NULL,NULL,1667386897,1667386897),
+('readAdmin',2,'Read a Admin',NULL,NULL,1667386897,1667386897),
+('readAirplane',2,'Read a Airplane',NULL,NULL,1667386897,1667386897),
+('readAirport',2,'Read a Airport',NULL,NULL,1667386897,1667386897),
+('readBalanceReq',2,'Read a BalanceReq',NULL,NULL,1667386897,1667386897),
+('readClient',2,'Read a Client',NULL,NULL,1667386897,1667386897),
+('readConfig',2,'Read a Config',NULL,NULL,1667386897,1667386897),
+('readEmployee',2,'Read a Employee',NULL,NULL,1667386897,1667386897),
+('readFlight',2,'Read a Flight',NULL,NULL,1667386897,1667386897),
+('readRefund',2,'Read a Refund',NULL,NULL,1667386897,1667386897),
+('readTariff',2,'Read a Tariff',NULL,NULL,1667386897,1667386897),
+('readTicket',2,'Read a Ticket',NULL,NULL,1667386897,1667386897),
+('supervisor',1,NULL,NULL,NULL,1667386897,1667386897),
+('ticketOperator',1,NULL,NULL,NULL,1667386897,1667386897),
+('updateAdmin',2,'Update a Admin',NULL,NULL,1667386897,1667386897),
+('updateAirplane',2,'Update a Airplane',NULL,NULL,1667386897,1667386897),
+('updateAirport',2,'Update a Airport',NULL,NULL,1667386897,1667386897),
+('updateBalanceReq',2,'Update a BalanceReq',NULL,NULL,1667386897,1667386897),
+('updateClient',2,'Update a Client',NULL,NULL,1667386897,1667386897),
+('updateConfig',2,'Update a Config',NULL,NULL,1667386897,1667386897),
+('updateEmployee',2,'Update a Employee',NULL,NULL,1667386897,1667386897),
+('updateFlight',2,'Update a Flight',NULL,NULL,1667386897,1667386897),
+('updateRefund',2,'Update a Refund',NULL,NULL,1667386897,1667386897),
+('updateTariff',2,'Update a Tariff',NULL,NULL,1667386897,1667386897),
+('updateTicket',2,'Update a Ticket',NULL,NULL,1667386897,1667386897);
+/*!40000 ALTER TABLE `auth_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_item_child`
+--
+
+DROP TABLE IF EXISTS `auth_item_child`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_item_child` (
+  `parent` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `child` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  PRIMARY KEY (`parent`,`child`),
+  KEY `child` (`child`),
+  CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_item_child`
+--
+
+LOCK TABLES `auth_item_child` WRITE;
+/*!40000 ALTER TABLE `auth_item_child` DISABLE KEYS */;
+INSERT INTO `auth_item_child` VALUES
+('admin','createAdmin'),
+('admin','createAirplane'),
+('admin','createAirport'),
+('admin','createEmployee'),
+('admin','createFlight'),
+('admin','deleteAdmin'),
+('admin','deleteAirplane'),
+('admin','deleteAirport'),
+('admin','deleteEmployee'),
+('admin','deleteFlight'),
+('admin','listAdmin'),
+('admin','listEmployee'),
+('admin','readAdmin'),
+('admin','supervisor'),
+('admin','updateAdmin'),
+('admin','updateAirplane'),
+('admin','updateAirport'),
+('admin','updateEmployee'),
+('admin','updateFlight'),
+('client','createBalanceReq'),
+('client','createClient'),
+('client','createRefund'),
+('client','createTicket'),
+('client','deleteRefund'),
+('client','listAirport'),
+('client','listBalanceReq'),
+('client','listConfig'),
+('client','listFlight'),
+('client','listRefund'),
+('client','listTicket'),
+('client','readAirport'),
+('client','readBalanceReq'),
+('client','readClient'),
+('client','readConfig'),
+('client','readFlight'),
+('client','readRefund'),
+('client','readTariff'),
+('client','readTicket'),
+('client','updateBalanceReq'),
+('client','updateClient'),
+('supervisor','createConfig'),
+('supervisor','createTariff'),
+('supervisor','deleteBalanceReq'),
+('supervisor','deleteClient'),
+('supervisor','deleteConfig'),
+('supervisor','deleteTariff'),
+('supervisor','listBalanceReq'),
+('supervisor','listRefund'),
+('supervisor','readBalanceReq'),
+('supervisor','readRefund'),
+('supervisor','ticketOperator'),
+('supervisor','updateBalanceReq'),
+('supervisor','updateClient'),
+('supervisor','updateConfig'),
+('supervisor','updateRefund'),
+('supervisor','updateTariff'),
+('ticketOperator','listAirplane'),
+('ticketOperator','listAirport'),
+('ticketOperator','listClient'),
+('ticketOperator','listConfig'),
+('ticketOperator','listFlight'),
+('ticketOperator','listTariff'),
+('ticketOperator','listTicket'),
+('ticketOperator','readAirplane'),
+('ticketOperator','readAirport'),
+('ticketOperator','readClient'),
+('ticketOperator','readConfig'),
+('ticketOperator','readEmployee'),
+('ticketOperator','readFlight'),
+('ticketOperator','readTariff'),
+('ticketOperator','readTicket'),
+('ticketOperator','updateTicket');
+/*!40000 ALTER TABLE `auth_item_child` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_rule`
+--
+
+DROP TABLE IF EXISTS `auth_rule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_rule` (
+  `name` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `data` blob DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_rule`
+--
+
+LOCK TABLES `auth_rule` WRITE;
+/*!40000 ALTER TABLE `auth_rule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_rule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `balanceReq`
 --
 
@@ -269,7 +510,11 @@ LOCK TABLES `migration` WRITE;
 INSERT INTO `migration` VALUES
 ('m000000_000000_base',1666799296),
 ('m130524_201442_init',1666799298),
-('m190124_110200_add_verification_token_column_to_user_table',1666799298);
+('m140506_102106_rbac_init',1667386891),
+('m170907_052038_rbac_add_index_on_auth_assignment_user_id',1667386891),
+('m180523_151638_rbac_updates_indexes_without_prefix',1667386891),
+('m190124_110200_add_verification_token_column_to_user_table',1666799298),
+('m200409_110543_rbac_update_mssql_trigger',1667386891);
 /*!40000 ALTER TABLE `migration` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -473,12 +718,12 @@ DROP TABLE IF EXISTS `userData`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `userData` (
   `user_id` int(11) NOT NULL,
-  `fName` varchar(25) DEFAULT NULL,
-  `surname` varchar(25) DEFAULT NULL,
-  `birthdate` date DEFAULT NULL,
-  `phone` varchar(9) DEFAULT NULL,
-  `nif` varchar(9) DEFAULT NULL,
-  `gender` enum('M','F') DEFAULT NULL,
+  `fName` varchar(25) NOT NULL,
+  `surname` varchar(25) NOT NULL,
+  `birthdate` date NOT NULL,
+  `phone` varchar(9) NOT NULL,
+  `nif` varchar(9) NOT NULL,
+  `gender` enum('M','F') NOT NULL,
   `accCreationDate` datetime NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `phone` (`phone`),
@@ -505,4 +750,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-27 14:14:10
+-- Dump completed on 2022-11-02 11:02:30
