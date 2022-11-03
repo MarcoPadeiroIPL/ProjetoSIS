@@ -18,6 +18,9 @@
 --
 -- Table structure for table `airplanes`
 --
+DROP DATABASE IF EXISTS airbender;
+CREATE DATABASE airbender;
+USE airbender;
 
 DROP TABLE IF EXISTS `airplanes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
