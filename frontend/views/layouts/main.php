@@ -44,7 +44,7 @@ AppAsset::register($this);
                             <li><?= Html::a('About', ['/site/about']) ?></li>
                             <li><?= Html::a('Contact', ['/site/contact']) ?></li>
                             <?php if (Yii::$app->user->isGuest) {
-                                echo '<li>' . Html::a('Login', ['/site/login']) . '</li>';
+                                echo '<li>' . Html::a('Login', ['/site/login#login-section']) . '</li>';
                             } else {
                                 echo '<li class="has-dropdown">
                                             <a href="#">' . Yii::$app->user->identity->username . '</a>
