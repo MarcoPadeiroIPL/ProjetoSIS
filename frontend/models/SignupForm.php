@@ -15,6 +15,9 @@ class SignupForm extends Model
     public $email;
     public $password;
 
+    const STATUS_ACTIVE = 10;
+    const STATUS_INACTIVE = 9;
+    const STATUS_DELETED = 0;
 
     /**
      * {@inheritdoc}
@@ -55,7 +58,7 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-        $user->status = 10;
+        $user->status = self::STATUS_ACTIVE;
 
         // the following three lines were added:
         $auth = \Yii::$app->authManager;
