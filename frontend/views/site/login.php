@@ -9,7 +9,7 @@ use yii\bootstrap5\ActiveForm;
 
 $this->title = 'Login';
 ?>
-<div class="gtco-section" id="signup-section">
+<div class="gtco-section" id="login-section">
     <div class="gtco-container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2 text-center gtco-heading">
