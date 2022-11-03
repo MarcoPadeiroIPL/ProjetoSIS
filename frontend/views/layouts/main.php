@@ -36,23 +36,27 @@ AppAsset::register($this);
 
                 <div class="row">
                     <div class="col-sm-4 col-xs-12">
-                        <div id="gtco-logo"><a href="index">Airbender <em>.</em></a></div>
+                        <div id="gtco-logo"><?= Html::a('Airbender<em>.</em>', ['/site/index']) ?></div>
                     </div>
                     <div class="col-xs-8 text-right menu-1">
                         <ul>
-                            <li><a href="destination.html">Flights</a></li>
-                            <li><a href="pricing.html">About</a></li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><?= Html::a('Flights', ['/flight/index']) ?></li>
+                            <li><?= Html::a('About', ['/site/about']) ?></li>
+                            <li><?= Html::a('Contact', ['/site/contact']) ?></li>
                             <?php if (Yii::$app->user->isGuest) {
                                 echo '<li>' . Html::a('Login', ['/site/login']) . '</li>';
                             } else {
                                 echo '<li class="has-dropdown">
                                             <a href="#">' . Yii::$app->user->identity->username . '</a>
                                                 <ul class="dropdown">
-                                                    <li><a href="#">Profile</a></li>
-                                                    <li><a href="#">Flights</a></li>
-                                                    <li><a href="#">Receipts</a></li>
-                                                    <li><a href="#">Logout</a></li>
+                                                    <li>' . Html::a('Profile', ['/client/logout']) . '</li>
+                                                    <li>' . Html::a('My flights', ['/flight/view']) . '</li>
+                                                    <li>' . Html::a('My receipts', ['/receipt/view']) . '</li>
+                                                    <li>' . Html::beginForm(['/site/logout'], 'post')
+                                    . Html::submitButton(
+                                        'Logout '
+                                    )
+                                    . Html::endForm() . '</li>
                                                 </ul>
                                         </li>
                                    ';
@@ -72,7 +76,11 @@ AppAsset::register($this);
                         <div class="row row-mt-15em">
 
                             <div class="col-md-12 mt-text animate-box" data-animate-effect="fadeInUp">
-                                <h1>Welcome back, <?= Yii::$app->user->identity->username ?>!</h1>
+                                <?php if (Yii::$app->user->isGuest) { ?>
+                                    <h1>Welcome to airbender!</h1>
+                                <?php } else { ?>
+                                    <h1>Welcome back, <?= Yii::$app->user->identity->username ?>!</h1>
+                                <?php } ?>
                             </div>
 
                         </div>
@@ -81,43 +89,6 @@ AppAsset::register($this);
                 </div>
             </div>
         </header>
-
-        <?php
-        /*NavBar::begin([
-            'brandLabel' => Yii::$app->name,
-            'brandUrl' => Yii::$app->homeUrl,
-            'options' => [
-                'class' => 'gtco-nav',
-                'role' => 'navigation',
-            ],
-        ]);
-
-        $menuItems = [
-            ['label' => 'Destination', 'url' => ['/site/index']],
-            ['label' => 'Travel', 'url' => ['/site/about']],
-            ['label' => 'Pricing', 'url' => ['/site/contact']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-        ];
-        if (Yii::$app->user->isGuest) {
-            $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        }
-
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
-            'items' => $menuItems,
-        ]);
-        if (Yii::$app->user->isGuest) {
-            echo Html::tag('div', Html::a('Login', ['/site/login'], ['class' => ['btn btn-link login text-decoration-none']]), ['class' => ['d-flex']]);
-        } else {
-            echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout text-decoration-none']
-                )
-                . Html::endForm();
-        }
-        NavBar::end(); */
-        ?>
 
         <main role="main" class="flex-shrink-0">
             <div class="container">
