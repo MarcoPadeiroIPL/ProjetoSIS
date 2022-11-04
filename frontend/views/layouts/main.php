@@ -44,7 +44,7 @@ AppAsset::register($this);
                             <li><?= Html::a('About', ['/site/about']) ?></li>
                             <li><?= Html::a('Contact', ['/site/contact']) ?></li>
                             <?php if (Yii::$app->user->isGuest) {
-                                echo '<li>' . Html::a('Login', ['/site/login#login-section']) . '</li>';
+                                echo '<li>' . Html::a('Login', ['/site/login', '#' => 'login-section']) . '</li>';
                             } else {
                                 echo '<li class="has-dropdown">
                                             <a href="#">' . Yii::$app->user->identity->username . '</a>
@@ -68,7 +68,7 @@ AppAsset::register($this);
 
             </div>
         </nav>
-        <header id="gtco-header" class="gtco-cover gtco-cover-sm" role="banner" style="background-image: url(images/img_6.jpg)">
+        <header id="gtco-header" class="gtco-cover gtco-cover-sm" role="banner" style="background-image: url(../images/img_6.jpg)">
             <div class="overlay"></div>
             <div class="gtco-container">
                 <div class="row">
