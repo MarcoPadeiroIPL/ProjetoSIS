@@ -59,6 +59,7 @@ class SignupForm extends Model
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
         $user->status = self::STATUS_ACTIVE;
+        $user->save(false);
 
         // the following three lines were added:
         $auth = \Yii::$app->authManager;
