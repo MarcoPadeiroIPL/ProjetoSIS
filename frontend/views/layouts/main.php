@@ -68,7 +68,7 @@ AppAsset::register($this);
 
             </div>
         </nav>
-        <header id="gtco-header" class="gtco-cover gtco-cover-sm" role="banner" style="background-image: url(../images/img_6.jpg)">
+        <header id="gtco-header" class="gtco-cover gtco-cover-sm" role="banner" style="background-image: url('" . <?= Yii::getAlias('@web') ?> . "/images/img_6.jpg')">
             <div class="overlay"></div>
             <div class="gtco-container">
                 <div class="row">

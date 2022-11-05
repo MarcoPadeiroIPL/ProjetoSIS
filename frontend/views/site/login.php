@@ -11,14 +11,14 @@ $this->title = 'Login';
 ?>
 <div class="gtco-section" id="login-section">
     <div class="gtco-container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center gtco-heading">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center gtco-heading">
                 <h2>Login</h2>
                 <p>Please fill out the following fields to login:</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3 text-left">
+        <div class="row justify-content-center">
+            <div class="col-md-5 text-left">
                 <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
