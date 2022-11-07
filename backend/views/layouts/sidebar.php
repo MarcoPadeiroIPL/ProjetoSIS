@@ -39,23 +39,10 @@
                         'icon' => 'tachometer-alt',
                         'url' => ['site/index']
                     ],
-                    ['label' => 'MANAGE', 'header' => true],
+                    ['label' => 'ARIPORTS', 'header' => true],
                     [
                         'label' => 'Employees',
                         'icon' => 'fa-solid fa-user-tie',
-                        'items' => [
-                            ['label' => 'Ticket Operators', 'iconStyle' => 'far'],
-                            ['label' => 'Supervisors', 'iconStyle' => 'far'],
-                            ['label' => 'Admins', 'iconStyle' => 'far']
-                        ]
-                    ],
-                    [
-                        'label' => 'Clients',
-                        'icon' => 'fa-solid fa-user',
-                    ],
-                    [
-                        'label' => 'Balance Requests',
-                        'icon' => 'fa-solid fa-comment-dollar',
                     ],
                     [
                         'label' => 'Luggage',
@@ -76,6 +63,15 @@
                     [
                         'label' => 'Tariffs',
                         'icon' => 'fa-solid fa-dollar-sign',
+                    ],
+                    ['label' => 'CUSTOMERS', 'header' => true],
+                    [
+                        'label' => 'Clients',
+                        'icon' => 'fa-solid fa-user',
+                    ],
+                    [
+                        'label' => 'Balance Requests',
+                        'icon' => 'fa-solid fa-comment-dollar',
                     ],
                     [
                         'label' => 'Refunds',
