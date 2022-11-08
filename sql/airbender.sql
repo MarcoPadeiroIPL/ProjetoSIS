@@ -18,9 +18,6 @@
 --
 -- Table structure for table `airplanes`
 --
-DROP DATABASE IF EXISTS airbender;
-CREATE DATABASE airbender;
-USE airbender;
 
 DROP TABLE IF EXISTS `airplanes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -105,6 +102,8 @@ CREATE TABLE `auth_assignment` (
 
 LOCK TABLES `auth_assignment` WRITE;
 /*!40000 ALTER TABLE `auth_assignment` DISABLE KEYS */;
+INSERT INTO `auth_assignment` VALUES
+('admin','1',1667908213);
 /*!40000 ALTER TABLE `auth_assignment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,65 +136,65 @@ CREATE TABLE `auth_item` (
 LOCK TABLES `auth_item` WRITE;
 /*!40000 ALTER TABLE `auth_item` DISABLE KEYS */;
 INSERT INTO `auth_item` VALUES
-('admin',1,NULL,NULL,NULL,1667386897,1667386897),
-('client',1,NULL,NULL,NULL,1667386897,1667386897),
-('createAdmin',2,'Create a Admin',NULL,NULL,1667386897,1667386897),
-('createAirplane',2,'Create a Airplane',NULL,NULL,1667386897,1667386897),
-('createAirport',2,'Create a Airport',NULL,NULL,1667386897,1667386897),
-('createBalanceReq',2,'Create a BalanceReq',NULL,NULL,1667386897,1667386897),
-('createClient',2,'Create a Client',NULL,NULL,1667386897,1667386897),
-('createConfig',2,'Create a Config',NULL,NULL,1667386897,1667386897),
-('createEmployee',2,'Create a Employee',NULL,NULL,1667386897,1667386897),
-('createFlight',2,'Create a Flight',NULL,NULL,1667386897,1667386897),
-('createRefund',2,'Create a Refund',NULL,NULL,1667386897,1667386897),
-('createTariff',2,'Create a Tariff',NULL,NULL,1667386897,1667386897),
-('createTicket',2,'Create a Ticket',NULL,NULL,1667386897,1667386897),
-('deleteAdmin',2,'Delete a Admin',NULL,NULL,1667386897,1667386897),
-('deleteAirplane',2,'Delete a Airplane',NULL,NULL,1667386897,1667386897),
-('deleteAirport',2,'Delete a Airport',NULL,NULL,1667386897,1667386897),
-('deleteBalanceReq',2,'Delete a BalanceReq',NULL,NULL,1667386897,1667386897),
-('deleteClient',2,'Delete a Client',NULL,NULL,1667386897,1667386897),
-('deleteConfig',2,'Delete a Config',NULL,NULL,1667386897,1667386897),
-('deleteEmployee',2,'Delete a Employee',NULL,NULL,1667386897,1667386897),
-('deleteFlight',2,'Delete a Flight',NULL,NULL,1667386897,1667386897),
-('deleteRefund',2,'Delete a Refund',NULL,NULL,1667386897,1667386897),
-('deleteTariff',2,'Delete a Tariff',NULL,NULL,1667386897,1667386897),
-('deleteTicket',2,'Delete a Ticket',NULL,NULL,1667386897,1667386897),
-('listAdmin',2,'List a Admin',NULL,NULL,1667386897,1667386897),
-('listAirplane',2,'List a Airplane',NULL,NULL,1667386897,1667386897),
-('listAirport',2,'List a Airport',NULL,NULL,1667386897,1667386897),
-('listBalanceReq',2,'List a BalanceReq',NULL,NULL,1667386897,1667386897),
-('listClient',2,'List a Client',NULL,NULL,1667386897,1667386897),
-('listConfig',2,'List a Config',NULL,NULL,1667386897,1667386897),
-('listEmployee',2,'List a Employee',NULL,NULL,1667386897,1667386897),
-('listFlight',2,'List a Flight',NULL,NULL,1667386897,1667386897),
-('listRefund',2,'List a Refund',NULL,NULL,1667386897,1667386897),
-('listTariff',2,'List a Tariff',NULL,NULL,1667386897,1667386897),
-('listTicket',2,'List a Ticket',NULL,NULL,1667386897,1667386897),
-('readAdmin',2,'Read a Admin',NULL,NULL,1667386897,1667386897),
-('readAirplane',2,'Read a Airplane',NULL,NULL,1667386897,1667386897),
-('readAirport',2,'Read a Airport',NULL,NULL,1667386897,1667386897),
-('readBalanceReq',2,'Read a BalanceReq',NULL,NULL,1667386897,1667386897),
-('readClient',2,'Read a Client',NULL,NULL,1667386897,1667386897),
-('readConfig',2,'Read a Config',NULL,NULL,1667386897,1667386897),
-('readEmployee',2,'Read a Employee',NULL,NULL,1667386897,1667386897),
-('readFlight',2,'Read a Flight',NULL,NULL,1667386897,1667386897),
-('readRefund',2,'Read a Refund',NULL,NULL,1667386897,1667386897),
-('readTariff',2,'Read a Tariff',NULL,NULL,1667386897,1667386897),
-('readTicket',2,'Read a Ticket',NULL,NULL,1667386897,1667386897),
-('supervisor',1,NULL,NULL,NULL,1667386897,1667386897),
-('ticketOperator',1,NULL,NULL,NULL,1667386897,1667386897),
-('updateAdmin',2,'Update a Admin',NULL,NULL,1667386897,1667386897),
-('updateAirplane',2,'Update a Airplane',NULL,NULL,1667386897,1667386897),
-('updateAirport',2,'Update a Airport',NULL,NULL,1667386897,1667386897),
-('updateBalanceReq',2,'Update a BalanceReq',NULL,NULL,1667386897,1667386897),
-('updateClient',2,'Update a Client',NULL,NULL,1667386897,1667386897),
-('updateConfig',2,'Update a Config',NULL,NULL,1667386897,1667386897),
-('updateEmployee',2,'Update a Employee',NULL,NULL,1667386897,1667386897),
-('updateFlight',2,'Update a Flight',NULL,NULL,1667386897,1667386897),
-('updateRefund',2,'Update a Refund',NULL,NULL,1667386897,1667386897),
-('updateTariff',2,'Update a Tariff',NULL,NULL,1667386897,1667386897),
-('updateTicket',2,'Update a Ticket',NULL,NULL,1667386897,1667386897);
+('admin',1,NULL,NULL,NULL,1667908213,1667908213),
+('client',1,NULL,NULL,NULL,1667908213,1667908213),
+('createAdmin',2,'Create a Admin',NULL,NULL,1667908213,1667908213),
+('createAirplane',2,'Create a Airplane',NULL,NULL,1667908213,1667908213),
+('createAirport',2,'Create a Airport',NULL,NULL,1667908213,1667908213),
+('createBalanceReq',2,'Create a BalanceReq',NULL,NULL,1667908213,1667908213),
+('createClient',2,'Create a Client',NULL,NULL,1667908213,1667908213),
+('createConfig',2,'Create a Config',NULL,NULL,1667908213,1667908213),
+('createEmployee',2,'Create a Employee',NULL,NULL,1667908213,1667908213),
+('createFlight',2,'Create a Flight',NULL,NULL,1667908213,1667908213),
+('createRefund',2,'Create a Refund',NULL,NULL,1667908213,1667908213),
+('createTariff',2,'Create a Tariff',NULL,NULL,1667908213,1667908213),
+('createTicket',2,'Create a Ticket',NULL,NULL,1667908213,1667908213),
+('deleteAdmin',2,'Delete a Admin',NULL,NULL,1667908213,1667908213),
+('deleteAirplane',2,'Delete a Airplane',NULL,NULL,1667908213,1667908213),
+('deleteAirport',2,'Delete a Airport',NULL,NULL,1667908213,1667908213),
+('deleteBalanceReq',2,'Delete a BalanceReq',NULL,NULL,1667908213,1667908213),
+('deleteClient',2,'Delete a Client',NULL,NULL,1667908213,1667908213),
+('deleteConfig',2,'Delete a Config',NULL,NULL,1667908213,1667908213),
+('deleteEmployee',2,'Delete a Employee',NULL,NULL,1667908213,1667908213),
+('deleteFlight',2,'Delete a Flight',NULL,NULL,1667908213,1667908213),
+('deleteRefund',2,'Delete a Refund',NULL,NULL,1667908213,1667908213),
+('deleteTariff',2,'Delete a Tariff',NULL,NULL,1667908213,1667908213),
+('deleteTicket',2,'Delete a Ticket',NULL,NULL,1667908213,1667908213),
+('listAdmin',2,'List a Admin',NULL,NULL,1667908213,1667908213),
+('listAirplane',2,'List a Airplane',NULL,NULL,1667908213,1667908213),
+('listAirport',2,'List a Airport',NULL,NULL,1667908213,1667908213),
+('listBalanceReq',2,'List a BalanceReq',NULL,NULL,1667908213,1667908213),
+('listClient',2,'List a Client',NULL,NULL,1667908213,1667908213),
+('listConfig',2,'List a Config',NULL,NULL,1667908213,1667908213),
+('listEmployee',2,'List a Employee',NULL,NULL,1667908213,1667908213),
+('listFlight',2,'List a Flight',NULL,NULL,1667908213,1667908213),
+('listRefund',2,'List a Refund',NULL,NULL,1667908213,1667908213),
+('listTariff',2,'List a Tariff',NULL,NULL,1667908213,1667908213),
+('listTicket',2,'List a Ticket',NULL,NULL,1667908213,1667908213),
+('readAdmin',2,'Read a Admin',NULL,NULL,1667908213,1667908213),
+('readAirplane',2,'Read a Airplane',NULL,NULL,1667908213,1667908213),
+('readAirport',2,'Read a Airport',NULL,NULL,1667908213,1667908213),
+('readBalanceReq',2,'Read a BalanceReq',NULL,NULL,1667908213,1667908213),
+('readClient',2,'Read a Client',NULL,NULL,1667908213,1667908213),
+('readConfig',2,'Read a Config',NULL,NULL,1667908213,1667908213),
+('readEmployee',2,'Read a Employee',NULL,NULL,1667908213,1667908213),
+('readFlight',2,'Read a Flight',NULL,NULL,1667908213,1667908213),
+('readRefund',2,'Read a Refund',NULL,NULL,1667908213,1667908213),
+('readTariff',2,'Read a Tariff',NULL,NULL,1667908213,1667908213),
+('readTicket',2,'Read a Ticket',NULL,NULL,1667908213,1667908213),
+('supervisor',1,NULL,NULL,NULL,1667908213,1667908213),
+('ticketOperator',1,NULL,NULL,NULL,1667908213,1667908213),
+('updateAdmin',2,'Update a Admin',NULL,NULL,1667908213,1667908213),
+('updateAirplane',2,'Update a Airplane',NULL,NULL,1667908213,1667908213),
+('updateAirport',2,'Update a Airport',NULL,NULL,1667908213,1667908213),
+('updateBalanceReq',2,'Update a BalanceReq',NULL,NULL,1667908213,1667908213),
+('updateClient',2,'Update a Client',NULL,NULL,1667908213,1667908213),
+('updateConfig',2,'Update a Config',NULL,NULL,1667908213,1667908213),
+('updateEmployee',2,'Update a Employee',NULL,NULL,1667908213,1667908213),
+('updateFlight',2,'Update a Flight',NULL,NULL,1667908213,1667908213),
+('updateRefund',2,'Update a Refund',NULL,NULL,1667908213,1667908213),
+('updateTariff',2,'Update a Tariff',NULL,NULL,1667908213,1667908213),
+('updateTicket',2,'Update a Ticket',NULL,NULL,1667908213,1667908213);
 /*!40000 ALTER TABLE `auth_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -753,4 +752,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-02 11:02:30
+-- Dump completed on 2022-11-08 12:02:18
