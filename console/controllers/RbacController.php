@@ -320,5 +320,7 @@ class RbacController extends Controller
         $auth->addChild($admin, $updateFlight);
         $auth->addChild($admin, $createFlight);
         $auth->addChild($admin, $deleteFlight);
+
+        $auth->assign($admin, 1);
     }
 }
