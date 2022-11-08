@@ -34,8 +34,13 @@ class SiteController extends Controller
                     ],
                     [
                         'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin', 'supervisor', 'ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index'],
                         'allow' => false,
-                        'roles' => ['cliente','?'],
+                        'roles' => ['cliente', '?'],
                     ],
                 ],
             ],
@@ -51,7 +56,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    
+
     public function actions()
     {
         return [
