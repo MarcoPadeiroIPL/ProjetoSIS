@@ -28,9 +28,14 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => false,
+                        'roles' => ['cliente','?'],
                     ],
                 ],
             ],
@@ -46,6 +51,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
+    
     public function actions()
     {
         return [

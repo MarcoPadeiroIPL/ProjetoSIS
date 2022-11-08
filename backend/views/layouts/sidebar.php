@@ -39,10 +39,11 @@
                         'icon' => 'tachometer-alt',
                         'url' => ['site/index']
                     ],
-                    ['label' => 'ARIPORTS', 'header' => true],
+                    ['label' => 'AIRPORTS', 'header' => true],
                     [
                         'label' => 'Employees',
                         'icon' => 'fa-solid fa-user-tie',
+                        'url' => ['employee/index']
                     ],
                     [
                         'label' => 'Luggage',
