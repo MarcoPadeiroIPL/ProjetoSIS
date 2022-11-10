@@ -12,26 +12,27 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($userData, 'fName')->textInput() ?>
+    <?= $form->field($model, 'fName')->textInput() ?>
 
-    <?= $form->field($userData, 'surname')->textInput() ?>
+    <?= $form->field($model, 'surname')->textInput() ?>
 
+    <?= $form->field($model, 'gender')->textInput() ?>
 
-    <?= $form->field($userData, 'gender')->textInput() ?>
+    <?= $form->field($model, 'phone')->textInput() ?>
 
-    <?= $form->field($userData, 'phone')->textInput() ?>
+    <?= $form->field($model, 'nif')->textInput() ?>
 
-    <?= $form->field($userData, 'nif')->textInput() ?>
+    <?= $form->field($model, 'birthdate')->textInput() ?>
 
-    <?= $form->field($userData, 'birthdate')->textInput() ?>
+    <?= $form->field($model, 'salary')->textInput() ?>
 
-    <?= $form->field($employee, 'salary')->textInput() ?>
+    <?= $form->field($model, 'role')->textInput() ?>
 
-    <?= $form->field($user, 'username')->textInput(['autofocus' => true]) ?>
+    <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-    <?= $form->field($user, 'email') ?>
+    <?= $form->field($model, 'email') ?>
 
-    <?= $form->field($user, 'password')->passwordInput() ?>
+    <?= $form->field($model, 'password')->passwordInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
