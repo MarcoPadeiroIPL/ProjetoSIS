@@ -8,7 +8,7 @@ $this->title = 'My Yii Application';
 ?>
 <div class="gtco-section">
     <div class="gtco-container">
-        <div class="row justify-content-center">
+        <div class="row d-flex justify-content-center">
             <div class="col-md-8 text-center gtco-heading">
                 <h2>Trip With Your Favourite Destination</h2>
                 <p>Dignissimos asperiores vitae velit veniam totam fuga molestias accusamus alias autem provident. Odit ab aliquam dolor eius.</p>

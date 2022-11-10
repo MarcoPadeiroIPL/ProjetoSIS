@@ -24,6 +24,7 @@ class AppAsset extends AssetBundle
         'css/style.css',
     ];
     public $js = [
+        'js/main.js',
         'js/jquery.min.js',
         'js/jquery.easing.1.3.js',
         'js/bootstrap.min.js',
@@ -34,11 +35,10 @@ class AppAsset extends AssetBundle
         'js/jquery.magnific-popup.min.js',
         'js/magnific-popup-options.js',
         'js/bootstrap-datepicker.min.js',
-        'js/main.js',
         'js/modernizr-2.6.2.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap5\BootstrapAsset',
+        //        'yii\bootstrap5\BootstrapAsset',
     ];
 }

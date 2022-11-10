@@ -1966,3 +1966,7 @@ form label {
 }
 
 /*# sourceMappingURL=style.css.map */
+.justify-content-center {
+  justify-content: center;
+  display: flex;
+}
