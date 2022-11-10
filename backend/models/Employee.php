@@ -3,6 +3,8 @@
 namespace backend\models;
 
 use Yii;
+use yii\base\Model;
+use common\models\User;
 
 /**
  * This is the model class for table "employees".
@@ -52,6 +54,27 @@ class Employee extends \yii\db\ActiveRecord
         ];
     }
 
+    public function createEmployee()
+    {
+        if (!$this->validate()) {
+            return null;
+        }
+
+        $user = new User();
+        $user->username = $this->username;
+        $user->email = $this->email;
+        $user->setPassword($this->password);
+        $user->generateAuthKey();
+        $user->generateEmailVerificationToken();
+        $user->status = 10;
+
+        // the following three lines were added:
+        $auth = \Yii::$app->authManager;
+        $role = $auth->getRole('client');
+        $auth->assign($role, $user->getId());
+
+        return $user->save();
+    }
     /**
      * Gets query for [[Airport]].
      *

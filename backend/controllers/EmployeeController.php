@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use backend\models\Employee;
+use common\models\User;
+use common\models\UserData;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -77,18 +79,25 @@ class EmployeeController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Employee();
+        $user = new User();
+        $userData = new UserData();
+        $employee = new Employee();
+
+        $userData->user_id = $user->id;
+        $employee->user_id = $user->id;
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'user_id' => $model->user_id]);
+            if ($employee->load($this->request->post()) && $employee->save()) {
+                return $this->redirect(['view', 'user_id' => $employee->user_id]);
             }
         } else {
-            $model->loadDefaultValues();
+            $employee->loadDefaultValues();
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'employee' => $employee,
+            'user' => $user,
+            'userData' => $userData,
         ]);
     }
 

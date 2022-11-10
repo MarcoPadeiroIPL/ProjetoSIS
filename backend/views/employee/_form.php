@@ -12,11 +12,26 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'user_id')->textInput() ?>
+    <?= $form->field($userData, 'fName')->textInput() ?>
 
-    <?= $form->field($model, 'salary')->textInput() ?>
+    <?= $form->field($userData, 'surname')->textInput() ?>
 
-    <?= $form->field($model, 'airport_id')->textInput() ?>
+
+    <?= $form->field($userData, 'gender')->textInput() ?>
+
+    <?= $form->field($userData, 'phone')->textInput() ?>
+
+    <?= $form->field($userData, 'nif')->textInput() ?>
+
+    <?= $form->field($userData, 'birthdate')->textInput() ?>
+
+    <?= $form->field($employee, 'salary')->textInput() ?>
+
+    <?= $form->field($user, 'username')->textInput(['autofocus' => true]) ?>
+
+    <?= $form->field($user, 'email') ?>
+
+    <?= $form->field($user, 'password')->passwordInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
