@@ -26,6 +26,7 @@ class RegisterEmployee extends Model
     public $birthdate;
 
     public $salary;
+    public $user_id;
     public $airportID;
 
 
@@ -44,10 +45,12 @@ class RegisterEmployee extends Model
 
             ['phone', 'trim'],
             ['phone', 'required'],
+            ['phone', 'unique', 'targetClass' => '\common\models\UserData', 'message' => 'This phone has already been taken.'],
             ['phone', 'string', 'min' => 9, 'max' => 9],
 
             ['nif', 'trim'],
             ['nif', 'required'],
+            ['nif', 'unique', 'targetClass' => '\common\models\UserData', 'message' => 'This nif has already been taken.'],
             ['nif', 'string', 'min' => 9, 'max' => 9],
 
             ['birthdate', 'trim'],
@@ -97,6 +100,7 @@ class RegisterEmployee extends Model
 
         $user->save();
 
+        $this->user_id = $user->getId();
         // tabela USERDATA
         $userData->user_id = $user->getId();
         $userData->fName = $this->fName;
@@ -108,11 +112,10 @@ class RegisterEmployee extends Model
 
         $userData->save();
 
+
         // tabela EMPLOYEE
         $employee->user_id = $user->getId();
         $employee->salary = $this->salary;
-
-        $employee->save();
 
         // RBAC
         $auth = \Yii::$app->authManager;
@@ -120,6 +123,6 @@ class RegisterEmployee extends Model
         $auth->assign($role, $user->getId());
 
 
-        return ($employee->save() && $user->save() && $userData->save());
+        return $employee->save();
     }
 }

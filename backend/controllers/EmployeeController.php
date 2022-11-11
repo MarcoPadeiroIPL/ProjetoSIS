@@ -80,13 +80,6 @@ class EmployeeController extends Controller
     {
         $model = new RegisterEmployee();
 
-        //$user = new User();
-        //$userData = new UserData();
-        //$employee = new Employee();
-
-        //$userData->user_id = $user->id;
-        //$employee->user_id = $user->id;
-
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->register()) {
                 return $this->redirect(['view', 'user_id' => $model->user_id]);
