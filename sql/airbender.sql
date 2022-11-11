@@ -1,4 +1,4 @@
--- MariaDB dump 10.19  Distrib 10.9.3-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.19  Distrib 10.9.4-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: airbender
 -- ------------------------------------------------------
@@ -18,6 +18,9 @@
 --
 -- Table structure for table `airplanes`
 --
+DROP DATABASE IF EXISTS airbender;
+CREATE DATABASE airbender;
+USE airbender;
 
 DROP TABLE IF EXISTS `airplanes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -58,15 +61,12 @@ DROP TABLE IF EXISTS `airports`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `airports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `country` varchar(50) NOT NULL,
-  `code` varchar(2) NOT NULL,
-  `city` varchar(50) NOT NULL,
+  `country` varchar(50) DEFAULT NULL,
+  `code` varchar(2) DEFAULT NULL,
+  `city` varchar(50) DEFAULT NULL,
   `search` int(11) NOT NULL,
   `status` enum('Operational','Not Operational') NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `country` (`country`),
-  UNIQUE KEY `code` (`code`),
-  UNIQUE KEY `city` (`city`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -752,4 +752,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-08 12:02:18
+-- Dump completed on 2022-11-11 11:41:05
