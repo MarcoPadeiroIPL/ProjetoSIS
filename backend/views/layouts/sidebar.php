@@ -1,3 +1,4 @@
+<?php $user_id = Yii::$app->user->getId(); ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
@@ -32,55 +33,124 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <?php
-            echo \hail812\adminlte\widgets\Menu::widget([
-                'items' => [
-                    [
-                        'label' => 'Dashboard',
-                        'icon' => 'tachometer-alt',
-                        'url' => ['site/index']
+            if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'ticketOperator') {
+                echo \hail812\adminlte\widgets\Menu::widget([
+                    'items' => [
+                        [
+                            'label' => 'Dashboard',
+                            'icon' => 'tachometer-alt',
+                            'url' => ['site/index']
+                        ],
+                        ['label' => 'AIRPORTS', 'header' => true],
+                        [
+                            'label' => 'Airports',
+                            'icon' => 'fa-solid fa-building',
+                            'url' => ['airport/index']
+                        ],
+                        [
+                            'label' => 'Flights',
+                            'icon' => 'fa-solid fa-plane-departure',
+                        ],
+                        [
+                            'label' => 'Airplanes',
+                            'icon' => 'fa-solid fa-plane',
+                        ],
+                        [
+                            'label' => 'Tariffs',
+                            'icon' => 'fa-solid fa-dollar-sign',
+                        ],
+                        ['label' => 'TICKETS', 'header' => true],
+                        [
+                            'label' => 'Tickets',
+                            'icon' => 'fa-solid fa-clipboard-check',
+                        ],
                     ],
-                    ['label' => 'AIRPORTS', 'header' => true],
-                    [
-                        'label' => 'Employees',
-                        'icon' => 'fa-solid fa-user-tie',
-                        'url' => ['employee/index']
+                ]);
+            }
+            if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'supervisor') {
+                echo \hail812\adminlte\widgets\Menu::widget([
+                    'items' => [
+                        [
+                            'label' => 'Dashboard',
+                            'icon' => 'tachometer-alt',
+                            'url' => ['site/index']
+                        ],
+                        ['label' => 'AIRPORTS', 'header' => true],
+                        [
+                            'label' => 'Luggage',
+                            'icon' => 'fa-solid fa-suitcase-rolling',
+                        ],
+                        [
+                            'label' => 'Airplanes',
+                            'icon' => 'fa-solid fa-plane',
+                        ],
+                        [
+                            'label' => 'Tariffs',
+                            'icon' => 'fa-solid fa-dollar-sign',
+                        ],
+                        ['label' => 'CUSTOMERS', 'header' => true],
+                        [
+                            'label' => 'Balance Requests',
+                            'icon' => 'fa-solid fa-comment-dollar',
+                        ],
+                        [
+                            'label' => 'Refunds',
+                            'icon' => 'fa-solid fa-money-bill',
+                        ],
                     ],
-                    [
-                        'label' => 'Luggage',
-                        'icon' => 'fa-solid fa-suitcase-rolling',
+                ]);
+            }
+            if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'admin') {
+                echo \hail812\adminlte\widgets\Menu::widget([
+                    'items' => [
+                        [
+                            'label' => 'Dashboard',
+                            'icon' => 'tachometer-alt',
+                            'url' => ['site/index']
+                        ],
+                        ['label' => 'AIRPORTS', 'header' => true],
+                        [
+                            'label' => 'Employees',
+                            'icon' => 'fa-solid fa-user-tie',
+                            'url' => ['employee/index']
+                        ],
+                        [
+                            'label' => 'Luggage',
+                            'icon' => 'fa-solid fa-suitcase-rolling',
+                        ],
+                        [
+                            'label' => 'Airports',
+                            'icon' => 'fa-solid fa-building',
+                            'url' => ['airport/index']
+                        ],
+                        [
+                            'label' => 'Flights',
+                            'icon' => 'fa-solid fa-plane-departure',
+                        ],
+                        [
+                            'label' => 'Airplanes',
+                            'icon' => 'fa-solid fa-plane',
+                        ],
+                        [
+                            'label' => 'Tariffs',
+                            'icon' => 'fa-solid fa-dollar-sign',
+                        ],
+                        ['label' => 'CUSTOMERS', 'header' => true],
+                        [
+                            'label' => 'Clients',
+                            'icon' => 'fa-solid fa-user',
+                        ],
+                        [
+                            'label' => 'Balance Requests',
+                            'icon' => 'fa-solid fa-comment-dollar',
+                        ],
+                        [
+                            'label' => 'Refunds',
+                            'icon' => 'fa-solid fa-money-bill',
+                        ],
                     ],
-                    [
-                        'label' => 'Airports',
-                        'icon' => 'fa-solid fa-building',
-                        'url' => ['airport/index']
-                    ],
-                    [
-                        'label' => 'Flights',
-                        'icon' => 'fa-solid fa-plane-departure',
-                    ],
-                    [
-                        'label' => 'Airplanes',
-                        'icon' => 'fa-solid fa-plane',
-                    ],
-                    [
-                        'label' => 'Tariffs',
-                        'icon' => 'fa-solid fa-dollar-sign',
-                    ],
-                    ['label' => 'CUSTOMERS', 'header' => true],
-                    [
-                        'label' => 'Clients',
-                        'icon' => 'fa-solid fa-user',
-                    ],
-                    [
-                        'label' => 'Balance Requests',
-                        'icon' => 'fa-solid fa-comment-dollar',
-                    ],
-                    [
-                        'label' => 'Refunds',
-                        'icon' => 'fa-solid fa-money-bill',
-                    ],
-                ],
-            ]);
+                ]);
+            }
             ?>
         </nav>
         <!-- /.sidebar-menu -->
