@@ -2,20 +2,16 @@
 
 namespace backend\controllers;
 
-use backend\models\RegisterEmployee;
-use backend\models\Employee;
 use common\models\Airport;
-
-use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * EmployeeController implements the CRUD actions for Employee model.
+ * AirportController implements the CRUD actions for Airport model.
  */
-class EmployeeController extends Controller
+class AirportController extends Controller
 {
     /**
      * @inheritDoc
@@ -36,21 +32,21 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Lists all Employee models.
+     * Lists all Airport models.
      *
      * @return string
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Employee::find(),
+            'query' => Airport::find(),
             /*
             'pagination' => [
                 'pageSize' => 50
             ],
             'sort' => [
                 'defaultOrder' => [
-                    'user_id' => SORT_DESC,
+                    'id' => SORT_DESC,
                 ]
             ],
             */
@@ -62,53 +58,53 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Displays a single Employee model.
-     * @param int $user_id User ID
+     * Displays a single Airport model.
+     * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($user_id)
+    public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($user_id),
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Employee model.
+     * Creates a new Airport model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new RegisterEmployee();
-        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $model = new Airport();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->register()) {
-                return $this->redirect(['view', 'user_id' => $model->user_id]);
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
             }
+        } else {
+            $model->loadDefaultValues();
         }
 
         return $this->render('create', [
             'model' => $model,
-            'airports' => $airports
         ]);
     }
 
     /**
-     * Updates an existing Employee model.
+     * Updates an existing Airport model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $user_id User ID
+     * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($user_id)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($user_id);
+        $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'user_id' => $model->user_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -117,29 +113,29 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Deletes an existing Employee model.
+     * Deletes an existing Airport model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $user_id User ID
+     * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($user_id)
+    public function actionDelete($id)
     {
-        $this->findModel($user_id)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Employee model based on its primary key value.
+     * Finds the Airport model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $user_id User ID
-     * @return Employee the loaded model
+     * @param int $id ID
+     * @return Airport the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($user_id)
+    protected function findModel($id)
     {
-        if (($model = Employee::findOne(['user_id' => $user_id])) !== null) {
+        if (($model = Airport::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

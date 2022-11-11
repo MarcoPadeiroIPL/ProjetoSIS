@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use common\models\User;
 use common\models\UserData;
+use common\models\Airport;
 use backend\models\Employee;
 
 /**
@@ -27,7 +28,7 @@ class RegisterEmployee extends Model
 
     public $salary;
     public $user_id;
-    public $airportID;
+    public $airport_id;
 
 
     public function rules()
@@ -63,6 +64,8 @@ class RegisterEmployee extends Model
 
             ['role', 'required'],
             ['role', 'string', 'min' => 2, 'max' => 255],
+
+            ['airport_id', 'required'],
 
             ['username', 'trim'],
             ['username', 'required'],
@@ -105,10 +108,11 @@ class RegisterEmployee extends Model
         $userData->user_id = $user->getId();
         $userData->fName = $this->fName;
         $userData->surname = $this->surname;
-        $userData->gender = $this->gender;
+        $userData->birthdate = date('Y/m/d', strtotime($this->birthdate));
         $userData->phone = $this->phone;
         $userData->nif = $this->nif;
-        $userData->birthdate = $this->birthdate;
+        $userData->gender = $this->gender;
+        $userData->accCreationDate = date('Y/m/d H:i:s');
 
         $userData->save();
 
@@ -116,6 +120,8 @@ class RegisterEmployee extends Model
         // tabela EMPLOYEE
         $employee->user_id = $user->getId();
         $employee->salary = $this->salary;
+        //$employee->airport_id = $this->airport_id;
+
 
         // RBAC
         $auth = \Yii::$app->authManager;

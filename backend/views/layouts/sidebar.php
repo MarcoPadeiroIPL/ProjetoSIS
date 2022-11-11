@@ -52,6 +52,7 @@
                     [
                         'label' => 'Airports',
                         'icon' => 'fa-solid fa-building',
+                        'url' => ['airport/index']
                     ],
                     [
                         'label' => 'Flights',

@@ -37,6 +37,9 @@ use yii\widgets\ActiveForm;
                 'admin' => 'Admin'
             ]) ?>
         </div>
+        <div class="col">
+            <?= $form->field($model, 'airport_id')->dropDownList($airports)->label('Airport') ?>
+        </div>
     </div>
 
     <div class="row">
