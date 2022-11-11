@@ -19,6 +19,10 @@
 -- Table structure for table `airplanes`
 --
 
+DROP DATABASE airbender;
+CREATE DATABASE airbender;
+USE airbender;
+
 DROP TABLE IF EXISTS `airplanes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

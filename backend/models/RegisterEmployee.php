@@ -5,16 +5,28 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\models\UserData;
+use backend\models\Employee;
 
 /**
  * Signup form
  */
-class SignupForm extends Model
+class RegisterEmployee extends Model
 {
     public $username;
     public $email;
     public $password;
     public $role;
+
+    public $fName;
+    public $surname;
+    public $gender;
+    public $phone;
+    public $nif;
+    public $birthdate;
+
+    public $salary;
+    public $airportID;
 
 
     public function rules()
@@ -36,13 +48,17 @@ class SignupForm extends Model
         ];
     }
 
-    public function createUser()
+    public function register()
     {
         if (!$this->validate()) {
             return null;
         }
 
         $user = new User();
+        $userData = new UserData();
+        $employee = new Employee();
+
+        // tabela USER
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
@@ -50,11 +66,25 @@ class SignupForm extends Model
         $user->generateEmailVerificationToken();
         $user->status = 10;
 
-        // the following three lines were added:
+        // tabela USERDATA
+        $userData->user_id = $user->getId();
+        $userData->fName = $this->fName;
+        $userData->surname = $this->surname;
+        $userData->gender = $this->gender;
+        $userData->phone = $this->phone;
+        $userData->nif = $this->nif;
+        $userData->birthdate = $this->birthdate;
+
+        // tabela EMPLOYEE
+        $employee->user_id = $user->getId();
+        $employee->salary = $this->salary;
+
+        // RBAC
         $auth = \Yii::$app->authManager;
         $role = $auth->getRole($this->role);
         $auth->assign($role, $user->getId());
 
-        return $user->save();
+
+        return ($employee->save() && $user->save() && $userData->save());
     }
 }
