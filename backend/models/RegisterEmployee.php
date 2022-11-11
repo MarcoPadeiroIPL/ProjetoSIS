@@ -16,8 +16,8 @@ class RegisterEmployee extends Model
     public $username;
     public $email;
     public $password;
-    public $role;
 
+    public $role;
     public $fName;
     public $surname;
     public $gender;
@@ -32,6 +32,35 @@ class RegisterEmployee extends Model
     public function rules()
     {
         return [
+            ['fName', 'trim'],
+            ['fName', 'required'],
+            ['fName', 'string', 'min' => 2, 'max' => 25],
+
+            ['surname', 'trim'],
+            ['surname', 'required'],
+            ['surname', 'string', 'min' => 2, 'max' => 25],
+
+            ['gender', 'required'],
+
+            ['phone', 'trim'],
+            ['phone', 'required'],
+            ['phone', 'string', 'min' => 9, 'max' => 9],
+
+            ['nif', 'trim'],
+            ['nif', 'required'],
+            ['nif', 'string', 'min' => 9, 'max' => 9],
+
+            ['birthdate', 'trim'],
+            ['birthdate', 'required'],
+            ['birthdate', 'string', 'min' => 10, 'max' => 10],
+
+            ['salary', 'trim'],
+            ['salary', 'required'],
+            ['salary', 'integer'],
+
+            ['role', 'required'],
+            ['role', 'string', 'min' => 2, 'max' => 255],
+
             ['username', 'trim'],
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
@@ -66,6 +95,8 @@ class RegisterEmployee extends Model
         $user->generateEmailVerificationToken();
         $user->status = 10;
 
+        $user->save();
+
         // tabela USERDATA
         $userData->user_id = $user->getId();
         $userData->fName = $this->fName;
@@ -75,9 +106,13 @@ class RegisterEmployee extends Model
         $userData->nif = $this->nif;
         $userData->birthdate = $this->birthdate;
 
+        $userData->save();
+
         // tabela EMPLOYEE
         $employee->user_id = $user->getId();
         $employee->salary = $this->salary;
+
+        $employee->save();
 
         // RBAC
         $auth = \Yii::$app->authManager;

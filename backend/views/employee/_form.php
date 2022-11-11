@@ -11,29 +11,38 @@ use yii\widgets\ActiveForm;
 <div class="employee-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'fName')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'surname')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'email') ?></div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <?= $form->field($model, 'gender')->dropDownList([
+                'M' => 'Male',
+                'F' => 'Female'
+            ]) ?>
+        </div>
+        <div class="col"><?= $form->field($model, 'phone')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'nif')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'birthdate')->textInput() ?></div>
 
-    <?= $form->field($model, 'fName')->textInput() ?>
+    </div>
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'salary')->textInput() ?></div>
+        <div class="col">
+            <?= $form->field($model, 'role')->dropDownList([
+                'ticketOperator' => 'Ticket Operator',
+                'supervisor' => 'Supervisor',
+                'admin' => 'Admin'
+            ]) ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'surname')->textInput() ?>
-
-    <?= $form->field($model, 'gender')->textInput() ?>
-
-    <?= $form->field($model, 'phone')->textInput() ?>
-
-    <?= $form->field($model, 'nif')->textInput() ?>
-
-    <?= $form->field($model, 'birthdate')->textInput() ?>
-
-    <?= $form->field($model, 'salary')->textInput() ?>
-
-    <?= $form->field($model, 'role')->textInput() ?>
-
-    <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
-    <?= $form->field($model, 'email') ?>
-
-    <?= $form->field($model, 'password')->passwordInput() ?>
-
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'username')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'password')->passwordInput() ?></div>
+    </div>
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
