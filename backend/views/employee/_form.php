@@ -26,7 +26,6 @@ use yii\widgets\ActiveForm;
         <div class="col"><?= $form->field($model, 'phone')->textInput() ?></div>
         <div class="col"><?= $form->field($model, 'nif')->textInput() ?></div>
         <div class="col"><?= $form->field($model, 'birthdate')->textInput() ?></div>
-
     </div>
     <div class="row">
         <div class="col"><?= $form->field($model, 'salary')->textInput() ?></div>
