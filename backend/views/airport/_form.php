@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'search')->textInput() ?>
 
-    <?= $form->field($model, 'status')->dropDownList(['Operational' => 'Operational', 'Not Operational' => 'Not Operational',], ['prompt' => '']) ?>
+    <?= $form->field($model, 'status')->dropDownList(['Operational' => 'Operational', 'Not Operational' => 'Not Operational',]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
