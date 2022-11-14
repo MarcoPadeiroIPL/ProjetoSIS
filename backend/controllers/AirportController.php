@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Airport;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -18,17 +19,44 @@ class AirportController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['supervisor', 'ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update'],
+                        'allow' => false,
+                        'roles' => ['supervisor', 'ticketOperator'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     /**
