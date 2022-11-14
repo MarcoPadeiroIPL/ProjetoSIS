@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use common\models\User;
 use common\models\UserData;
-use common\models\Airport;
+use backend\models\Airport;
 use backend\models\Employee;
 
 /**
@@ -46,11 +46,13 @@ class RegisterEmployee extends Model
 
             ['phone', 'trim'],
             ['phone', 'required'],
+            ['phone', 'number'],
             ['phone', 'unique', 'targetClass' => '\common\models\UserData', 'message' => 'This phone has already been taken.'],
             ['phone', 'string', 'min' => 9, 'max' => 9],
 
             ['nif', 'trim'],
             ['nif', 'required'],
+            ['nif', 'number'],
             ['nif', 'unique', 'targetClass' => '\common\models\UserData', 'message' => 'This nif has already been taken.'],
             ['nif', 'string', 'min' => 9, 'max' => 9],
 
