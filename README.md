@@ -1,11 +1,7 @@
 # Projeto Airbender - PLSI
 
-### Instituição:
-- Instituto Politécnico de Leiria 
-![Logo IPL](https://www.ipleiria.pt/wp-content/uploads/2022/04/estg_h.svg)
-
 ### Projeto realizado por 
->- Grupo 16 PL2
+Grupo 16 PL2
 >   - Marco Padeiro
 >   - Marco Harbuzyuk
 >   - TomasMoura
@@ -40,3 +36,6 @@ Por último, executar a base de dados sql/airbender.sql como root e mudar no com
 ```
 
 
+
+- Instituto Politécnico de Leiria 
+![Logo IPL](https://www.ipleiria.pt/wp-content/uploads/2022/04/estg_h.svg)
