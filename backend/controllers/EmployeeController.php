@@ -70,9 +70,10 @@ class EmployeeController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Employee::find(),
-            /*
+        if (\Yii::$app->user->can('listEmployee')) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => Employee::find(),
+                /*
             'pagination' => [
                 'pageSize' => 50
             ],
@@ -82,11 +83,12 @@ class EmployeeController extends Controller
                 ]
             ],
             */
-        ]);
+            ]);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**
@@ -97,9 +99,11 @@ class EmployeeController extends Controller
      */
     public function actionView($user_id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($user_id),
-        ]);
+        if (\Yii::$app->user->can('readEmployee')) {
+            return $this->render('view', [
+                'model' => $this->findModel($user_id),
+            ]);
+        }
     }
 
     /**
@@ -109,19 +113,21 @@ class EmployeeController extends Controller
      */
     public function actionCreate()
     {
-        $model = new RegisterEmployee();
-        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        if (\Yii::$app->user->can('createEmployee')) {
+            $model = new RegisterEmployee();
+            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->register()) {
-                return $this->redirect(['view', 'user_id' => $model->user_id]);
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->register()) {
+                    return $this->redirect(['view', 'user_id' => $model->user_id]);
+                }
             }
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-            'airports' => $airports
-        ]);
+            return $this->render('create', [
+                'model' => $model,
+                'airports' => $airports
+            ]);
+        }
     }
 
     /**
@@ -133,15 +139,17 @@ class EmployeeController extends Controller
      */
     public function actionUpdate($user_id)
     {
-        $model = $this->findModel($user_id);
+        if (\Yii::$app->user->can('updateEmployee')) {
+            $model = $this->findModel($user_id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'user_id' => $model->user_id]);
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'user_id' => $model->user_id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -153,9 +161,10 @@ class EmployeeController extends Controller
      */
     public function actionDelete($user_id)
     {
-        $this->findModel($user_id)->delete();
-
-        return $this->redirect(['index']);
+        if (\Yii::$app->user->can('deleteEmployee')) {
+            $this->findModel($user_id)->delete();
+            return $this->redirect(['index']);
+        }
     }
 
     /**

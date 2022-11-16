@@ -33,7 +33,7 @@ class AirportController extends Controller
                         'roles' => ['admin'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['view', 'index'],
                         'allow' => true,
                         'roles' => ['supervisor', 'ticketOperator'],
                     ],
@@ -43,7 +43,7 @@ class AirportController extends Controller
                         'roles' => ['client', '?'],
                     ],
                     [
-                        'actions' => ['index', 'create', 'delete', 'update'],
+                        'actions' => ['create', 'delete', 'update'],
                         'allow' => false,
                         'roles' => ['supervisor', 'ticketOperator'],
                     ],
@@ -66,9 +66,10 @@ class AirportController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Airport::find(),
-            /*
+        if (\Yii::$app->user->can('listAirport')) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => Airport::find(),
+                /*
             'pagination' => [
                 'pageSize' => 50
             ],
@@ -78,11 +79,12 @@ class AirportController extends Controller
                 ]
             ],
             */
-        ]);
+            ]);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**
@@ -93,9 +95,11 @@ class AirportController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if (\Yii::$app->user->can('readAirport')) {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
     }
 
     /**
@@ -105,19 +109,21 @@ class AirportController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Airport();
+        if (\Yii::$app->user->can('createAirport')) {
+            $model = new Airport();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            } else {
+                $model->loadDefaultValues();
             }
-        } else {
-            $model->loadDefaultValues();
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -129,15 +135,17 @@ class AirportController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (\Yii::$app->user->can('updateAirport')) {
+            $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -149,9 +157,11 @@ class AirportController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (\Yii::$app->user->can('deleteAirport')) {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }
     }
 
     /**
