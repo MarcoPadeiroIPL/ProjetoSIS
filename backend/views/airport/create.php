@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /** @var common\models\Airport $model */
 
 $this->title = 'Create Airport';
-$this->params['breadcrumbs'][] = ['label' => 'Airports', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Airport', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="airport-create">

@@ -8,10 +8,7 @@ use common\models\Airport;
 
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
-<<<<<<< HEAD
-=======
 use yii\filters\AccessControl;
->>>>>>> master
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,19 +23,6 @@ class EmployeeController extends Controller
      */
     public function behaviors()
     {
-<<<<<<< HEAD
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-=======
         return [
             'access' => [
                 'class' => AccessControl::class,
@@ -65,7 +49,7 @@ class EmployeeController extends Controller
                     [
                         'actions' => ['index', 'create', 'delete', 'update'],
                         'allow' => false,
-                        'roles' => ['client', '?'],
+                        'roles' => ['supervisor', 'ticketOperator'],
                     ],
                 ],
             ],
@@ -77,7 +61,6 @@ class EmployeeController extends Controller
                 ],
             ],
         ];
->>>>>>> master
     }
 
     /**

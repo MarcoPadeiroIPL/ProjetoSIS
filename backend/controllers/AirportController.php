@@ -4,10 +4,7 @@ namespace backend\controllers;
 
 use common\models\Airport;
 use yii\data\ActiveDataProvider;
-<<<<<<< HEAD
-=======
 use yii\filters\AccessControl;
->>>>>>> master
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -22,19 +19,6 @@ class AirportController extends Controller
      */
     public function behaviors()
     {
-<<<<<<< HEAD
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-=======
         return [
             'access' => [
                 'class' => AccessControl::class,
@@ -73,7 +57,6 @@ class AirportController extends Controller
                 ],
             ],
         ];
->>>>>>> master
     }
 
     /**
