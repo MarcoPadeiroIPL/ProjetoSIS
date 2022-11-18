@@ -1,6 +1,7 @@
 <?php
 
 use common\models\Flight;
+use backend\helpers\TableBuilder;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -19,9 +20,40 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Flight', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php
+    $header = [
+        'nome' => 'Nome',
+        'dorme' => 'Dorme',
+        'home' => 'Home',
+        'fome' => 'Fome',
+    ];
+    $array = [
+        [
+            'nome' => 'arroz',
+            'dorme' => 'asd',
+            'fome' => 'asd',
+            'come' => 'asdasd',
+        ],
+        [
+            'nome' => 'skalfh',
+            'dorme' => 'adsf',
+            'fome' => 'asd',
+            'come' => 'asd',
+        ],
+        [
+            'nome' => 'skalfh',
+            'dorme' => 'adsf',
+            'fome' => 'asd',
+            'come' => 'asd',
+        ],
+    ];
+    $tableBuilder = new TableBuilder($header, $array);
+    $tableBuilder->generate();
 
 
-    <?= GridView::widget([
+    ?>
+    <!--
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -37,10 +69,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Flight $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
         ],
-    ]); ?>
+    ]);
+-->
 
 
 </div>
