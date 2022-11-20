@@ -72,8 +72,13 @@ class EmployeeController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listEmployee')) {
-            $model = Employee::find()
-                ->innerJoinWith('user', 'employees.user_id=user.id')
+            $model = (new \yii\db\Query())
+                ->select(['*'])
+                ->from('user')
+                ->innerJoin('userData', 'userData.user_id=user.id')
+                ->innerJoin('employees', 'employees.user_id=user.id')
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id=user.id')
+                ->innerJoin('airports', 'employees.airport_id=airports.id')
                 ->all();
             return $this->render('index', [
                 'model' => $model,

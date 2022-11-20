@@ -23,12 +23,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?php
-    var_dump($model);
     $headers = [
         [
             'label' => '#',
             'attr' => 'id',
-            'class' => 'col-1 text-start',
+            'class' => 'col text-start',
         ],
         [
             'label' => 'First Name',
@@ -62,13 +61,13 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'label' => 'Role',
-            'attr' => 'role',
+            'attr' => 'item_name',
             'class' => 'col text-center',
         ],
         [
             'label' => 'Airport',
-            'attr' => 'airport_id',
-            'class' => 'col text-end',
+            'attr' => 'city',
+            'class' => 'col text-center',
         ],
     ];
     $tableBuilder = new TableBuilder($headers, $model);
