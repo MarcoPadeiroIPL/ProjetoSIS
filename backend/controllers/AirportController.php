@@ -67,16 +67,8 @@ class AirportController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listAirport')) {
-            $headers = [
-                'id' => 'ID',
-                'country' => 'Country',
-                'code' => 'Code',
-                'city' => 'City',
-                'search' => 'Search',
-            ];
             $model = Airport::find()->all();
             return $this->render('index', [
-                'headers' => $headers,
                 'model' => $model,
             ]);
         }

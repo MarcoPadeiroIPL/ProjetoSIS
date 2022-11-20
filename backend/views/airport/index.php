@@ -22,6 +22,33 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?php
+    $headers = [
+        [
+            'label' => '#',
+            'attr' => 'id',
+            'class' => 'col-2 text-start',
+        ],
+        [
+            'label' => 'Country',
+            'attr' => 'country',
+            'class' => 'col text-center',
+        ],
+        [
+            'label' => 'Code',
+            'attr' => 'code',
+            'class' => 'col text-center',
+        ],
+        [
+            'label' => 'City',
+            'attr' => 'city',
+            'class' => 'col text-center',
+        ],
+        [
+            'label' => 'Search',
+            'attr' => 'search',
+            'class' => 'col text-end',
+        ],
+    ];
     $tableBuilder = new TableBuilder($headers, $model);
     $tableBuilder->generate();
     ?>
