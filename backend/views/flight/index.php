@@ -21,36 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Flight', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?php
-    $header = [
-        'nome' => 'Nome',
-        'dorme' => 'Dorme',
-        'home' => 'Home',
-        'fome' => 'Fome',
-    ];
-    $array = [
-        [
-            'nome' => 'arroz',
-            'dorme' => 'asd',
-            'fome' => 'asd',
-            'come' => 'asdasd',
-        ],
-        [
-            'nome' => 'skalfh',
-            'dorme' => 'adsf',
-            'fome' => 'asd',
-            'come' => 'asd',
-        ],
-        [
-            'nome' => 'skalfh',
-            'dorme' => 'adsf',
-            'fome' => 'asd',
-            'come' => 'asd',
-        ],
-    ];
-    $tableBuilder = new TableBuilder($header, $array);
+    $tableBuilder = new TableBuilder($headers, $model);
     $tableBuilder->generate();
-
-
     ?>
     <!--
     GridView::widget([

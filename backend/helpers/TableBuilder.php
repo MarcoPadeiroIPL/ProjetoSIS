@@ -24,8 +24,8 @@ class TableBuilder
 
     private function generateHeader()
     {
-        echo '<div class="container shadow">';
-        echo '<div class="row text-white bg-dark rounded">';
+        echo '<div class="container">';
+        echo '<div class="row text-white bg-dark shadow-sm rounded-top pt-3 pb-3">';
         foreach ($this->header as $val) {
             echo '<div class="col">' . $val . '</div>';
         }
@@ -35,7 +35,7 @@ class TableBuilder
     private function generateBody()
     {
         foreach ($this->array as $row) {
-            echo '<div class="row rounded">';
+            echo '<div class="row rounded shadow-sm mt-2 mb-2 pt-3 pb-3">';
             foreach ($this->header as $key => $x) {
                 if (isset($row[$key]))
                     echo '<div class="col">' . $row[$key] . '</div>';

@@ -67,22 +67,17 @@ class AirportController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listAirport')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Airport::find(),
-                /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-            ]);
-
+            $headers = [
+                'id' => 'ID',
+                'country' => 'Country',
+                'code' => 'Code',
+                'city' => 'City',
+                'search' => 'Search',
+            ];
+            $model = Airport::find()->all();
             return $this->render('index', [
-                'dataProvider' => $dataProvider,
+                'headers' => $headers,
+                'model' => $model,
             ]);
         }
     }
