@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     $headers = [
         [
             'label' => '#',
-            'attr' => 'id',
+            'attr' => 'user_id',
             'class' => 'col text-start',
         ],
         [
