@@ -66,8 +66,12 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'label' => 'Airport',
-            'attr' => 'city',
+            'attr' => [
+                'country', 'city'
+            ],
             'class' => 'text-center',
+            'syntax' => [0, ' - ', 1],
+
         ],
     ];
     $tableBuilder = new TableBuilder($headers, $model);

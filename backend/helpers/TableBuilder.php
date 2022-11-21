@@ -40,10 +40,23 @@ class TableBuilder
         foreach ($this->array as $row) {
             echo '<tr class="rounded shadow-sm mt-2 mb-2 p-3">';
             foreach ($this->header as $key) {
-                if (isset($row[$key['attr']]))
+                if (isset($key['syntax'])) { // caso se queira uma syntax em especifico
+                    echo '<td class="' . $key['class'] . '">';
+                    foreach ($key['syntax'] as $s) {
+                        if (is_numeric($s)) {
+                            if (is_array($key['attr'])) {
+                                echo $row[$key['attr'][$s]];
+                            } else {
+                                echo $row[$key['attr']];
+                            }
+                        } else {
+                            echo $s;
+                        }
+                    }
+                    echo '</td>';
+                } else {
                     echo '<td class="' . $key['class'] . '">' . $row[$key['attr']] . '</td>';
-                else
-                    echo '<td class="' . $key['class'] . '">(Not Set)</td>';
+                }
             }
             echo '</tr>';
         }
