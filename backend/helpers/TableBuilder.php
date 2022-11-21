@@ -26,7 +26,7 @@ class TableBuilder
     {
         echo '<table class="table">';
         echo '<thead>';
-        echo '<tr class="text-white bg-dark shadow-sm rounded-top p-3">';
+        echo '<tr class="text-white bg-dark p-3">';
         foreach ($this->header as $val) {
             echo '<td class="' . $val['class'] . '">' . $val['label'] . '</td>';
         }
