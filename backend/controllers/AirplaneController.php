@@ -39,22 +39,10 @@ class AirplaneController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listAirplane')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Airplane::find(),
-                /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-            ]);
+            $model = Airplane::find()->all();
 
             return $this->render('index', [
-                'dataProvider' => $dataProvider,
+                'model' => $model,
             ]);
         }
     }
