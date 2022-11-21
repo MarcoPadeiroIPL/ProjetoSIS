@@ -11,31 +11,37 @@ use yii\widgets\ActiveForm;
 <div class="airplane-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'luggageCapacity')->textInput() ?>
-
-    <?= $form->field($model, 'minLinha')->textInput() ?>
-
-    <?= $form->field($model, 'minCol')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'maxLinha')->textInput() ?>
-
-    <?= $form->field($model, 'maxCol')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'economicStart')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'economicStop')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'normalStart')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'normalStop')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'luxuryStart')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'luxuryStop')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'status')->dropDownList([ 'Active' => 'Active', 'Not working' => 'Not working', ], ['prompt' => '']) ?>
-
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'luggageCapacity')->textInput()->label('Luggage Capacity (Kg)') ?></div>
+    </div>
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'minLinha')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'maxLinha')->textInput() ?></div>
+    </div>
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'minCol')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'maxCol')->textInput() ?></div>
+    </div>
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'economicStart')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'economicStop')->textInput() ?></div>
+    </div>
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'normalStart')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'normalStop')->textInput() ?></div>
+    </div>
+    <div class="row">
+        <div class="col"><?= $form->field($model, 'luxuryStart')->textInput() ?></div>
+        <div class="col"><?= $form->field($model, 'luxuryStop')->textInput() ?></div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <?= $form->field($model, 'status')->dropDownList([
+                'active' => 'Active',
+                'notWorking' => 'Not Working'
+            ]) ?>
+        </div>
+    </div>
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
