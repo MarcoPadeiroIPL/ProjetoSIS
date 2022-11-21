@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use common\models\Airport;
+use common\models\Airplane;
 
 /**
  * This is the model class for table "flights".
@@ -41,9 +43,9 @@ class Flight extends \yii\db\ActiveRecord
             [['departureDate', 'arrivalDate'], 'safe'],
             [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
             [['status'], 'string'],
-            [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplanes::class, 'targetAttribute' => ['airplane_id' => 'id']],
-            [['airportArrival_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airports::class, 'targetAttribute' => ['airportArrival_id' => 'id']],
-            [['airportDeparture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airports::class, 'targetAttribute' => ['airportDeparture_id' => 'id']],
+            [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplane::class, 'targetAttribute' => ['airplane_id' => 'id']],
+            [['airportArrival_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportArrival_id' => 'id']],
+            [['airportDeparture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportDeparture_id' => 'id']],
         ];
     }
 
@@ -70,7 +72,7 @@ class Flight extends \yii\db\ActiveRecord
      */
     public function getAirplane()
     {
-        return $this->hasOne(Airplanes::class, ['id' => 'airplane_id']);
+        return $this->hasOne(Airplane::class, ['id' => 'airplane_id']);
     }
 
     /**
@@ -80,7 +82,7 @@ class Flight extends \yii\db\ActiveRecord
      */
     public function getAirportArrival()
     {
-        return $this->hasOne(Airports::class, ['id' => 'airportArrival_id']);
+        return $this->hasOne(Airport::class, ['id' => 'airportArrival_id']);
     }
 
     /**
@@ -90,26 +92,26 @@ class Flight extends \yii\db\ActiveRecord
      */
     public function getAirportDeparture()
     {
-        return $this->hasOne(Airports::class, ['id' => 'airportDeparture_id']);
+        return $this->hasOne(Airport::class, ['id' => 'airportDeparture_id']);
     }
 
     /**
-     * Gets query for [[Tariffs]].
+     * Gets query for [[Tariff]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTariffs()
+    public function getTariff()
     {
-        return $this->hasMany(Tariffs::class, ['flight_id' => 'id']);
+        return $this->hasMany(Tariff::class, ['flight_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Tickets]].
+     * Gets query for [[Ticket]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTickets()
+    public function getTicket()
     {
-        return $this->hasMany(Tickets::class, ['flight_id' => 'id']);
+        return $this->hasMany(Ticket::class, ['flight_id' => 'id']);
     }
 }
