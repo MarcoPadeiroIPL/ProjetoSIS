@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\RegisterEmployee;
 use backend\models\Employee;
+use common\models\User;
 use common\models\Airport;
 
 use yii\helpers\ArrayHelper;
@@ -71,22 +72,16 @@ class EmployeeController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listEmployee')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Employee::find(),
-                /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'user_id' => SORT_DESC,
-                ]
-            ],
-            */
-            ]);
-
+            $model = (new \yii\db\Query())
+                ->select(['*'])
+                ->from('user')
+                ->innerJoin('userData', 'userData.user_id=user.id')
+                ->innerJoin('employees', 'employees.user_id=user.id')
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id=user.id')
+                ->innerJoin('airports', 'employees.airport_id=airports.id')
+                ->all();
             return $this->render('index', [
-                'dataProvider' => $dataProvider,
+                'model' => $model,
             ]);
         }
     }
