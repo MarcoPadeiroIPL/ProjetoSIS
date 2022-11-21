@@ -24,30 +24,34 @@ class TableBuilder
 
     private function generateHeader()
     {
-        echo '<div class="container">';
-        echo '<div class="row text-white bg-dark shadow-sm rounded-top p-3">';
+        echo '<table class="table">';
+        echo '<thead>';
+        echo '<tr class="text-white bg-dark shadow-sm rounded-top p-3">';
         foreach ($this->header as $val) {
-            echo '<div class="' . $val['class'] . '">' . $val['label'] . '</div>';
+            echo '<td class="' . $val['class'] . '">' . $val['label'] . '</td>';
         }
-        echo '</div>';
+        echo '</tr>';
+        echo '</thead>';
     }
 
     private function generateBody()
     {
+        echo '<tbody>';
         foreach ($this->array as $row) {
-            echo '<div class="row rounded shadow-sm mt-2 mb-2 p-3">';
+            echo '<tr class="rounded shadow-sm mt-2 mb-2 p-3">';
             foreach ($this->header as $key) {
                 if (isset($row[$key['attr']]))
-                    echo '<div class="' . $key['class'] . '">' . $row[$key['attr']] . '</div>';
+                    echo '<td class="' . $key['class'] . '">' . $row[$key['attr']] . '</td>';
                 else
-                    echo '<div class="' . $key['class'] . '">(Not Set)</div>';
+                    echo '<td class="' . $key['class'] . '">(Not Set)</td>';
             }
-            echo '</div>';
+            echo '</tr>';
         }
+        echo '</tbody>';
     }
 
     private function closeTable()
     {
-        echo '</div>';
+        echo '</table>';
     }
 }

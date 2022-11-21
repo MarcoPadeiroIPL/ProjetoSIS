@@ -27,47 +27,47 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'label' => '#',
             'attr' => 'user_id',
-            'class' => 'col text-start',
+            'class' => 'text-start',
         ],
         [
             'label' => 'First Name',
             'attr' => 'fName',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Surname',
             'attr' => 'surname',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Username',
             'attr' => 'username',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Email',
             'attr' => 'email',
-            'class' => 'col-3 text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Phone',
             'attr' => 'phone',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Gender',
             'attr' => 'gender',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Role',
             'attr' => 'item_name',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Airport',
             'attr' => 'city',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
     ];
     $tableBuilder = new TableBuilder($headers, $model);
