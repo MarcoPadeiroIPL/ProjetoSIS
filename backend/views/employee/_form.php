@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col"><?= $form->field($model, 'fName')->textInput()->label('First Name') ?></div>
         <div class="col"><?= $form->field($model, 'surname')->textInput() ?></div>
-        <div class="col"><?= $form->field($model, 'email') ?></div>
+        <div class="col"><?= $form->field($model, 'email')->textInput() ?></div>
     </div>
     <div class="row">
         <div class="col-2">
