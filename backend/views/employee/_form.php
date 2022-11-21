@@ -30,11 +30,7 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col"><?= $form->field($model, 'salary')->textInput() ?></div>
         <div class="col">
-            <?= $form->field($model, 'role')->dropDownList([
-                'ticketOperator' => 'Ticket Operator',
-                'supervisor' => 'Supervisor',
-                'admin' => 'Admin'
-            ]) ?>
+            <?= $form->field($model, 'role')->dropDownList($roles)->label('Roles')?>
         </div>
         <div class="col">
             <?= $form->field($model, 'airport_id')->dropDownList($airports)->label('Airport') ?>
