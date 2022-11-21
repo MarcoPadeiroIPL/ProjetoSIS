@@ -111,11 +111,11 @@ class EmployeeController extends Controller
         if (\Yii::$app->user->can('createEmployee')) {
             $model = new RegisterEmployee();
             $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $roles= (new \yii\db\Query())
-            ->select(['name'])
-            ->from('auth_item')
-            ->where('type = 1 and name != "client"')
-            ->all();
+            $roles = (new \yii\db\Query())
+                ->select(['name'])
+                ->from('auth_item')
+                ->where('type = 1 and name != "client"')
+                ->all();
 
             if ($this->request->isPost) {
                 if ($model->load($this->request->post()) && $model->register()) {

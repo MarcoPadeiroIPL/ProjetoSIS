@@ -6,11 +6,13 @@ class TableBuilder
 {
     private $array;
     private $header;
+    private $buttons;
 
-    public function __construct($header, $arr)
+    public function __construct($header, $arr, $buttons = [])
     {
         $this->array = $arr;
         $this->header = $header;
+        $this->buttons = $buttons;
     }
 
     public function generate()
@@ -30,6 +32,9 @@ class TableBuilder
         foreach ($this->header as $val) {
             echo '<td class="' . $val['class'] . '">' . $val['label'] . '</td>';
         }
+        if (isset($this->buttons)) {
+            echo '<td></td>';
+        }
         echo '</tr>';
         echo '</thead>';
     }
@@ -40,9 +45,9 @@ class TableBuilder
         foreach ($this->array as $row) {
             echo '<tr class="rounded shadow-sm mt-2 mb-2 p-3">';
             foreach ($this->header as $key) {
-                if (isset($key['syntax'])) { // caso se queira uma syntax em especifico
+                if (isset($key['format'])) { // caso se queira uma syntax em especifico
                     echo '<td class="' . $key['class'] . '">';
-                    foreach ($key['syntax'] as $s) {
+                    foreach ($key['format'] as $s) {
                         if (is_numeric($s)) {
                             if (is_array($key['attr'])) {
                                 echo $row[$key['attr'][$s]];
@@ -57,6 +62,14 @@ class TableBuilder
                 } else {
                     echo '<td class="' . $key['class'] . '">' . $row[$key['attr']] . '</td>';
                 }
+            }
+            if (isset($this->buttons)) {
+                echo '<td>';
+                foreach ($this->buttons as $button) {
+                    //echo '<td><a href="' . $button['href'] . '" title="Create"><i class="' . $button['icon'] . '"></i></a></td>';
+                    echo '<a href="' . $button['href'] . '?user_id=' . $row['user_id'] . '">' . $button['icon'] . '</a>';
+                }
+                echo '</td>';
             }
             echo '</tr>';
         }

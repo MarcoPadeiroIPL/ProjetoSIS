@@ -19,9 +19,14 @@ class AirportController extends Controller
      */
     public function behaviors()
     {
+<<<<<<< Updated upstream
         return [
             'access' => [
                 'class' => AccessControl::class,
+=======
+        return array_merge(
+            parent::behaviors(),
+>>>>>>> Stashed changes
                 'rules' => [
                     [
                         'actions' => ['login', 'error'],
@@ -57,6 +62,7 @@ class AirportController extends Controller
                 ],
             ],
         ];
+<<<<<<< Updated upstream
     }
 
     /**
@@ -64,6 +70,8 @@ class AirportController extends Controller
      *
      * @return string
      */
+=======
+>>>>>>> Stashed changes
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listAirport')) {

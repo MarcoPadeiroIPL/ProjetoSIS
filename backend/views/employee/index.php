@@ -16,13 +16,29 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="employee-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Employee', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="d-flex m-2 justify-content-end">
+        <?= Html::a('+ Create Employee', ['create'], ['class' => 'btn btn-dark']) ?>
+    </div>
 
     <?php
+    $buttons = [
+        [
+            'icon' => 'View',
+            'href' => 'view',
+            'user_id' => 'true'
+        ],
+        [
+            'icon' => 'Update',
+            'href' => 'update',
+            'user_id' => 'true'
+        ],
+        [
+            'icon' => 'Delete',
+            'href' => 'delete',
+            'user_id' => 'true'
+        ],
+    ];
     $headers = [
         [
             'label' => '#',
@@ -70,11 +86,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'country', 'city'
             ],
             'class' => 'text-center',
-            'syntax' => [0, ' - ', 1],
+            'format' => [0, ' - ', 1],
 
         ],
     ];
-    $tableBuilder = new TableBuilder($headers, $model);
+    $tableBuilder = new TableBuilder($headers, $model, $buttons);
     $tableBuilder->generate();
 
     ?>
