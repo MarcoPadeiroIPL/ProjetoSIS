@@ -12,11 +12,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'airplane_id')->textInput() ?>
+
     <?= $form->field($model, 'departureDate')->textInput() ?>
 
     <?= $form->field($model, 'arrivalDate')->textInput() ?>
-
-    <?= $form->field($model, 'airplane_id')->textInput() ?>
 
     <?= $form->field($model, 'airportDeparture_id')->textInput() ?>
 

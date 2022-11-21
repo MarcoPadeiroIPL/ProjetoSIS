@@ -20,32 +20,49 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Flight', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+
     <?php
+    $headers = [
+        [
+            'label' => '#',
+            'attr' => 'id',
+            'class' => 'text-start',
+        ],
+        [
+            'label' => 'Airplane Id',
+            'attr' => 'airplane_id',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Departure Date',
+            'attr' => 'departureDate',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Arrival Date',
+            'attr' => 'arrivalDate',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Airport Departure Id',
+            'attr' => 'airportDeparture_id',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Airport Arrival',
+            'attr' => 'airportArrival_id',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Status',
+            'attr' => 'status',
+            'class' => 'text-center',
+        ],
+    ];
     $tableBuilder = new TableBuilder($headers, $model);
     $tableBuilder->generate();
-    ?>
-    <!--
-    GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'departureDate',
-            'arrivalDate',
-            'airplane_id',
-            'airportDeparture_id',
-            //'airportArrival_id',
-            //'status',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Flight $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                }
-            ],
-        ],
-    ]);
--->
+    ?>
 
 
 </div>
