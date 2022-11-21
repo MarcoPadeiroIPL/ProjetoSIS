@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\models\Airport;
 
 /**
  * This is the model class for table "employees".
