@@ -41,10 +41,10 @@ class ConfigController extends Controller
         if (\Yii::$app->user->can('listConfig')) {
             $dataProvider = new ActiveDataProvider([
                 'query' => Config::find(),
-                /*
             'pagination' => [
-                'pageSize' => 50
+                'pageSize' => 10
             ],
+            /*
             'sort' => [
                 'defaultOrder' => [
                     'id' => SORT_DESC,
