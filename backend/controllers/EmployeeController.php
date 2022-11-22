@@ -116,6 +116,11 @@ class EmployeeController extends Controller
                 ->from('auth_item')
                 ->where('type = 1 and name != "client"')
                 ->all();
+            $temp = [];
+
+            foreach($roles as $role) {
+                $temp[$role['name']] = $role['name'];
+            }
 
             if ($this->request->isPost) {
                 if ($model->load($this->request->post()) && $model->register()) {
@@ -126,7 +131,7 @@ class EmployeeController extends Controller
             return $this->render('create', [
                 'model' => $model,
                 'airports' => $airports,
-                'roles' => $roles
+                'roles' => $temp
             ]);
         }
     }
