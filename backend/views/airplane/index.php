@@ -15,11 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="airplane-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Airplane', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="d-flex m-2 justify-content-end">
+        <?= Html::a('+ Create Employee', ['create'], ['class' => 'btn btn-dark']) ?>
+    </div>
 
     <?php
     $headers = [
@@ -34,54 +32,34 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'text-center',
         ],
         [
-            'label' => 'Min Linha',
-            'attr' => 'minLinha',
+            'label' => 'Rows',
+            'attr' => ['minLinha', 'maxLinha'],
             'class' => 'text-center',
+            'format' => [0, ' - ', 1] 
         ],
         [
-            'label' => 'Min Coluna',
-            'attr' => 'minCol',
+            'label' => 'Columns',
+            'attr' => ['minCol', 'maxCol'],
             'class' => 'text-center',
+            'format' => [0, ' - ', 1] 
         ],
         [
-            'label' => 'Max Linha',
-            'attr' => 'maxLinha',
+            'label' => 'Economic',
+            'attr' => ['economicStart', 'economicStop'],
             'class' => 'text-center',
+            'format' => [0, ' - ', 1] 
         ],
         [
-            'label' => 'Max Coluna',
-            'attr' => 'maxCol',
+            'label' => 'Normal',
+            'attr' => ['normalStart', 'normalStop'],
             'class' => 'text-center',
+            'format' => [0, ' - ', 1] 
         ],
         [
-            'label' => 'Economic Start',
-            'attr' => 'economicStart',
+            'label' => 'Luxury',
+            'attr' => ['luxuryStart', 'luxuryStop'],
             'class' => 'text-center',
-        ],
-        [
-            'label' => 'Economic Stop',
-            'attr' => 'economicStop',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Normal Start',
-            'attr' => 'normalStart',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Normal Stop',
-            'attr' => 'normalStop',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Luxury Start',
-            'attr' => 'luxuryStart',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Luxury Stop',
-            'attr' => 'luxuryStop',
-            'class' => 'text-center',
+            'format' => [0, ' - ', 1] 
         ],
         [
             'label' => 'Status',

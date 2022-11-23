@@ -15,11 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="flight-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Flight', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="d-flex m-2 justify-content-end">
+        <?= Html::a('+ Create Employee', ['create'], ['class' => 'btn btn-dark']) ?>
+    </div>
 
     <?php
     $headers = [

@@ -15,38 +15,36 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="airport-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Airport', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="d-flex m-2 justify-content-end">
+        <?= Html::a('+ Create Employee', ['create'], ['class' => 'btn btn-dark']) ?>
+    </div>
 
     <?php
     $headers = [
         [
             'label' => '#',
             'attr' => 'id',
-            'class' => 'col-2 text-start',
+            'class' => 'text-start',
         ],
         [
             'label' => 'Country',
             'attr' => 'country',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Code',
             'attr' => 'code',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'City',
             'attr' => 'city',
-            'class' => 'col text-center',
+            'class' => 'text-center',
         ],
         [
             'label' => 'Search',
             'attr' => 'search',
-            'class' => 'col text-end',
+            'class' => 'text-center',
         ],
     ];
     $tableBuilder = new TableBuilder($headers, $model);
