@@ -28,20 +28,15 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'label' => 'Luggage Capacity (Kg)',
-            'attr' => 'luggageCapacity',
+            'attr' => ['luggageCapacity'],
             'class' => 'text-center',
+            'format' => [0, ' Kg']
         ],
         [
-            'label' => 'Rows',
-            'attr' => ['minLinha', 'maxLinha'],
+            'label' => 'Seats (Rows - Columns)',
+            'attr' => ['minLinha', 'minCol', 'maxLinha', 'maxCol'],
             'class' => 'text-center',
-            'format' => [0, ' - ', 1]
-        ],
-        [
-            'label' => 'Columns',
-            'attr' => ['minCol', 'maxCol'],
-            'class' => 'text-center',
-            'format' => [0, ' - ', 1]
+            'format' => [0, 1, ' - ', 2 , 3]
         ],
         [
             'label' => 'Economic',

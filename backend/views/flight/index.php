@@ -32,6 +32,29 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'text-center',
         ],
         [
+            'label' => 'Airport Departure Id',
+            'attr' => 'airportDeparture_id',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Airport Departure Name',
+            'attr' => ['country', 'city'],
+            'class' => 'text-center',
+            'format' => [0, 1],
+        ],
+        [
+            'label' => 'Airport Arrival',
+            'attr' => 'airportArrival_id',
+            'class' => 'text-center',
+        ],
+        /* TODO: **** Airport Arrival Name ****
+        [
+            'label' => 'Airport Arrival Name',
+            'attr' => 'airp',
+            'class' => 'text-center',
+        ],
+        */
+        [
             'label' => 'Departure Date',
             'attr' => 'departureDate',
             'class' => 'text-center',
@@ -39,16 +62,6 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'label' => 'Arrival Date',
             'attr' => 'arrivalDate',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Airport Departure Id',
-            'attr' => 'airportDeparture_id',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Airport Arrival',
-            'attr' => 'airportArrival_id',
             'class' => 'text-center',
         ],
         [
