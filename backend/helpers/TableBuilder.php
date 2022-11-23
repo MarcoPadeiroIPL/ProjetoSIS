@@ -2,6 +2,8 @@
 
 namespace backend\helpers;
 
+use yii\bootstrap5\Html;
+
 class TableBuilder
 {
     private $array;
@@ -67,7 +69,21 @@ class TableBuilder
                 echo '<td>';
                 foreach ($this->buttons as $button) {
                     //echo '<td><a href="' . $button['href'] . '" title="Create"><i class="' . $button['icon'] . '"></i></a></td>';
-                    echo '<a href="' . $button['href'] . '?user_id=' . $row['user_id'] . '">' . $button['icon'] . '</a>';
+                    if ($button['href'] == 'delete')
+                        echo Html::beginForm(['delete'], 'post') . Html::hiddenInput('user_id', $row[$button['flags']['id']]) . Html::submitButton('Delete') . Html::endForm();
+                    else {
+                        echo '<a href="' . $button['href'];
+                        if (isset($button['flags'])) {
+                            $i = 0;
+                            echo '?';
+                            foreach ($button['flags'] as $flag => $x) {
+                                echo ($i > 0 ? '&' : '');
+                                echo $flag . '=' . (isset($row[$x]) ? $row[$x] : $x);
+                                $i++;
+                            }
+                        }
+                        echo '">' . $button['icon'] . '</a>';
+                    }
                 }
                 echo '</td>';
             }

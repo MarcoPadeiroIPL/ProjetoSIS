@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="airplane-index">
 
     <div class="d-flex m-2 justify-content-end">
-        <?= Html::a('+ Create Employee', ['create'], ['class' => 'btn btn-dark']) ?>
+        <?= Html::a('+ Create Airplane', ['create'], ['class' => 'btn btn-dark']) ?>
     </div>
 
     <?php
@@ -35,31 +35,31 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'Rows',
             'attr' => ['minLinha', 'maxLinha'],
             'class' => 'text-center',
-            'format' => [0, ' - ', 1] 
+            'format' => [0, ' - ', 1]
         ],
         [
             'label' => 'Columns',
             'attr' => ['minCol', 'maxCol'],
             'class' => 'text-center',
-            'format' => [0, ' - ', 1] 
+            'format' => [0, ' - ', 1]
         ],
         [
             'label' => 'Economic',
             'attr' => ['economicStart', 'economicStop'],
             'class' => 'text-center',
-            'format' => [0, ' - ', 1] 
+            'format' => [0, ' - ', 1]
         ],
         [
             'label' => 'Normal',
             'attr' => ['normalStart', 'normalStop'],
             'class' => 'text-center',
-            'format' => [0, ' - ', 1] 
+            'format' => [0, ' - ', 1]
         ],
         [
             'label' => 'Luxury',
             'attr' => ['luxuryStart', 'luxuryStop'],
             'class' => 'text-center',
-            'format' => [0, ' - ', 1] 
+            'format' => [0, ' - ', 1]
         ],
         [
             'label' => 'Status',

@@ -92,11 +92,11 @@ class EmployeeController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($user_id)
+    public function actionView($id)
     {
         if (\Yii::$app->user->can('readEmployee')) {
             return $this->render('view', [
-                'model' => $this->findModel($user_id),
+                'model' => $this->findModel($id),
             ]);
         }
     }
@@ -118,7 +118,7 @@ class EmployeeController extends Controller
                 ->all();
             $temp = [];
 
-            foreach($roles as $role) {
+            foreach ($roles as $role) {
                 $temp[$role['name']] = $role['name'];
             }
 
@@ -143,13 +143,13 @@ class EmployeeController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($user_id)
+    public function actionUpdate($id)
     {
         if (\Yii::$app->user->can('updateEmployee')) {
-            $model = $this->findModel($user_id);
+            $model = $this->findModel($id);
 
             if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'user_id' => $model->user_id]);
+                return $this->redirect(['view', 'id' => $model->user_id]);
             }
 
             return $this->render('update', [

@@ -26,17 +26,23 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'icon' => 'View',
             'href' => 'view',
-            'user_id' => 'true'
+            'flags' => [
+                'id' => 'user_id',
+            ],
         ],
         [
             'icon' => 'Update',
             'href' => 'update',
-            'user_id' => 'true'
+            'flags' => [
+                'id' => 'user_id',
+            ],
         ],
         [
             'icon' => 'Delete',
             'href' => 'delete',
-            'user_id' => 'true'
+            'flags' => [
+                'id' => 'user_id',
+            ],
         ],
     ];
     $headers = [

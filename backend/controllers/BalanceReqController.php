@@ -7,6 +7,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * BalanceReqController implements the CRUD actions for BalanceReq model.
@@ -18,17 +19,34 @@ class BalanceReqController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['index', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin', 'supervisor'],
+                    ],
+                    [
+                        'actions' => ['index', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['ticketOperator', 'client'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -39,23 +57,11 @@ class BalanceReqController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listBalanceReq')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => BalanceReq::find(),
-                /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-            ]);
+            $model = BalanceReq::find()->all();
         }
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
@@ -74,67 +80,23 @@ class BalanceReqController extends Controller
         }
     }
 
-    /**
-     * Creates a new BalanceReq model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        if (\Yii::$app->user->can('createBalanceReq')) {
-            $model = new BalanceReq();
-
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-            } else {
-                $model->loadDefaultValues();
-            }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing BalanceReq model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $status)
     {
         if (\Yii::$app->user->can('updateBalanceReq')) {
             $model = $this->findModel($id);
-
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->status == 'Ongoing') {
+                if ($model->setStatus($status)) {
+                    // Sucess
+                } else {
+                    // Error while changing in DB
+                }
+            } else {
+                // Not allowed to change status
             }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return $this->redirect('index');
         }
     }
 
-    /**
-     * Deletes an existing BalanceReq model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        if (\Yii::$app->user->can('deleteBalanceReq')) {
-            $this->findModel($id)->delete();
-
-            return $this->redirect(['index']);
-        }
-    }
 
     /**
      * Finds the BalanceReq model based on its primary key value.
