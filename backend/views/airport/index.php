@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="airport-index">
 
     <div class="d-flex m-2 justify-content-end">
-        <?= Html::a('+ Create Employee', ['create'], ['class' => 'btn btn-dark']) ?>
+        <?= Html::a('+ Create Airport', ['create'], ['class' => 'btn btn-dark']) ?>
     </div>
 
     <?php

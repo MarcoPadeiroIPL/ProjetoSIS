@@ -1,6 +1,7 @@
 <?php
 
 use common\models\Config;
+use backend\helpers\TableBuilder;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -14,31 +15,41 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="config-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="d-flex m-2 justify-content-end">
+        <?= Html::a('+ Create Config', ['create'], ['class' => 'btn btn-dark']) ?>
+    </div>
 
-    <p>
-        <?= Html::a('Create Config', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'description:ntext',
-            'weight',
-            'price',
-            'active',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Config $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+    <?php
+    $headers = [
+        [
+            'label' => '#',
+            'attr' => 'id',
+            'class' => 'text-start',
         ],
-    ]); ?>
+        [
+            'label' => 'Description',
+            'attr' => 'description',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Weight',
+            'attr' => 'weight',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Price',
+            'attr' => 'price',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Active',
+            'attr' => 'active',
+            'class' => 'text-center',
+        ],
+    ];
+    $tableBuilder = new TableBuilder($headers, $model);
+    $tableBuilder->generate();
+    ?>
 
 
 </div>

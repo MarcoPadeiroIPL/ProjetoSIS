@@ -1,6 +1,7 @@
 <?php
 
 use common\models\Tariff;
+use backend\helpers\TableBuilder;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -14,33 +15,41 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tariff-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="d-flex m-2 justify-content-end">
+        <?= Html::a('+ Create Tariff', ['create'], ['class' => 'btn btn-dark']) ?>
+    </div>
 
-    <p>
-        <?= Html::a('Create Tariff', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'startDate',
-            'economicPrice',
-            'normalPrice',
-            'luxuryPrice',
-            //'flight_id',
-            //'active',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Tariff $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+    <?php
+    $headers = [
+        [
+            'label' => '#',
+            'attr' => 'id',
+            'class' => 'text-start',
         ],
-    ]); ?>
+        [
+            'label' => 'Start-Date',
+            'attr' => 'startDate',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Economic Price',
+            'attr' => 'economicPrice',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Normal Price',
+            'attr' => 'normalPrice',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Luxury Price',
+            'attr' => 'luxuryPrice',
+            'class' => 'text-center',
+        ],
+    ];
+    $tableBuilder = new TableBuilder($headers, $model);
+    $tableBuilder->generate();
+    ?>
 
 
 </div>

@@ -39,21 +39,9 @@ class TariffController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listTariff')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Tariff::find(),
-                /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-            ]);
+            $model = Tariff::find()->all();
             return $this->render('index', [
-                'dataProvider' => $dataProvider,
+                'model' => $model,
             ]);
         }
     }

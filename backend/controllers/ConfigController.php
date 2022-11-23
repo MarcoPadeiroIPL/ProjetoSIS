@@ -39,22 +39,9 @@ class ConfigController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listConfig')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Config::find(),
-            'pagination' => [
-                'pageSize' => 10
-            ],
-            /*
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-            ]);
-
+            $model = Config::find()->all();
             return $this->render('index', [
-                'dataProvider' => $dataProvider,
+                'model' => $model,
             ]);
         }
     }
