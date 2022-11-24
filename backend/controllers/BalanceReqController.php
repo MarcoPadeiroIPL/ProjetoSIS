@@ -86,7 +86,14 @@ class BalanceReqController extends Controller
             $model = $this->findModel($id);
             if ($model->status == 'Ongoing') {
                 if ($model->setStatus($status)) {
-                    // Sucess
+                    
+                   /* $user = User::findModel($model->client_id);
+                    if($user->validateAuthKey("client"))
+                    {
+                        $client = Client::findModel($model->client_id);
+                        $client->addBalance($model->amount);
+                    }
+                    */
                 } else {
                     // Error while changing in DB
                 }
