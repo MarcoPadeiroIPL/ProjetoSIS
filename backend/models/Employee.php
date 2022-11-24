@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\models\Airport;
 
 /**
  * This is the model class for table "employees".
@@ -13,7 +14,7 @@ use common\models\User;
  * @property float $salary
  * @property int|null $airport_id
  *
- * @property Airports $airport
+ * @property Airport $airport
  * @property Tickets[] $tickets
  * @property User $user
  */
@@ -37,7 +38,7 @@ class Employee extends \yii\db\ActiveRecord
             [['user_id', 'airport_id'], 'integer'],
             [['salary'], 'number'],
             [['user_id'], 'unique'],
-            [['airport_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airports::class, 'targetAttribute' => ['airport_id' => 'id']],
+            [['airport_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airport_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -82,7 +83,7 @@ class Employee extends \yii\db\ActiveRecord
      */
     public function getAirport()
     {
-        return $this->hasOne(Airports::class, ['id' => 'airport_id']);
+        return $this->hasOne(Airport::class, ['id' => 'airport_id']);
     }
 
     /**

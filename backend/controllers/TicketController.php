@@ -2,102 +2,86 @@
 
 namespace backend\controllers;
 
-use common\models\Airport;
+use common\models\Ticket;
 use yii\data\ActiveDataProvider;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * AirportController implements the CRUD actions for Airport model.
+ * TicketController implements the CRUD actions for Ticket model.
  */
-class AirportController extends Controller
+class TicketController extends Controller
 {
     /**
      * @inheritDoc
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                    [
-                        'actions' => ['view', 'index'],
-                        'allow' => true,
-                        'roles' => ['supervisor', 'ticketOperator'],
-                    ],
-                    [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
-                        'allow' => false,
-                        'roles' => ['client', '?'],
-                    ],
-                    [
-                        'actions' => ['create', 'delete', 'update'],
-                        'allow' => false,
-                        'roles' => ['supervisor', 'ticketOperator'],
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
                     ],
                 ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
+            ]
+        );
     }
 
     /**
-     * Lists all Airport models.
+     * Lists all Ticket models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        if (\Yii::$app->user->can('listAirport')) {
-            $model = Airport::find()->all();
+        if (\Yii::$app->user->can('listTicket')) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => Ticket::find(),
+                /*
+            'pagination' => [
+                'pageSize' => 50
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
+            */
+            ]);
+
             return $this->render('index', [
-                'model' => $model,
+                'dataProvider' => $dataProvider,
             ]);
         }
     }
 
     /**
-     * Displays a single Airport model.
+     * Displays a single Ticket model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        if (\Yii::$app->user->can('readAirport')) {
+        if (\Yii::$app->user->can('readTicket')) {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
         }
     }
-
     /**
-     * Creates a new Airport model.
+     * Creates a new Ticket model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        if (\Yii::$app->user->can('createAirport')) {
-            $model = new Airport();
+        if (\Yii::$app->user->can('createTicket')) {
+            $model = new Ticket();
 
             if ($this->request->isPost) {
                 if ($model->load($this->request->post()) && $model->save()) {
@@ -114,7 +98,7 @@ class AirportController extends Controller
     }
 
     /**
-     * Updates an existing Airport model.
+     * Updates an existing Ticket model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -122,7 +106,7 @@ class AirportController extends Controller
      */
     public function actionUpdate($id)
     {
-        if (\Yii::$app->user->can('updateAirport')) {
+        if (\Yii::$app->user->can('updateTicket')) {
             $model = $this->findModel($id);
 
             if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -136,7 +120,7 @@ class AirportController extends Controller
     }
 
     /**
-     * Deletes an existing Airport model.
+     * Deletes an existing Ticket model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -144,7 +128,7 @@ class AirportController extends Controller
      */
     public function actionDelete($id)
     {
-        if (\Yii::$app->user->can('deleteAirport')) {
+        if (\Yii::$app->user->can('deleteTicket')) {
             $this->findModel($id)->delete();
 
             return $this->redirect(['index']);
@@ -152,15 +136,15 @@ class AirportController extends Controller
     }
 
     /**
-     * Finds the Airport model based on its primary key value.
+     * Finds the Ticket model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Airport the loaded model
+     * @return Ticket the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Airport::findOne(['id' => $id])) !== null) {
+        if (($model = Ticket::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

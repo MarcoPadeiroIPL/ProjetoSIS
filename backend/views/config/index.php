@@ -1,22 +1,22 @@
 <?php
 
-use common\models\Airport;
+use common\models\Config;
+use backend\helpers\TableBuilder;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use backend\helpers\TableBuilder;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Airports';
+$this->title = 'Configs';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="airport-index">
+<div class="config-index">
 
     <div class="d-flex m-2 justify-content-end">
-        <?= Html::a('+ Create Airport', ['create'], ['class' => 'btn btn-dark']) ?>
+        <?= Html::a('+ Create Config', ['create'], ['class' => 'btn btn-dark']) ?>
     </div>
 
     <?php
@@ -27,30 +27,29 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'text-start',
         ],
         [
-            'label' => 'Country',
-            'attr' => 'country',
+            'label' => 'Description',
+            'attr' => 'description',
             'class' => 'text-center',
         ],
         [
-            'label' => 'Code',
-            'attr' => 'code',
+            'label' => 'Weight',
+            'attr' => 'weight',
             'class' => 'text-center',
         ],
         [
-            'label' => 'City',
-            'attr' => 'city',
+            'label' => 'Price',
+            'attr' => 'price',
             'class' => 'text-center',
         ],
         [
-            'label' => 'Search',
-            'attr' => 'search',
+            'label' => 'Active',
+            'attr' => 'active',
             'class' => 'text-center',
         ],
     ];
     $tableBuilder = new TableBuilder($headers, $model);
     $tableBuilder->generate();
     ?>
-
 
 
 </div>
