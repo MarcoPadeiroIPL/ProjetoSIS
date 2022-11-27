@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use common\models\BalanceReq;
+use common\models\User;
+use common\models\Client;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -86,7 +88,11 @@ class BalanceReqController extends Controller
             $model = $this->findModel($id);
             if ($model->status == 'Ongoing') {
                 if ($model->setStatus($status)) {
-                    // Sucess
+                    if($status == 'Accepted') {
+                        // add balance to account
+                        $client = Client::findOne([$model->client_id]);
+                        $client->addBalance($model->amount);
+                    }    
                 } else {
                     // Error while changing in DB
                 }

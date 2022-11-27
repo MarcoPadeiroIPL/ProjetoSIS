@@ -52,14 +52,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'text-start',
         ],
         [
-            'label' => 'First Name',
-            'attr' => 'fName',
+            'label' => 'Full Name',
+            'attr' => [
+                'fName', 'surname'
+            ],
             'class' => 'text-center',
-        ],
-        [
-            'label' => 'Surname',
-            'attr' => 'surname',
-            'class' => 'text-center',
+            'format' => [0, " ", 1],
         ],
         [
             'label' => 'Username',
