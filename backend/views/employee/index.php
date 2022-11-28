@@ -24,21 +24,21 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
     $buttons = [
         [
-            'icon' => 'View',
+            'label' => 'View',
             'href' => 'view',
             'flags' => [
                 'id' => 'user_id',
             ],
         ],
         [
-            'icon' => 'Update',
+            'label' => 'Update',
             'href' => 'update',
             'flags' => [
                 'id' => 'user_id',
             ],
         ],
         [
-            'icon' => 'Delete',
+            'label' => 'Delete',
             'href' => 'delete',
             'flags' => [
                 'id' => 'user_id',

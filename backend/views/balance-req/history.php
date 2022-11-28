@@ -13,30 +13,10 @@ use backend\helpers\TableBuilder;
 $this->title = 'Balance Reqs';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<a href="history">View history</a>
-<div class="balance-req-index">
+<a href="index">View pending</a>
+<div class="balance-req-history">
 
     <?php
-    $buttons = [
-        [
-            'label' => 'Accept',
-            'class' => 'btn btn-success btn-sm mr-3',
-            'href' => 'accept',
-            'flags' => [
-                'id' => 'id',
-                'employee_id' => Yii::$app->user->identity->getId()
-            ],
-        ],
-        [
-            'label' => 'Decline',
-            'class' => 'btn btn-danger btn-sm',
-            'href' => 'decline',
-            'flags' => [
-                'id' => 'id',
-                'employee_id' => Yii::$app->user->identity->getId()
-            ],
-        ],
-    ];
     $headers = [
         [
             'label' => '#',
@@ -59,8 +39,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'attr' => 'clientName',
             'class' => 'text-center',
         ],
+        [
+            'label' => 'Decision Date',
+            'attr' => 'decisionDate',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Employee',
+            'attr' => 'employeeName',
+            'class' => 'text-center',
+        ],
+        [
+            'label' => 'Decision',
+            'attr' => 'status',
+            'class' => 'text-center',
+        ],
     ];
-    $tableBuilder = new TableBuilder($headers, $model, $buttons);
+    $tableBuilder = new TableBuilder($headers, $model);
     $tableBuilder->generate();
     ?>
 </div>

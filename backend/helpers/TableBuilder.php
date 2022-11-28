@@ -10,7 +10,7 @@ class TableBuilder
     private $header;
     private $buttons;
 
-    public function __construct($header, $arr, $buttons = [])
+    public function __construct($header, $arr, $buttons = null)
     {
         $this->array = $arr;
         $this->header = $header;
@@ -62,17 +62,26 @@ class TableBuilder
                     }
                     echo '</td>';
                 } else {
-                    echo '<td class="' . $key['class'] . '">' . $row[$key['attr']] . '</td>';
+                    echo '<td class="' . $key['class'] . '">';
+                    if (isset($row[$key['attr']]))
+                        echo $row[$key['attr']];
+                    else
+                        echo '(Not set)';
+                    echo '</td>';
                 }
             }
             if (isset($this->buttons)) {
-                echo '<td>';
+                echo '<td class="col-2 text-center">';
                 foreach ($this->buttons as $button) {
                     //echo '<td><a href="' . $button['href'] . '" title="Create"><i class="' . $button['icon'] . '"></i></a></td>';
                     if ($button['href'] == 'delete')
                         echo Html::beginForm(['delete'], 'post') . Html::hiddenInput('user_id', $row[$button['flags']['id']]) . Html::submitButton('Delete') . Html::endForm();
                     else {
-                        echo '<a href="' . $button['href'];
+                        echo '<a class="';
+                        if (isset($button['class'])) {
+                            echo $button['class'];
+                        }
+                        echo '" href="' . $button['href'];
                         if (isset($button['flags'])) {
                             $i = 0;
                             echo '?';
@@ -82,7 +91,7 @@ class TableBuilder
                                 $i++;
                             }
                         }
-                        echo '">' . $button['icon'] . '</a>';
+                        echo '">' . $button['label'] . '</a>';
                     }
                 }
                 echo '</td>';
