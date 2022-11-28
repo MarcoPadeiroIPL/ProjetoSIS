@@ -35,11 +35,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'Weight',
             'attr' => 'weight',
             'class' => 'text-center',
+            'format' => [0, 'kg']
         ],
         [
             'label' => 'Price',
             'attr' => 'price',
             'class' => 'text-center',
+            'format' => [0, '€']
         ],
         [
             'label' => 'Active',

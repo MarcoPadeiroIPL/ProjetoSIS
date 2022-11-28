@@ -74,25 +74,21 @@ class TableBuilder
                 echo '<td class="col-2 text-center">';
                 foreach ($this->buttons as $button) {
                     //echo '<td><a href="' . $button['href'] . '" title="Create"><i class="' . $button['icon'] . '"></i></a></td>';
-                    if ($button['href'] == 'delete')
-                        echo Html::beginForm(['delete'], 'post') . Html::hiddenInput('user_id', $row[$button['flags']['id']]) . Html::submitButton('Delete') . Html::endForm();
-                    else {
-                        echo '<a class="';
-                        if (isset($button['class'])) {
-                            echo $button['class'];
-                        }
-                        echo '" href="' . $button['href'];
-                        if (isset($button['flags'])) {
-                            $i = 0;
-                            echo '?';
-                            foreach ($button['flags'] as $flag => $x) {
-                                echo ($i > 0 ? '&' : '');
-                                echo $flag . '=' . (isset($row[$x]) ? $row[$x] : $x);
-                                $i++;
-                            }
-                        }
-                        echo '">' . $button['label'] . '</a>';
+                    echo '<a class="';
+                    if (isset($button['class'])) {
+                        echo $button['class'];
                     }
+                    echo '" href="' . $button['href'];
+                    if (isset($button['flags'])) {
+                        $i = 0;
+                        echo '?';
+                        foreach ($button['flags'] as $flag => $x) {
+                            echo ($i > 0 ? '&' : '');
+                            echo $flag . '=' . (isset($row[$x]) ? $row[$x] : $x);
+                            $i++;
+                        }
+                    }
+                    echo '">' . $button['label'] . '</a>';
                 }
                 echo '</td>';
             }

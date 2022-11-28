@@ -58,7 +58,7 @@ class EmployeeController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
-                    'delete' => ['POST'],
+                    //          'delete' => ['POST'],
                 ],
             ],
         ];

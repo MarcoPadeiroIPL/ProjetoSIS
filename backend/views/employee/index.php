@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     $buttons = [
         [
             'label' => 'View',
+            'class' => 'btn btn-dark mr-1',
             'href' => 'view',
             'flags' => [
                 'id' => 'user_id',
@@ -32,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'label' => 'Update',
+            'class' => 'btn btn-primary mr-1',
             'href' => 'update',
             'flags' => [
                 'id' => 'user_id',
@@ -39,6 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'label' => 'Delete',
+            'class' => 'btn btn-danger',
             'href' => 'delete',
             'flags' => [
                 'id' => 'user_id',
