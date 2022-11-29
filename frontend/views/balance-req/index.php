@@ -14,11 +14,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="balance-req-index">
 
+    <h1>My balance: <?=  $client->balance ?>€</h1>
     <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a('Create Balance Req', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+   
+    
 
 
     <?= GridView::widget([

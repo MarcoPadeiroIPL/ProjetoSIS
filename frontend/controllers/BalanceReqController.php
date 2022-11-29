@@ -2,11 +2,15 @@
 
 namespace frontend\controllers;
 
+use yii;
 use common\models\BalanceReq;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\Client;
+
+
 
 /**
  * BalanceReqController implements the CRUD actions for BalanceReq model.
@@ -38,8 +42,10 @@ class BalanceReqController extends Controller
      */
     public function actionIndex()
     {
+        $client = Client::findOne([Yii::$app->user->getId()]);
         $dataProvider = new ActiveDataProvider([
-            'query' => BalanceReq::find(),
+            'query' => BalanceReq::find()->where(['client_id'=> Yii::$app->user->identity]),
+            
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -51,9 +57,11 @@ class BalanceReqController extends Controller
             ],
             */
         ]);
-
+        
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'client' => $client,
+            
             
         ]);
     }
@@ -93,24 +101,9 @@ class BalanceReqController extends Controller
             'model' => $model,
         ]);
     }
+    
 
-    /**
-     * Updates an existing BalanceReq model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
    
-   
-
-    /**
-     * Deletes an existing BalanceReq model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
