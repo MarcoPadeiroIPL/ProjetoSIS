@@ -5,7 +5,6 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use backend\helpers\TableBuilder;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -16,51 +15,51 @@ $this->params['breadcrumbs'][] = $this->title;
 <a href="history">View history</a>
 <div class="balance-req-index">
 
-    <?php
-    $buttons = [
-        [
-            'label' => 'Accept',
-            'class' => 'btn btn-success btn-sm mr-3',
-            'href' => 'accept',
-            'flags' => [
-                'id' => 'id',
-                'employee_id' => Yii::$app->user->identity->getId()
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'requestDate',
+            [
+                'label' => 'Amount',
+                'value' => function ($model) {
+                    return $model->amount . '€';
+                }
+            ],
+            [
+                'label' => 'Client username',
+                'value' => function ($model) {
+                    return $model->client->user->username;
+                }
+            ],
+            [
+                'class' => ActionColumn::className(),
+                'template' => '{accept} {decline}',
+                'buttons' => [
+                    'accept' => function ($url) {
+                        return Html::a(
+                            '<span>Accept</span>',
+                            $url,
+                            [
+                                'title' => 'Accept',
+                                'data-pjax' => '0',
+                            ],
+                            ['class' => 'btn btn-success']
+                        );
+                    },
+                    'decline' => function ($url) {
+                        return Html::a(
+                            '<span>Decline</span>',
+                            $url,
+                            [
+                                'title' => 'Decline',
+                                'data-pjax' => '0',
+                            ],
+                            ['class' => 'btn btn-danger']
+                        );
+                    }
+                ],
             ],
         ],
-        [
-            'label' => 'Decline',
-            'class' => 'btn btn-danger btn-sm',
-            'href' => 'decline',
-            'flags' => [
-                'id' => 'id',
-                'employee_id' => Yii::$app->user->identity->getId()
-            ],
-        ],
-    ];
-    $headers = [
-        [
-            'label' => '#',
-            'attr' => 'id',
-            'class' => 'text-start',
-        ],
-        [
-            'label' => 'Request Date',
-            'attr' => 'requestDate',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Amount',
-            'attr' => 'amount',
-            'class' => 'text-center',
-            'format' => [0, '€']
-        ],
-        [
-            'label' => 'Client',
-            'attr' => 'clientName',
-            'class' => 'text-center',
-        ],
-    ];
-    $tableBuilder = new TableBuilder($headers, $model, $buttons);
-    $tableBuilder->generate();
-    ?>
+    ]); ?>
 </div>

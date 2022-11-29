@@ -1,7 +1,6 @@
 <?php
 
 use common\models\Config;
-use backend\helpers\TableBuilder;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -19,39 +18,31 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('+ Create Config', ['create'], ['class' => 'btn btn-dark']) ?>
     </div>
 
-    <?php
-    $headers = [
-        [
-            'label' => '#',
-            'attr' => 'id',
-            'class' => 'text-start',
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'description',
+            [
+                'label' => 'Weight',
+                'value' => function ($model) {
+                    return $model->weight . 'kg';
+                }
+            ],
+            [
+                'label' => 'Price',
+                'value' => function ($model) {
+                    return $model->price . '€';
+                }
+            ],
+            'active',
+            [
+                'class' => ActionColumn::className(),
+                'urlCreator' => function ($action, Config $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'id' => $model->id]);
+                }
+            ],
         ],
-        [
-            'label' => 'Description',
-            'attr' => 'description',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Weight',
-            'attr' => 'weight',
-            'class' => 'text-center',
-            'format' => [0, 'kg']
-        ],
-        [
-            'label' => 'Price',
-            'attr' => 'price',
-            'class' => 'text-center',
-            'format' => [0, '€']
-        ],
-        [
-            'label' => 'Active',
-            'attr' => 'active',
-            'class' => 'text-center',
-        ],
-    ];
-    $tableBuilder = new TableBuilder($headers, $model);
-    $tableBuilder->generate();
-    ?>
-
+    ]); ?>
 
 </div>

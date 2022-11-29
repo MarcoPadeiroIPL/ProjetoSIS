@@ -59,22 +59,48 @@ class BalanceReqController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listBalanceReq')) {
-            $model = BalanceReq::find()->where('status="Ongoing"')->all();
-        }
+            $dataProvider = new ActiveDataProvider([
+                'query' => BalanceReq::find(),
+                /*
+                'pagination' => [
+                    'pageSize' => 50
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'user_id' => SORT_DESC,
+                    ]
+                ],
+                */
+            ]);
 
-        return $this->render('index', [
-            'model' => $model,
-        ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
     public function actionHistory()
     {
         if (\Yii::$app->user->can('listBalanceReq')) {
-            $model = BalanceReq::find()->where('status="Accepted" OR status="Declined"')->all();
-        }
+            if (\Yii::$app->user->can('listBalanceReq')) {
+                $dataProvider = new ActiveDataProvider([
+                    'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
+                    /*
+                'pagination' => [
+                    'pageSize' => 50
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'user_id' => SORT_DESC,
+                    ]
+                ],
+                */
+                ]);
 
-        return $this->render('history', [
-            'model' => $model,
-        ]);
+                return $this->render('history', [
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+        }
     }
 
     /**
@@ -97,19 +123,17 @@ class BalanceReqController extends Controller
         if (\Yii::$app->user->can('updateBalanceReq')) {
             $balanceReq = $this->findModel($id);
             if ($balanceReq->status == 'Ongoing') {
-                if ($balanceReq->setStatus('Accepted')) {
-                    // add balance to account
-                    $client = Client::findOne([$balanceReq->client_id]);
-                    $client->addBalance($balanceReq->amount);
+                // add balance to account
+                $client = Client::findOne([$balanceReq->client_id]);
+                $client->addBalance($balanceReq->amount);
 
-                    // assign responsible employee
-                    $balanceReqEmployee = new BalanceReqEmployee();
-                    $balanceReqEmployee->balanceReq_id = $id;
-                    $balanceReqEmployee->employee_id = $employee_id;
-                    $balanceReqEmployee->save();
-                } else {
-                    // Error while changing in DB
-                }
+                // assign responsible employee
+                $balanceReqEmployee = new BalanceReqEmployee();
+                $balanceReqEmployee->balanceReq_id = $id;
+                $balanceReqEmployee->employee_id = $employee_id;
+                $balanceReqEmployee->save();
+
+                $balanceReq->setStatus('Accepted');
             } else {
                 // Not allowed to change status
             }
@@ -121,15 +145,12 @@ class BalanceReqController extends Controller
         if (\Yii::$app->user->can('updateBalanceReq')) {
             $balanceReq = $this->findModel($id);
             if ($balanceReq->status == 'Ongoing') {
-                if ($balanceReq->setStatus('Declined')) {
-                    // assign responsible employee
-                    $balanceReqEmployee = new BalanceReqEmployee();
-                    $balanceReqEmployee->balanceReq_id = $id;
-                    $balanceReqEmployee->employee_id = $employee_id;
-                    $balanceReqEmployee->save();
-                } else {
-                    // Error while changing in DB
-                }
+                // assign responsible employee
+                $balanceReqEmployee = new BalanceReqEmployee();
+                $balanceReqEmployee->balanceReq_id = $id;
+                $balanceReqEmployee->employee_id = $employee_id;
+                $balanceReqEmployee->save();
+                $balanceReq->setStatus('Accepted');
             } else {
                 // Not allowed to change status
             }

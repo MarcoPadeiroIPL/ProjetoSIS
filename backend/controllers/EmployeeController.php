@@ -58,7 +58,7 @@ class EmployeeController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
-                    //          'delete' => ['POST'],
+                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -72,16 +72,22 @@ class EmployeeController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listEmployee')) {
-            $model = (new \yii\db\Query())
-                ->select(['*'])
-                ->from('user')
-                ->innerJoin('userData', 'userData.user_id=user.id')
-                ->innerJoin('employees', 'employees.user_id=user.id')
-                ->innerJoin('auth_assignment', 'auth_assignment.user_id=user.id')
-                ->innerJoin('airports', 'employees.airport_id=airports.id')
-                ->all();
+            $dataProvider = new ActiveDataProvider([
+                'query' => User::find()->where('status=10')->innerJoin('employees', 'user.id=employees.user_id'),
+                /*
+                'pagination' => [
+                    'pageSize' => 50
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'user_id' => SORT_DESC,
+                    ]
+                ],
+                */
+            ]);
+
             return $this->render('index', [
-                'model' => $model,
+                'dataProvider' => $dataProvider,
             ]);
         }
     }
@@ -92,11 +98,11 @@ class EmployeeController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($user_id)
     {
         if (\Yii::$app->user->can('readEmployee')) {
             return $this->render('view', [
-                'model' => $this->findModel($id),
+                'model' => $this->findModel($user_id),
             ]);
         }
     }
@@ -143,10 +149,10 @@ class EmployeeController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($user_id)
     {
         if (\Yii::$app->user->can('updateEmployee')) {
-            $model = $this->findModel($id);
+            $model = $this->findModel($user_id);
 
             if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->user_id]);
@@ -168,7 +174,7 @@ class EmployeeController extends Controller
     public function actionDelete($user_id)
     {
         if (\Yii::$app->user->can('deleteEmployee')) {
-            $this->findModel($user_id)->delete();
+            User::findOne($user_id)->deleteUser();
             return $this->redirect(['index']);
         }
     }

@@ -39,19 +39,22 @@ class FlightController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listFlight')) {
-            $headers = [
-                'departureDate' => 'Departure Date',
-                'arrivalDate' => 'Arrival Date',
-                'airplane_id' => 'Airplane',
-                'airplane_id' => 'Airplane',
-                'airportDeparture_id' => 'Airport Arrival',
-                'airportArrival_id' => 'Airplane Departure',
-                'status' => 'Status',
-            ];
-            $model = Flight::find()->all();
+            $dataProvider = new ActiveDataProvider([
+                'query' => Flight::find(),
+                /*
+                'pagination' => [
+                    'pageSize' => 50
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'user_id' => SORT_DESC,
+                    ]
+                ],
+                */
+            ]);
+
             return $this->render('index', [
-                'headers' => $headers,
-                'model' => $model,
+                'dataProvider' => $dataProvider,
             ]);
         }
     }
