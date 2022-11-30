@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'code',
             'city',
             'search',
+            'status',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Airport $model, $key, $index, $column) {
