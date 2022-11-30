@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use common\models\BalanceReq;
+use common\models\BalanceReqEmployee;
+use common\models\Client;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -28,12 +30,12 @@ class BalanceReqController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'update', 'view'],
+                        'actions' => ['index', 'history', 'accept', 'decline', 'view'],
                         'allow' => true,
                         'roles' => ['admin', 'supervisor'],
                     ],
                     [
-                        'actions' => ['index', 'update', 'view'],
+                        'actions' => ['index', 'accept', 'history', 'decline', 'view'],
                         'allow' => false,
                         'roles' => ['ticketOperator', 'client'],
                     ],
@@ -57,12 +59,48 @@ class BalanceReqController extends Controller
     public function actionIndex()
     {
         if (\Yii::$app->user->can('listBalanceReq')) {
-            $model = BalanceReq::find()->all();
-        }
+            $dataProvider = new ActiveDataProvider([
+                'query' => BalanceReq::find()->where('status="Ongoing"'),
+                /*
+                'pagination' => [
+                    'pageSize' => 50
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'user_id' => SORT_DESC,
+                    ]
+                ],
+                */
+            ]);
 
-        return $this->render('index', [
-            'model' => $model,
-        ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+    }
+    public function actionHistory()
+    {
+        if (\Yii::$app->user->can('listBalanceReq')) {
+            if (\Yii::$app->user->can('listBalanceReq')) {
+                $dataProvider = new ActiveDataProvider([
+                    'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
+                    /*
+                'pagination' => [
+                    'pageSize' => 50
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'user_id' => SORT_DESC,
+                    ]
+                ],
+                */
+                ]);
+
+                return $this->render('history', [
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+        }
     }
 
     /**
@@ -80,23 +118,42 @@ class BalanceReqController extends Controller
         }
     }
 
-    public function actionUpdate($id, $status)
+    public function actionAccept($id)
     {
+        $employee_id = \Yii::$app->user->getId();
         if (\Yii::$app->user->can('updateBalanceReq')) {
-            $model = $this->findModel($id);
-            if ($model->status == 'Ongoing') {
-                if ($model->setStatus($status)) {
-                    
-                   /* $user = User::findModel($model->client_id);
-                    if($user->validateAuthKey("client"))
-                    {
-                        $client = Client::findModel($model->client_id);
-                        $client->addBalance($model->amount);
-                    }
-                    */
-                } else {
-                    // Error while changing in DB
-                }
+            $balanceReq = $this->findModel($id);
+            if ($balanceReq->status == 'Ongoing') {
+                // add balance to account
+                $client = Client::findOne(['user_id' => $balanceReq->client_id]);
+                $client->addBalance($balanceReq->amount);
+
+                // assign responsible employee
+                $balanceReqEmployee = new BalanceReqEmployee();
+                $balanceReqEmployee->balanceReq_id = $id;
+                $balanceReqEmployee->employee_id = $employee_id;
+                $balanceReqEmployee->save();
+
+                $balanceReq->setStatus('Accepted');
+                $client->save();
+            } else {
+                // Not allowed to change status
+            }
+            return $this->redirect('index');
+        }
+    }
+    public function actionDecline($id)
+    {
+        $employee_id = \Yii::$app->user->getId();
+        if (\Yii::$app->user->can('updateBalanceReq')) {
+            $balanceReq = $this->findModel($id);
+            if ($balanceReq->status == 'Ongoing') {
+                // assign responsible employee
+                $balanceReqEmployee = new BalanceReqEmployee();
+                $balanceReqEmployee->balanceReq_id = $id;
+                $balanceReqEmployee->employee_id = $employee_id;
+                $balanceReqEmployee->save();
+                $balanceReq->setStatus('Accepted');
             } else {
                 // Not allowed to change status
             }

@@ -5,7 +5,6 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use backend\helpers\TableBuilder;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -13,56 +12,54 @@ use backend\helpers\TableBuilder;
 $this->title = 'Balance Reqs';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<a href="history">View history</a>
 <div class="balance-req-index">
 
-    <?php
-    $buttons = [
-        [
-            'icon' => 'Accept',
-            'href' => 'update',
-            'flags' => [
-                'id' => 'id',
-                'status' => 'Accepted',
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'requestDate',
+            [
+                'label' => 'Amount',
+                'value' => function ($model) {
+                    return $model->amount . '€';
+                }
+            ],
+            [
+                'label' => 'Client username',
+                'value' => function ($model) {
+                    return $model->client->user->username;
+                }
+            ],
+            [
+                'class' => ActionColumn::className(),
+                'template' => '{accept} {decline}',
+                'buttons' => [
+                    'accept' => function ($url) {
+                        return Html::a(
+                            '<span>Accept</span>',
+                            $url,
+                            [
+                                'title' => 'Accept',
+                                'data-pjax' => '0',
+                            ],
+                            ['class' => 'btn btn-success']
+                        );
+                    },
+                    'decline' => function ($url) {
+                        return Html::a(
+                            '<span>Decline</span>',
+                            $url,
+                            [
+                                'title' => 'Decline',
+                                'data-pjax' => '0',
+                            ],
+                            ['class' => 'btn btn-danger']
+                        );
+                    }
+                ],
             ],
         ],
-        [
-            'icon' => 'Decline',
-            'href' => 'update',
-            'flags' => [
-                'id' => 'id',
-                'status' => 'Declined',
-            ],
-        ],
-    ];
-    $headers = [
-        [
-            'label' => '#',
-            'attr' => 'id',
-            'class' => 'text-start',
-        ],
-        [
-            'label' => 'Amount',
-            'attr' => 'amount',
-            'class' => 'text-center',
-            'format' => [0, '€']
-        ],
-        [
-            'label' => 'Status',
-            'attr' => 'status',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Request Date',
-            'attr' => 'requestDate',
-            'class' => 'text-center',
-        ],
-        [
-            'label' => 'Decision Date',
-            'attr' => 'decisionDate',
-            'class' => 'text-center',
-        ],
-    ];
-    $tableBuilder = new TableBuilder($headers, $model, $buttons);
-    $tableBuilder->generate();
-    ?>
+    ]); ?>
 </div>

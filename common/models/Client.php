@@ -70,9 +70,11 @@ class Client extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    public function addBalance($balance)
+    public function addBalance($amount)
     {
-        $this->balance += $balance;
-        return $this->save();
+        if ($amount > 0) {
+            $this->balance += $amount;
+            $this->save();
+        }
     }
 }

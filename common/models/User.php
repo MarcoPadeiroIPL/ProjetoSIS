@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use backend\models\Employee;
 
 /**
  * User model
@@ -48,6 +49,15 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'User ID',
+            'username' => 'Username',
+            'email' => 'Email',
+            'status' => 'Status',
+        ];
+    }
     /**
      * {@inheritdoc}
      */
@@ -210,5 +220,29 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+    public function deleteUser()
+    {
+        $this->status = self::STATUS_DELETED;
+        $this->save();
+    }
+    public function getUserData()
+    {
+        return $this->hasOne(UserData::class, ['user_id' => 'id']);
+    }
+
+    public function getEmployee()
+    {
+        return $this->hasOne(Employee::class, ['user_id' => 'id']);
+    }
+
+    public function getClient()
+    {
+        return $this->hasOne(Client::class, ['user_id' => 'id']);
+    }
+
+    public function getAuthAssignment()
+    {
+        return $this->hasOne(AuthAssignment::class, ['user_id' => 'id']);
     }
 }

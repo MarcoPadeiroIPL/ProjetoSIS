@@ -1,6 +1,5 @@
 <?php
 
-use backend\helpers\TableBuilder;
 use common\models\Airplane;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -19,53 +18,43 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('+ Create Airplane', ['create'], ['class' => 'btn btn-dark']) ?>
     </div>
 
-    <?php
-    $headers = [
-        [
-            'label' => '#',
-            'attr' => 'id',
-            'class' => 'text-start',
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'id',
+            'luggageCapacity',
+            [
+                'label' => 'Seats (Rows - Columns)',
+                'value' => function ($model) {
+                    return $model->minLinha . $model->minCol . ' - ' . $model->maxLinha . $model->maxCol;
+                }
+            ],
+            [
+                'label' => 'Economic',
+                'value' => function ($model) {
+                    return $model->economicStart . ' - ' . $model->economicStop;
+                }
+            ],
+            [
+                'label' => 'Normal',
+                'value' => function ($model) {
+                    return $model->normalStart . ' - ' . $model->normalStop;
+                }
+            ],
+            [
+                'label' => 'Luxury',
+                'value' => function ($model) {
+                    return $model->luxuryStart . ' - ' . $model->luxuryStop;
+                }
+            ],
+            [
+                'class' => ActionColumn::className(),
+                'urlCreator' => function ($action, Airplane $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'id' => $model->id]);
+                }
+            ],
         ],
-        [
-            'label' => 'Luggage Capacity (Kg)',
-            'attr' => ['luggageCapacity'],
-            'class' => 'text-center',
-            'format' => [0, ' Kg']
-        ],
-        [
-            'label' => 'Seats (Rows - Columns)',
-            'attr' => ['minLinha', 'minCol', 'maxLinha', 'maxCol'],
-            'class' => 'text-center',
-            'format' => [0, 1, ' - ', 2 , 3]
-        ],
-        [
-            'label' => 'Economic',
-            'attr' => ['economicStart', 'economicStop'],
-            'class' => 'text-center',
-            'format' => [0, ' - ', 1]
-        ],
-        [
-            'label' => 'Normal',
-            'attr' => ['normalStart', 'normalStop'],
-            'class' => 'text-center',
-            'format' => [0, ' - ', 1]
-        ],
-        [
-            'label' => 'Luxury',
-            'attr' => ['luxuryStart', 'luxuryStop'],
-            'class' => 'text-center',
-            'format' => [0, ' - ', 1]
-        ],
-        [
-            'label' => 'Status',
-            'attr' => 'status',
-            'class' => 'text-center',
-        ],
-    ];
-    $tableBuilder = new TableBuilder($headers, $model);
-    $tableBuilder->generate();
-
-    ?>
-
+    ]); ?>
 
 </div>

@@ -38,7 +38,7 @@ class BalanceReq extends \yii\db\ActiveRecord
             [['status'], 'string'],
             [['requestDate', 'decisionDate'], 'safe'],
             [['client_id'], 'integer'],
-            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['client_id' => 'id']],
+            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'user_id']],
         ];
     }
 
@@ -74,14 +74,13 @@ class BalanceReq extends \yii\db\ActiveRecord
      */
     public function getClient()
     {
-        return $this->hasOne(User::class, ['id' => 'client_id']);
+        return $this->hasOne(Client::class, ['user_id' => 'client_id']);
     }
 
     public function setStatus($status)
     {
         $this->status = $status;
         $this->decisionDate = date('Y-m-d H:i:s');
-        return $this->save();
+        $this->save();
     }
-   
 }
