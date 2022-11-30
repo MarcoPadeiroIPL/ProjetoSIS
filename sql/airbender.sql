@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: airbender
 -- ------------------------------------------------------
--- Server version	10.9.3-MariaDB
+-- Server version	10.9.4-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,9 +18,6 @@
 --
 -- Table structure for table `airplanes`
 --
-DROP DATABASE IF EXISTS airbender;
-CREATE DATABASE airbender;
-USE airbender;
 
 DROP TABLE IF EXISTS `airplanes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -40,7 +37,7 @@ CREATE TABLE `airplanes` (
   `luxuryStop` char(1) NOT NULL,
   `status` enum('Active','Not working') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +64,7 @@ CREATE TABLE `airports` (
   `search` int(11) NOT NULL,
   `status` enum('Operational','Not Operational') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,8 +84,8 @@ DROP TABLE IF EXISTS `auth_assignment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `auth_assignment` (
-  `item_name` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `user_id` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `item_name` varchar(64) NOT NULL,
+  `user_id` varchar(64) NOT NULL,
   `created_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`item_name`,`user_id`),
   KEY `idx-auth_assignment-user_id` (`user_id`),
@@ -115,10 +112,10 @@ DROP TABLE IF EXISTS `auth_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `auth_item` (
-  `name` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name` varchar(64) NOT NULL,
   `type` smallint(6) NOT NULL,
-  `description` text COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `rule_name` varchar(64) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `rule_name` varchar(64) DEFAULT NULL,
   `data` blob DEFAULT NULL,
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
@@ -206,8 +203,8 @@ DROP TABLE IF EXISTS `auth_item_child`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `auth_item_child` (
-  `parent` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `child` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `parent` varchar(64) NOT NULL,
+  `child` varchar(64) NOT NULL,
   PRIMARY KEY (`parent`,`child`),
   KEY `child` (`child`),
   CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -305,7 +302,7 @@ DROP TABLE IF EXISTS `auth_rule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `auth_rule` (
-  `name` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name` varchar(64) NOT NULL,
   `data` blob DEFAULT NULL,
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
@@ -338,8 +335,8 @@ CREATE TABLE `balanceReq` (
   `client_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_client_id` (`client_id`),
-  CONSTRAINT `fk_client_id` FOREIGN KEY (`client_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `fk_client_id` FOREIGN KEY (`client_id`) REFERENCES `clients` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -365,7 +362,7 @@ CREATE TABLE `balanceReq_employee` (
   KEY `fk_employeeBalanceReq_id` (`employee_id`),
   CONSTRAINT `fk_balanceReq_id` FOREIGN KEY (`balanceReq_id`) REFERENCES `balanceReq` (`id`),
   CONSTRAINT `fk_employeeBalanceReq_id` FOREIGN KEY (`employee_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -390,7 +387,7 @@ CREATE TABLE `clients` (
   `application` tinyint(1) NOT NULL,
   PRIMARY KEY (`user_id`),
   CONSTRAINT `fk_usersClients_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -416,7 +413,7 @@ CREATE TABLE `configs` (
   `price` double(10,2) NOT NULL,
   `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -443,7 +440,7 @@ CREATE TABLE `employees` (
   KEY `fk_airport_id` (`airport_id`),
   CONSTRAINT `fk_airport_id` FOREIGN KEY (`airport_id`) REFERENCES `airports` (`id`),
   CONSTRAINT `fk_usersEmployees_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -477,7 +474,7 @@ CREATE TABLE `flights` (
   CONSTRAINT `fk_airplane_id` FOREIGN KEY (`airplane_id`) REFERENCES `airplanes` (`id`),
   CONSTRAINT `fk_airportArrival_id` FOREIGN KEY (`airportArrival_id`) REFERENCES `airports` (`id`),
   CONSTRAINT `fk_airportDeparture_id` FOREIGN KEY (`airportDeparture_id`) REFERENCES `airports` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -497,7 +494,7 @@ DROP TABLE IF EXISTS `migration`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `migration` (
-  `version` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `version` varchar(180) NOT NULL,
   `apply_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`version`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -533,7 +530,7 @@ CREATE TABLE `receipts` (
   `total` double(10,2) NOT NULL,
   `status` enum('Complete','Refunded') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -561,7 +558,7 @@ CREATE TABLE `refund` (
   PRIMARY KEY (`id`),
   KEY `fk_receiptRefund_id` (`receipt_id`),
   CONSTRAINT `fk_receiptRefund_id` FOREIGN KEY (`receipt_id`) REFERENCES `receipt` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -587,7 +584,7 @@ CREATE TABLE `refund_employee` (
   KEY `fk_refundEmployee_id` (`employee_id`),
   CONSTRAINT `fk_refundEmployee_id` FOREIGN KEY (`employee_id`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_refund_id` FOREIGN KEY (`refund_id`) REFERENCES `refund` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -617,7 +614,7 @@ CREATE TABLE `tariffs` (
   PRIMARY KEY (`id`),
   KEY `fk_flightTariff_id` (`flight_id`),
   CONSTRAINT `fk_flightTariff_id` FOREIGN KEY (`flight_id`) REFERENCES `flights` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -663,7 +660,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `fk_luggage_1` FOREIGN KEY (`luggage_1`) REFERENCES `configs` (`id`),
   CONSTRAINT `fk_luggage_2` FOREIGN KEY (`luggage_2`) REFERENCES `configs` (`id`),
   CONSTRAINT `fk_receipt_id` FOREIGN KEY (`receipt_id`) REFERENCES `receipts` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -684,15 +681,15 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `auth_key` varchar(32) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `password_hash` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `password_reset_token` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `auth_key` varchar(32) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `password_reset_token` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
   `status` smallint(6) NOT NULL DEFAULT 10,
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
-  `verification_token` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `verification_token` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
@@ -731,7 +728,7 @@ CREATE TABLE `userData` (
   UNIQUE KEY `phone` (`phone`),
   UNIQUE KEY `nif` (`nif`),
   CONSTRAINT `fk_userData_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -752,4 +749,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-11 11:41:05
+-- Dump completed on 2022-11-29 13:13:38

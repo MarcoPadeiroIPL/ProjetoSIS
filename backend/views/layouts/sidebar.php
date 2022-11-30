@@ -50,19 +50,23 @@
                         [
                             'label' => 'Flights',
                             'icon' => 'fa-solid fa-plane-departure',
+                            'url' => ['flight/index']
                         ],
                         [
                             'label' => 'Airplanes',
                             'icon' => 'fa-solid fa-plane',
+                            'url' => ['airplane/index']
                         ],
                         [
                             'label' => 'Tariffs',
                             'icon' => 'fa-solid fa-dollar-sign',
+                            'url' => ['tariff/index']
                         ],
                         ['label' => 'TICKETS', 'header' => true],
                         [
                             'label' => 'Tickets',
                             'icon' => 'fa-solid fa-clipboard-check',
+                            'url' => ['ticket/index']
                         ],
                     ],
                 ]);
@@ -79,23 +83,28 @@
                         [
                             'label' => 'Luggage',
                             'icon' => 'fa-solid fa-suitcase-rolling',
+                            'url' => ['config/index']
                         ],
                         [
                             'label' => 'Airplanes',
                             'icon' => 'fa-solid fa-plane',
+                            'url' => ['airplane/index']
                         ],
                         [
                             'label' => 'Tariffs',
                             'icon' => 'fa-solid fa-dollar-sign',
+                            'url' => ['tariff/index']
                         ],
                         ['label' => 'CUSTOMERS', 'header' => true],
                         [
                             'label' => 'Balance Requests',
                             'icon' => 'fa-solid fa-comment-dollar',
+                            'url' => ['balance-req/index']
                         ],
                         [
                             'label' => 'Refunds',
                             'icon' => 'fa-solid fa-money-bill',
+                            'url' => ['refund/index']
                         ],
                     ],
                 ]);
@@ -117,6 +126,7 @@
                         [
                             'label' => 'Luggage',
                             'icon' => 'fa-solid fa-suitcase-rolling',
+                            'url' => ['config/index']
                         ],
                         [
                             'label' => 'Airports',
@@ -126,27 +136,33 @@
                         [
                             'label' => 'Flights',
                             'icon' => 'fa-solid fa-plane-departure',
+                            'url' => ['flight/index']
                         ],
                         [
                             'label' => 'Airplanes',
                             'icon' => 'fa-solid fa-plane',
+                            'url' => ['airplane/index']
                         ],
                         [
                             'label' => 'Tariffs',
                             'icon' => 'fa-solid fa-dollar-sign',
+                            'url' => ['tariff/index']
                         ],
                         ['label' => 'CUSTOMERS', 'header' => true],
                         [
                             'label' => 'Clients',
                             'icon' => 'fa-solid fa-user',
+                            'url' => ['client/index']
                         ],
                         [
                             'label' => 'Balance Requests',
                             'icon' => 'fa-solid fa-comment-dollar',
+                            'url' => ['balance-req/index']
                         ],
                         [
                             'label' => 'Refunds',
                             'icon' => 'fa-solid fa-money-bill',
+                            'url' => ['refund/index']
                         ],
                     ],
                 ]);

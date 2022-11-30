@@ -54,11 +54,11 @@ class UserData extends \yii\db\ActiveRecord
     {
         return [
             'user_id' => 'User ID',
-            'fName' => 'F Name',
+            'fName' => 'First Name',
             'surname' => 'Surname',
             'birthdate' => 'Birthdate',
             'phone' => 'Phone',
-            'nif' => 'Nif',
+            'nif' => 'NIF',
             'gender' => 'Gender',
             'accCreationDate' => 'Acc Creation Date',
         ];

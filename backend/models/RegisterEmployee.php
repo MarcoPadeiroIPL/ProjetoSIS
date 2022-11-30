@@ -6,7 +6,6 @@ use Yii;
 use yii\base\Model;
 use common\models\User;
 use common\models\UserData;
-use backend\models\Airport;
 use backend\models\Employee;
 
 /**
@@ -122,7 +121,7 @@ class RegisterEmployee extends Model
         // tabela EMPLOYEE
         $employee->user_id = $user->getId();
         $employee->salary = $this->salary;
-        //$employee->airport_id = $this->airport_id;
+        $employee->airport_id = $this->airport_id;
 
 
         // RBAC

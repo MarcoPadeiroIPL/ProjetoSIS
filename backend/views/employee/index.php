@@ -1,10 +1,11 @@
 <?php
 
-use backend\models\Employee;
+use common\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -14,29 +15,38 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="employee-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Employee', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
+    <div class="d-flex m-2 justify-content-end">
+        <?= Html::a('+ Create Employee', ['create'], ['class' => 'btn btn-dark']) ?>
+    </div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'user_id',
-            'salary',
-            'airport_id',
+            'id',
+            'userData.fName',
+            'userData.surname',
+            'email',
+            'userData.phone',
+            'userData.gender',
+            'authAssignment.item_name',
+            'employee.salary',
+            [
+                'label' => 'Airport',
+                'value' => function ($model) {
+                    return isset($model->employee->airport) ? $model->employee->airport->country . ' - ' . $model->employee->airport->city : "Not set";
+                }
+            ],
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Employee $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'user_id' => $model->user_id]);
-                 }
+                'urlCreator' => function ($action, User $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'user_id' => $model->id]);
+                }
             ],
         ],
     ]); ?>
+
 
 
 </div>

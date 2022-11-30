@@ -4,14 +4,12 @@ namespace backend\controllers;
 
 use backend\models\RegisterEmployee;
 use backend\models\Employee;
+use common\models\User;
 use common\models\Airport;
 
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
-<<<<<<< HEAD
-=======
 use yii\filters\AccessControl;
->>>>>>> master
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,19 +24,6 @@ class EmployeeController extends Controller
      */
     public function behaviors()
     {
-<<<<<<< HEAD
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-=======
         return [
             'access' => [
                 'class' => AccessControl::class,
@@ -65,7 +50,7 @@ class EmployeeController extends Controller
                     [
                         'actions' => ['index', 'create', 'delete', 'update'],
                         'allow' => false,
-                        'roles' => ['client', '?'],
+                        'roles' => ['supervisor', 'ticketOperator'],
                     ],
                 ],
             ],
@@ -77,7 +62,6 @@ class EmployeeController extends Controller
                 ],
             ],
         ];
->>>>>>> master
     }
 
     /**
@@ -87,23 +71,25 @@ class EmployeeController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Employee::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'user_id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        if (\Yii::$app->user->can('listEmployee')) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => User::find()->where('status=10')->innerJoin('employees', 'user.id=employees.user_id'),
+                /*
+                'pagination' => [
+                    'pageSize' => 50
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'user_id' => SORT_DESC,
+                    ]
+                ],
+                */
+            ]);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**
@@ -114,9 +100,11 @@ class EmployeeController extends Controller
      */
     public function actionView($user_id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($user_id),
-        ]);
+        if (\Yii::$app->user->can('readEmployee')) {
+            return $this->render('view', [
+                'model' => $this->findModel($user_id),
+            ]);
+        }
     }
 
     /**
@@ -126,19 +114,32 @@ class EmployeeController extends Controller
      */
     public function actionCreate()
     {
-        $model = new RegisterEmployee();
-        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        if (\Yii::$app->user->can('createEmployee')) {
+            $model = new RegisterEmployee();
+            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+            $roles = (new \yii\db\Query())
+                ->select(['name'])
+                ->from('auth_item')
+                ->where('type = 1 and name != "client"')
+                ->all();
+            $temp = [];
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->register()) {
-                return $this->redirect(['view', 'user_id' => $model->user_id]);
+            foreach ($roles as $role) {
+                $temp[$role['name']] = $role['name'];
             }
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-            'airports' => $airports
-        ]);
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->register()) {
+                    return $this->redirect(['view', 'id' => $model->user_id]);
+                }
+            }
+
+            return $this->render('create', [
+                'model' => $model,
+                'airports' => $airports,
+                'roles' => $temp
+            ]);
+        }
     }
 
     /**
@@ -150,15 +151,17 @@ class EmployeeController extends Controller
      */
     public function actionUpdate($user_id)
     {
-        $model = $this->findModel($user_id);
+        if (\Yii::$app->user->can('updateEmployee')) {
+            $model = $this->findModel($user_id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'user_id' => $model->user_id]);
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->user_id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -170,9 +173,10 @@ class EmployeeController extends Controller
      */
     public function actionDelete($user_id)
     {
-        $this->findModel($user_id)->delete();
-
-        return $this->redirect(['index']);
+        if (\Yii::$app->user->can('deleteEmployee')) {
+            User::findOne($user_id)->deleteUser();
+            return $this->redirect(['index']);
+        }
     }
 
     /**
