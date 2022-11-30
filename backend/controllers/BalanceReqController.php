@@ -60,7 +60,7 @@ class BalanceReqController extends Controller
     {
         if (\Yii::$app->user->can('listBalanceReq')) {
             $dataProvider = new ActiveDataProvider([
-                'query' => BalanceReq::find(),
+                'query' => BalanceReq::find()->where('status="Ongoing"'),
                 /*
                 'pagination' => [
                     'pageSize' => 50
@@ -118,13 +118,14 @@ class BalanceReqController extends Controller
         }
     }
 
-    public function actionAccept($id, $employee_id)
+    public function actionAccept($id)
     {
+        $employee_id = \Yii::$app->user->getId();
         if (\Yii::$app->user->can('updateBalanceReq')) {
             $balanceReq = $this->findModel($id);
             if ($balanceReq->status == 'Ongoing') {
                 // add balance to account
-                $client = Client::findOne([$balanceReq->client_id]);
+                $client = Client::findOne(['user_id' => $balanceReq->client_id]);
                 $client->addBalance($balanceReq->amount);
 
                 // assign responsible employee
@@ -134,14 +135,16 @@ class BalanceReqController extends Controller
                 $balanceReqEmployee->save();
 
                 $balanceReq->setStatus('Accepted');
+                $client->save();
             } else {
                 // Not allowed to change status
             }
             return $this->redirect('index');
         }
     }
-    public function actionDecline($id, $employee_id)
+    public function actionDecline($id)
     {
+        $employee_id = \Yii::$app->user->getId();
         if (\Yii::$app->user->can('updateBalanceReq')) {
             $balanceReq = $this->findModel($id);
             if ($balanceReq->status == 'Ongoing') {

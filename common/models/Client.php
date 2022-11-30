@@ -72,9 +72,9 @@ class Client extends \yii\db\ActiveRecord
 
     public function addBalance($amount)
     {
-        if($amount > 0){
+        if ($amount > 0) {
             $this->balance += $amount;
-            return $this->save();
+            $this->save();
         }
     }
 }
