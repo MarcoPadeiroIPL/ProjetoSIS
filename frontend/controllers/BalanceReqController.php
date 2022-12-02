@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Client;
+use yii\filters\AccessControl;
 
 
 
@@ -22,17 +23,34 @@ class BalanceReqController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'history', 'delete'],
+                        'allow' => true,
+                        'roles' => ['client'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'history', 'delete'],
+                        'allow' => false,
+                        'roles' => ['admin', 'supervisor', '?', 'ticketOperator'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -42,28 +60,28 @@ class BalanceReqController extends Controller
      */
     public function actionIndex()
     {
-        $client = Client::findOne([Yii::$app->user->getId()]);
-        $dataProvider = new ActiveDataProvider([
-            'query' => BalanceReq::find()->where(['client_id'=> Yii::$app->user->identity]),
-            
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
-        
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'client' => $client,
-            
-            
-        ]);
+        if (\Yii::$app->user->can('listBalanceReq')) {
+            $client = Client::findOne([Yii::$app->user->getId()]);
+            $dataProvider = new ActiveDataProvider([
+                'query' => BalanceReq::find()->where(['client_id' => Yii::$app->user->identity])->andWhere(['status' => 'Ongoing']),
+
+                'pagination' => [
+                    'pageSize' => 5
+                ],
+                'sort' => [
+                    'defaultOrder' => [
+                        'id' => SORT_ASC,
+                    ]
+                ],
+            ]);
+
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+                'client' => $client,
+
+
+            ]);
+        }
     }
 
     /**
@@ -86,29 +104,58 @@ class BalanceReqController extends Controller
      */
     public function actionCreate()
     {
-        $model = new BalanceReq();
-        
+        if (\Yii::$app->user->can('createBalanceReq')) {
+            $model = new BalanceReq();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            } else {
+                $model->loadDefaultValues();
             }
-        } else {
-            $model->loadDefaultValues();
+
+            return $this->render('create', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
-    
 
-   
+
+
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (\Yii::$app->user->can('deleteBalanceReq')) {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }
+    }
+
+    public function actionHistory()
+    {
+        if (\Yii::$app->user->can('listBalanceReq')) {
+            if (\Yii::$app->user->can('listBalanceReq')) {
+                $dataProvider = new ActiveDataProvider([
+                    'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
+
+                    'pagination' => [
+                        'pageSize' => 10
+                    ],
+                    'sort' => [
+                        'defaultOrder' => [
+                            'id' => SORT_ASC,
+                        ]
+                    ],
+
+                ]);
+
+                return $this->render('history', [
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+        }
     }
 
     /**

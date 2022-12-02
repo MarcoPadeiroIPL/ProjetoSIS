@@ -77,6 +77,8 @@ class BalanceReq extends \yii\db\ActiveRecord
         return $this->hasOne(Client::class, ['user_id' => 'client_id']);
     }
 
+
+
     public function setStatus($status)
     {
         $this->status = $status;
