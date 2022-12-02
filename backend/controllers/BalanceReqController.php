@@ -153,7 +153,7 @@ class BalanceReqController extends Controller
                 $balanceReqEmployee->balanceReq_id = $id;
                 $balanceReqEmployee->employee_id = $employee_id;
                 $balanceReqEmployee->save();
-                $balanceReq->setStatus('Accepted');
+                $balanceReq->setStatus('Declined');
             } else {
                 // Not allowed to change status
             }
