@@ -38,24 +38,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'accept' => function ($url) {
                         return Html::a(
-                            '<span>Accept</span>',
+                            '<span class="btn btn-success">Accept</span>',
                             $url,
                             [
                                 'title' => 'Accept',
                                 'data-pjax' => '0',
                             ],
-                            ['class' => 'btn btn-success']
                         );
                     },
                     'decline' => function ($url) {
                         return Html::a(
-                            '<span>Decline</span>',
+                            '<span class="btn btn-danger">Decline</span>',
                             $url,
                             [
                                 'title' => 'Decline',
                                 'data-pjax' => '0',
                             ],
-                            ['class' => 'btn btn-danger']
                         );
                     }
                 ],
