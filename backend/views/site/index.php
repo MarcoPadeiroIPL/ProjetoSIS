@@ -1,19 +1,29 @@
 <?php
+/* TODO:
+    -Mostrar a percentagem do aeroporto mais procurado.
+    -Mostrar a percentagem dos aeroportos operacionais.
+*/
+
+use common\models\BalanceReq;
+use common\models\Airport;
+
 $this->title = 'Starter Page';
 $this->params['breadcrumbs'] = [['label' => $this->title]];
 ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6">
-            <?= \hail812\adminlte\widgets\Alert::widget([
-                'type' => 'success',
-                'body' => '<h3>Congratulations!</h3>',
-            ]) ?>
-            <?= \hail812\adminlte\widgets\Callout::widget([
-                'type' => 'danger',
-                'head' => 'I am a danger callout!',
-                'body' => 'There is a problem that we need to fix. A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.'
-            ]) ?>
+            <?php if ($balanceReqCount == 0) { ?>
+                <?= \hail812\adminlte\widgets\Alert::widget([
+                    'type' => 'success',
+                    'body' => '<h3>There are no Balance Requests Pending!</h3>',
+                ]) ?>
+            <?php } else { ?>
+                <?= \hail812\adminlte\widgets\Callout::widget([
+                    'type' => 'danger',
+                    'body' => '<h3>' . $balanceReqCount . ' Balance Requests Pending!</h3>'
+                ]) ?>
+            <?php } ?>
         </div>
     </div>
 
@@ -29,10 +39,11 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
 
     <div class="row">
         <div class="col-md-4 col-sm-6 col-12">
+
             <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Messages',
-                'number' => '1,410',
-                'icon' => 'far fa-envelope',
+                'text' => 'Pending Balance Requests',
+                'number' => $balanceReqCount,
+                'icon' => 'fas fa-comment-dollar',
             ]) ?>
         </div>
         <div class="col-md-4 col-sm-6 col-12">
@@ -66,35 +77,58 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
             ]) ?>
         </div>
         <div class="col-md-4 col-sm-6 col-12">
-            <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
-                'text' => 'Likes',
-                'number' => '41,410',
-                'theme' => 'success',
-                'icon' => 'far fa-thumbs-up',
-                'progress' => [
-                    'width' => '70%',
-                    'description' => '70% Increase in 30 Days'
-                ]
-            ]) ?>
-            <?= \hail812\adminlte\widgets\Ribbon::widget([
-                'id' => $infoBox->id . '-ribbon',
-                'text' => 'Ribbon',
-            ]) ?>
+            <?php if ($airportCount != 0) { ?>
+                <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
+                    'text' => 'Most Popular Destination',
+                    'number' => $mostSearchedAirport->country . ' - ' . $mostSearchedAirport->city,
+                    'theme' => 'success',
+                    'icon' => 'far fa-thumbs-up',
+                    'progress' => [
+                        'width' => $mostSearchedAirportPercentage . '%',
+                        'description' => 'The destination with most searches.'
+                    ]
+                ]) ?>
+                <?= \hail812\adminlte\widgets\Ribbon::widget([
+                    'id' => $infoBox->id . '-ribbon',
+                    'text' => 'Popular',
+                ]) ?> <?php } else { ?>
+                <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
+                            'text' => 'Most Popular Destination',
+                            'number' => 'No Searches Yet',
+                            'theme' => 'success',
+                            'icon' => 'far fa-thumbs-up',
+                            'progress' => [
+                                'width' => '0%',
+                                'description' => 'There are no searches yet.'
+                            ]
+                        ]) ?> <?php } ?>
             <?php \hail812\adminlte\widgets\InfoBox::end() ?>
         </div>
         <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Events',
-                'number' => '41,410',
-                'theme' => 'gradient-warning',
-                'icon' => 'far fa-calendar-alt',
-                'progress' => [
-                    'width' => '70%',
-                    'description' => '70% Increase in 30 Days'
-                ],
-                'loadingStyle' => true
-            ]) ?>
+            <?php if ($airportCount != 0) { ?>
+                <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
+                    'text' => 'Least popular Destination',
+                    'number' => $leastSearchedAirport->country . ' - ' . $leastSearchedAirport->city,
+                    'theme' => 'danger',
+                    'icon' => 'far fa-thumbs-down',
+                    'progress' => [
+                        'width' => $leastSearchedAirportPercentage . '%',
+                        'description' => 'The destination with least searches.'
+                    ]
+                ]) ?> <?php } else { ?>
+                <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
+                            'text' => 'Least popular Destination',
+                            'number' => 'No Searches yet',
+                            'theme' => 'danger',
+                            'icon' => 'far fa-thumbs-down',
+                            'progress' => [
+                                'width' => '0%',
+                                'description' => 'There are no searches yet.'
+                            ]
+                        ]) ?> <?php } ?>
+            <?php \hail812\adminlte\widgets\InfoBox::end() ?>
         </div>
+
     </div>
 
     <div class="row">

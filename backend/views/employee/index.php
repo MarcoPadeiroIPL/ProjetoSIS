@@ -25,8 +25,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
-            'userData.fName',
-            'userData.surname',
+            [
+                'label' => 'Full Name',
+                'value' => function ($model) {
+                    return $model->userData->fName . '   ' . $model->userData->surname;
+                }
+            ],
             'email',
             'userData.phone',
             'userData.gender',

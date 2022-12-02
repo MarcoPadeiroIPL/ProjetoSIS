@@ -8,6 +8,8 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
+use common\models\BalanceReq;
+use common\models\Airport;
 
 /**
  * Site controller
@@ -73,7 +75,30 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $airportCount = Airport::find()->count();
+
+        $mostSearchedAirport = Airport::find()->orderBy(['search' => SORT_DESC])->one();
+        if(!is_null($mostSearchedAirport)) 
+            $mostSearchedAirportPercentage = $mostSearchedAirport->search;
+        else 
+            $mostSearchedAirportPercentage = 0;
+
+        $leastSearchedAirport = Airport::find()->orderBy(['search' => SORT_ASC])->one();
+        if(!is_null($leastSearchedAirport)) 
+            $leastSearchedAirportPercentage = $leastSearchedAirport->search;
+        else 
+        $leastSearchedAirportPercentage = 0;
+
+        $balanceReqCount = BalanceReq::find()->where(['status' => 'Ongoing'])->count();
+
+        return $this->render('index', [
+            'balanceReqCount' => $balanceReqCount,
+            'mostSearchedAirport' => $mostSearchedAirport,
+            'mostSearchedAirportPercentage' => $mostSearchedAirportPercentage,
+            'leastSearchedAirport' => $leastSearchedAirport,
+            'leastSearchedAirportPercentage' => $leastSearchedAirportPercentage,
+            'airportCount' => $airportCount,
+        ]);
     }
 
     /**
