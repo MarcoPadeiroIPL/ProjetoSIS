@@ -6,28 +6,21 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
-
-
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 ?>
-<div class="balance-req-index">
+<div class="balance-req-history">
     <div class="gtco-section">
         <div class="gtco-container">
             <div class="row">
-                <div class="col-4 text-center align-self-center">
-                    <h1>My balance:</h1>
-                    <h1><?= $client->balance ?>€</h1>
-                    <?= Html::a('Create Balance Req', ['create'], ['class' => 'btn btn-success']) ?>
-                </div>
                 <div class="col">
                     <div class="row">
                         <div class="col-6">
-                            <h2>Current balance requests</h2>
+                            <h1>History</h1>
                         </div>
                         <div class=" col">
-                            <h2 class="text-right"><a href="history">View history</a></h2>
+                            <h2 class="text-right"><a href="index">View pending</a></h2>
                         </div>
                     </div>
 
@@ -35,15 +28,20 @@ use yii\grid\GridView;
                         'dataProvider' => $dataProvider,
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
-                            'amount',
+                            [
+                                'label' => 'Amount',
+                                'value' => function ($model) {
+                                    return $model->amount . '€';
+                                }
+                            ],
                             'status',
                             'requestDate',
-                            //'client_id',  
+                            'decisionDate',
                             [
-                                'class' => ActionColumn::className(),
-                                'template' => '{delete}',
-
+                                'label' => 'Decision By',
+                                'value' => 'balanceReqEmployee.employee.username'
                             ],
+
                         ],
                     ]); ?>
                 </div>
@@ -51,5 +49,4 @@ use yii\grid\GridView;
         </div>
     </div>
 
-</div>
 </div>

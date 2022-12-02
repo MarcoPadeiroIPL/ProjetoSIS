@@ -133,6 +133,31 @@ class BalanceReqController extends Controller
         }
     }
 
+    public function actionHistory()
+    {
+        if (\Yii::$app->user->can('listBalanceReq')) {
+            if (\Yii::$app->user->can('listBalanceReq')) {
+                $dataProvider = new ActiveDataProvider([
+                    'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
+
+                    'pagination' => [
+                        'pageSize' => 10
+                    ],
+                    'sort' => [
+                        'defaultOrder' => [
+                            'id' => SORT_ASC,
+                        ]
+                    ],
+
+                ]);
+
+                return $this->render('history', [
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+        }
+    }
+
     /**
      * Finds the BalanceReq model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

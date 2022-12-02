@@ -49,7 +49,7 @@ AppAsset::register($this);
                                 echo '<li class="has-dropdown">
                                             <a href="#">' . Yii::$app->user->identity->username . '</a>
                                                 <ul class="dropdown">
-                                                    <li>' . Html::a('Profile', ['/client/view']) . '</li>
+                                                    <li>' . Html::a('Profile', ['/client/index']) . '</li>
                                                     <li>' . Html::a('My balance', ['/balance-req/index']) . '</li>
                                                     <li>' . Html::a('My flights', ['/flight/view']) . '</li>
                                                     <li>' . Html::a('My receipts', ['/receipt/view']) . '</li>
