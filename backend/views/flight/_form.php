@@ -15,17 +15,47 @@ use yii\jui\DatePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <?=
+            $form->field($model, 'departureDate')->widget(DatePicker::classname(), [
+                'language' => 'en',
+                'dateFormat' => 'yyyy-MM-dd',
+                'inline' => true,
+                'clientOptions' => [
+                    'changeMonth' => true,
+                    'changeYear' => true,
+                    'minDate' => date('Y-m-d'),
+                    'maxDate' => '+1Y',
+                ],
+            ]) ?>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <?=
+            $form->field($model, 'arrivalDate')->widget(DatePicker::classname(), [
+                'language' => 'en',
+                'dateFormat' => 'yyyy-MM-dd',
+                'inline' => true,
+                'clientOptions' => [
+                    'changeMonth' => true,
+                    'changeYear' => true,
+                    'minDate' => date('Y-m-d'),
+                    'maxDate' => '+1Y',
+                ],
+            ]) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports)->label('Airport Departure') ?>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <?= $form->field($model, 'airportArrival_id')->dropDownList($airports, ['prompt' => ''])->label('Airport Arrival') ?>
+        </div>
+    </div>
     <?= $form->field($model, 'airplane_id')->dropDownList($airplanes)->label('Airplane') ?>
 
-    <?= $form->field($model, 'departureDate')->textInput() ?>
-
-    <?= $form->field($model, 'arrivalDate')->textInput() ?>
-
-    <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports)->label('Airport Departure') ?>
-
-    <?= $form->field($model, 'airportArrival_id')->dropDownList($airports, ['prompt' => ''])->label('Airport Arrival') ?>
-
-    <?= $form->field($model, 'status')->dropDownList(['Available' => 'Available', 'Unavailable' => 'Unavailable', 'Complete' => 'Complete', 'Canceled' => 'Canceled',]) ?>
+    <?= $form->field($model, 'status')->hiddenInput(['value'=> 'Available']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
