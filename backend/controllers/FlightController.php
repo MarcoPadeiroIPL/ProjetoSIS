@@ -3,10 +3,14 @@
 namespace backend\controllers;
 
 use common\models\Flight;
+use common\models\Airport;
+use common\models\Airplane;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use yii\helpers\ArrayHelper;
 
 /**
  * FlightController implements the CRUD actions for Flight model.
@@ -41,6 +45,11 @@ class FlightController extends Controller
         if (\Yii::$app->user->can('listFlight')) {
             $dataProvider = new ActiveDataProvider([
                 'query' => Flight::find(),
+                'sort' => [
+                    'defaultOrder' => [
+                        'departureDate' => SORT_ASC,
+                    ]
+                ],
                 /*
                 'pagination' => [
                     'pageSize' => 50
@@ -83,6 +92,8 @@ class FlightController extends Controller
     {
         if (\Yii::$app->user->can('createFlight')) {
             $model = new Flight();
+            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+            $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
 
             if ($this->request->isPost) {
                 if ($model->load($this->request->post()) && $model->save()) {
@@ -94,6 +105,8 @@ class FlightController extends Controller
 
             return $this->render('create', [
                 'model' => $model,
+                'airports' => $airports,
+                'airplanes' => $airplanes,
             ]);
         }
     }

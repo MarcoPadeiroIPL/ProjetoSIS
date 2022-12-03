@@ -24,8 +24,18 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'id',
             'airplane.id',
-            'airportDeparture.country',
-            'airportArrival.country',
+            [
+                'label' => 'Departure',
+                'value' => function ($model) {
+                    return $model->airportDeparture->city . ' - '. '(' . $model->airportDeparture->country . ')';
+                }
+            ],
+            [
+                'label' => 'Destination',
+                'value' => function ($model) {
+                    return $model->airportArrival->city . ' - '. '(' . $model->airportArrival->country . ')';
+                }
+            ],
             'departureDate',
             'arrivalDate',
             'status',
