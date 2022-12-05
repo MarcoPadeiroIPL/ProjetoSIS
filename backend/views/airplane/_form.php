@@ -14,12 +14,12 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col"><?= $form->field($model, 'luggageCapacity')->textInput()->label('Luggage Capacity (Kg)') ?></div>
     </div>
+    <div class="col"><?= $form->field($model, 'minLinha')->hiddenInput(['value' => 1])->label(false) ?></div>
     <div class="row">
-        <div class="col"><?= $form->field($model, 'minLinha')->hiddenInput(['value' => 1])->label(false) ?></div>
         <div class="col"><?= $form->field($model, 'maxLinha')->textInput() ?></div>
     </div>
+    <div class="col"><?= $form->field($model, 'minCol')->hiddenInput(['value' => 'A'])->label(false) ?></div>
     <div class="row">
-        <div class="col"><?= $form->field($model, 'minCol')->hiddenInput(['value' => 'A'])->label(false) ?></div>
         <div class="col"><?= $form->field($model, 'maxCol')->textInput() ?></div>
     </div>
     <div class="row">

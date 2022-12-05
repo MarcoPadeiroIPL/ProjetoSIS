@@ -33,13 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'email',
             'userData.phone',
-            [ 
+            [
                 'label' => 'Gender',
                 'value' => function ($model) {
-                    if ($model->userData->gender == 'M') 
-                     return $model->userData->gender = 'Male';
+                    if ($model->userData->gender == 'M')
+                        return $model->userData->gender = 'Male';
                     else
-                     return $model->userData->gender = 'Female';
+                        return $model->userData->gender = 'Female';
                 }
             ],
             'authAssignment.item_name',
