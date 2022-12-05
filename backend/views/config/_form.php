@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'price')->textInput() ?>
 
-    <?= $form->field($model, 'active')->textInput() ?>
+    <?= $form->field($model, 'active')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

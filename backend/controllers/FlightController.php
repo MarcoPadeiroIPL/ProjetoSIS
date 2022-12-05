@@ -122,6 +122,8 @@ class FlightController extends Controller
     {
         if (\Yii::$app->user->can('updateFlight')) {
             $model = $this->findModel($id);
+            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+            $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
 
             if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -129,6 +131,8 @@ class FlightController extends Controller
 
             return $this->render('update', [
                 'model' => $model,
+                'airports' => $airports,
+                'airplanes' => $airplanes,
             ]);
         }
     }

@@ -3,10 +3,12 @@
 namespace backend\controllers;
 
 use common\models\Tariff;
+use common\models\Flight;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * TariffController implements the CRUD actions for Tariff model.
@@ -83,6 +85,7 @@ class TariffController extends Controller
     {
         if (\Yii::$app->user->can('createTariff')) {
             $model = new Tariff();
+            $flights = ArrayHelper::map(Flight::find()->asArray()->all(), 'id', 'id');
 
             if ($this->request->isPost) {
                 if ($model->load($this->request->post()) && $model->save()) {
@@ -94,6 +97,7 @@ class TariffController extends Controller
 
             return $this->render('create', [
                 'model' => $model,
+                'flights' => $flights,
             ]);
         }
     }
@@ -109,6 +113,7 @@ class TariffController extends Controller
     {
         if (\Yii::$app->user->can('updateTariff')) {
             $model = $this->findModel($id);
+            $flights = ArrayHelper::map(Flight::find()->asArray()->all(), 'id', 'id');
 
             if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -116,6 +121,7 @@ class TariffController extends Controller
 
             return $this->render('update', [
                 'model' => $model,
+                'flights' => $flights,
             ]);
         }
     }

@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Attribute\Depends;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\jui\DatePicker;
@@ -9,7 +10,20 @@ use yii\jui\DatePicker;
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
+<?= ''
+/*todo: quando seleciono a data de partida, a data de chegada deve ser maior que a data de partida
+                // e não deverá deixar selecionar uma data anterior a data de partida no calendário da data de chegada
 
+                 'options' => [
+                    'onchange' => '
+                        var departureDate = $("#flight-departuredate").val();
+                        var arrivalDate = $("#flight-arrivaldate").val();
+                        if (departureDate > arrivalDate) {
+                            alert("Arrival date must be after departure date");
+                            $("#flight-arrivaldate").val("");
+                        }
+                    ',
+                ], */ ?>
 
 <div class="flight-form">
 
@@ -55,7 +69,7 @@ use yii\jui\DatePicker;
     </div>
     <?= $form->field($model, 'airplane_id')->dropDownList($airplanes)->label('Airplane') ?>
 
-    <?= $form->field($model, 'status')->hiddenInput(['value'=> 'Available']) ?>
+    <?= $form->field($model, 'status')->hiddenInput(['value' => 'Available'])->label(false) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
