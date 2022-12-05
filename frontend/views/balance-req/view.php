@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <a href="index">Voltar atrás</a>
     </p>
 
     <?= DetailView::widget([

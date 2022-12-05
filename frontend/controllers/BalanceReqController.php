@@ -32,7 +32,7 @@ class BalanceReqController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'create', 'history', 'delete'],
+                        'actions' => ['index', 'create', 'history', 'delete', 'view'],
                         'allow' => true,
                         'roles' => ['client'],
                     ],
