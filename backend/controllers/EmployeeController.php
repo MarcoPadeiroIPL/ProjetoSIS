@@ -117,15 +117,12 @@ class EmployeeController extends Controller
         if (\Yii::$app->user->can('createEmployee')) {
             $model = new RegisterEmployee();
             $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $roles = (new \yii\db\Query())
-                ->select(['name'])
-                ->from('auth_item')
-                ->where('type = 1 and name != "client"')
-                ->all();
-            $temp = [];
+            $temp = \Yii::$app->authManager->getRoles();
+            $roles = [];
 
-            foreach ($roles as $role) {
-                $temp[$role['name']] = $role['name'];
+            foreach ($temp as $role) {
+                if ($role->name != 'client')
+                    $roles[$role->name] = $role->name;
             }
 
             if ($this->request->isPost) {
@@ -136,7 +133,7 @@ class EmployeeController extends Controller
             return $this->render('create', [
                 'model' => $model,
                 'airports' => $airports,
-                'roles' => $temp
+                'roles' => $roles
             ]);
         }
     }
@@ -149,7 +146,7 @@ class EmployeeController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($user_id)
-    {   
+    {
         if (\Yii::$app->user->can('updateEmployee')) {
             $model = $this->findModel($user_id);
             $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
