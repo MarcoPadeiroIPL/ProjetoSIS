@@ -259,7 +259,7 @@ class RbacController extends Controller
         $auth->addChild($client, $createBalanceReq);
         $auth->addChild($client, $readBalanceReq);
         $auth->addChild($client, $listBalanceReq);
-        $auth->addChild($client, $updateBalanceReq);
+        $auth->addChild($client, $deleteBalanceReq);
         $auth->addChild($client, $readConfig);
         $auth->addChild($client, $listConfig);
         $auth->addChild($client, $createRefund);

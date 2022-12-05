@@ -18,6 +18,9 @@
 --
 -- Table structure for table `airplanes`
 --
+DROP DATABASE airbender;
+CREATE DATABASE airbender;
+USE airbender;
 
 DROP TABLE IF EXISTS `airplanes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -37,7 +40,7 @@ CREATE TABLE `airplanes` (
   `luxuryStop` char(1) NOT NULL,
   `status` enum('Active','Not working') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,6 +49,9 @@ CREATE TABLE `airplanes` (
 
 LOCK TABLES `airplanes` WRITE;
 /*!40000 ALTER TABLE `airplanes` DISABLE KEYS */;
+INSERT INTO `airplanes` VALUES
+(1,240,1,'A',6,'F','E','F','C','D','A','B','Active'),
+(2,310,1,'A',9,'I','H','I','F','G','A','D','Active');
 /*!40000 ALTER TABLE `airplanes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +70,7 @@ CREATE TABLE `airports` (
   `search` int(11) NOT NULL,
   `status` enum('Operational','Not Operational') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,6 +79,11 @@ CREATE TABLE `airports` (
 
 LOCK TABLES `airports` WRITE;
 /*!40000 ALTER TABLE `airports` DISABLE KEYS */;
+INSERT INTO `airports` VALUES
+(1,'Portugal','PT','Lisboa',60,'Operational'),
+(2,'France','FR','Paris',90,'Operational'),
+(3,'United Kingdom','UK','London',95,'Operational'),
+(4,'Spain','ES','Madrid',65,'Operational');
 /*!40000 ALTER TABLE `airports` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +111,9 @@ CREATE TABLE `auth_assignment` (
 LOCK TABLES `auth_assignment` WRITE;
 /*!40000 ALTER TABLE `auth_assignment` DISABLE KEYS */;
 INSERT INTO `auth_assignment` VALUES
-('admin','1',1667908213);
+('admin','1',1670254804),
+('client','6',1670255085),
+('client','7',1670255105);
 /*!40000 ALTER TABLE `auth_assignment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,65 +146,65 @@ CREATE TABLE `auth_item` (
 LOCK TABLES `auth_item` WRITE;
 /*!40000 ALTER TABLE `auth_item` DISABLE KEYS */;
 INSERT INTO `auth_item` VALUES
-('admin',1,NULL,NULL,NULL,1667908213,1667908213),
-('client',1,NULL,NULL,NULL,1667908213,1667908213),
-('createAdmin',2,'Create a Admin',NULL,NULL,1667908213,1667908213),
-('createAirplane',2,'Create a Airplane',NULL,NULL,1667908213,1667908213),
-('createAirport',2,'Create a Airport',NULL,NULL,1667908213,1667908213),
-('createBalanceReq',2,'Create a BalanceReq',NULL,NULL,1667908213,1667908213),
-('createClient',2,'Create a Client',NULL,NULL,1667908213,1667908213),
-('createConfig',2,'Create a Config',NULL,NULL,1667908213,1667908213),
-('createEmployee',2,'Create a Employee',NULL,NULL,1667908213,1667908213),
-('createFlight',2,'Create a Flight',NULL,NULL,1667908213,1667908213),
-('createRefund',2,'Create a Refund',NULL,NULL,1667908213,1667908213),
-('createTariff',2,'Create a Tariff',NULL,NULL,1667908213,1667908213),
-('createTicket',2,'Create a Ticket',NULL,NULL,1667908213,1667908213),
-('deleteAdmin',2,'Delete a Admin',NULL,NULL,1667908213,1667908213),
-('deleteAirplane',2,'Delete a Airplane',NULL,NULL,1667908213,1667908213),
-('deleteAirport',2,'Delete a Airport',NULL,NULL,1667908213,1667908213),
-('deleteBalanceReq',2,'Delete a BalanceReq',NULL,NULL,1667908213,1667908213),
-('deleteClient',2,'Delete a Client',NULL,NULL,1667908213,1667908213),
-('deleteConfig',2,'Delete a Config',NULL,NULL,1667908213,1667908213),
-('deleteEmployee',2,'Delete a Employee',NULL,NULL,1667908213,1667908213),
-('deleteFlight',2,'Delete a Flight',NULL,NULL,1667908213,1667908213),
-('deleteRefund',2,'Delete a Refund',NULL,NULL,1667908213,1667908213),
-('deleteTariff',2,'Delete a Tariff',NULL,NULL,1667908213,1667908213),
-('deleteTicket',2,'Delete a Ticket',NULL,NULL,1667908213,1667908213),
-('listAdmin',2,'List a Admin',NULL,NULL,1667908213,1667908213),
-('listAirplane',2,'List a Airplane',NULL,NULL,1667908213,1667908213),
-('listAirport',2,'List a Airport',NULL,NULL,1667908213,1667908213),
-('listBalanceReq',2,'List a BalanceReq',NULL,NULL,1667908213,1667908213),
-('listClient',2,'List a Client',NULL,NULL,1667908213,1667908213),
-('listConfig',2,'List a Config',NULL,NULL,1667908213,1667908213),
-('listEmployee',2,'List a Employee',NULL,NULL,1667908213,1667908213),
-('listFlight',2,'List a Flight',NULL,NULL,1667908213,1667908213),
-('listRefund',2,'List a Refund',NULL,NULL,1667908213,1667908213),
-('listTariff',2,'List a Tariff',NULL,NULL,1667908213,1667908213),
-('listTicket',2,'List a Ticket',NULL,NULL,1667908213,1667908213),
-('readAdmin',2,'Read a Admin',NULL,NULL,1667908213,1667908213),
-('readAirplane',2,'Read a Airplane',NULL,NULL,1667908213,1667908213),
-('readAirport',2,'Read a Airport',NULL,NULL,1667908213,1667908213),
-('readBalanceReq',2,'Read a BalanceReq',NULL,NULL,1667908213,1667908213),
-('readClient',2,'Read a Client',NULL,NULL,1667908213,1667908213),
-('readConfig',2,'Read a Config',NULL,NULL,1667908213,1667908213),
-('readEmployee',2,'Read a Employee',NULL,NULL,1667908213,1667908213),
-('readFlight',2,'Read a Flight',NULL,NULL,1667908213,1667908213),
-('readRefund',2,'Read a Refund',NULL,NULL,1667908213,1667908213),
-('readTariff',2,'Read a Tariff',NULL,NULL,1667908213,1667908213),
-('readTicket',2,'Read a Ticket',NULL,NULL,1667908213,1667908213),
-('supervisor',1,NULL,NULL,NULL,1667908213,1667908213),
-('ticketOperator',1,NULL,NULL,NULL,1667908213,1667908213),
-('updateAdmin',2,'Update a Admin',NULL,NULL,1667908213,1667908213),
-('updateAirplane',2,'Update a Airplane',NULL,NULL,1667908213,1667908213),
-('updateAirport',2,'Update a Airport',NULL,NULL,1667908213,1667908213),
-('updateBalanceReq',2,'Update a BalanceReq',NULL,NULL,1667908213,1667908213),
-('updateClient',2,'Update a Client',NULL,NULL,1667908213,1667908213),
-('updateConfig',2,'Update a Config',NULL,NULL,1667908213,1667908213),
-('updateEmployee',2,'Update a Employee',NULL,NULL,1667908213,1667908213),
-('updateFlight',2,'Update a Flight',NULL,NULL,1667908213,1667908213),
-('updateRefund',2,'Update a Refund',NULL,NULL,1667908213,1667908213),
-('updateTariff',2,'Update a Tariff',NULL,NULL,1667908213,1667908213),
-('updateTicket',2,'Update a Ticket',NULL,NULL,1667908213,1667908213);
+('admin',1,NULL,NULL,NULL,1670254804,1670254804),
+('client',1,NULL,NULL,NULL,1670254804,1670254804),
+('createAdmin',2,'Create a Admin',NULL,NULL,1670254804,1670254804),
+('createAirplane',2,'Create a Airplane',NULL,NULL,1670254804,1670254804),
+('createAirport',2,'Create a Airport',NULL,NULL,1670254804,1670254804),
+('createBalanceReq',2,'Create a BalanceReq',NULL,NULL,1670254804,1670254804),
+('createClient',2,'Create a Client',NULL,NULL,1670254804,1670254804),
+('createConfig',2,'Create a Config',NULL,NULL,1670254804,1670254804),
+('createEmployee',2,'Create a Employee',NULL,NULL,1670254804,1670254804),
+('createFlight',2,'Create a Flight',NULL,NULL,1670254804,1670254804),
+('createRefund',2,'Create a Refund',NULL,NULL,1670254804,1670254804),
+('createTariff',2,'Create a Tariff',NULL,NULL,1670254804,1670254804),
+('createTicket',2,'Create a Ticket',NULL,NULL,1670254804,1670254804),
+('deleteAdmin',2,'Delete a Admin',NULL,NULL,1670254804,1670254804),
+('deleteAirplane',2,'Delete a Airplane',NULL,NULL,1670254804,1670254804),
+('deleteAirport',2,'Delete a Airport',NULL,NULL,1670254804,1670254804),
+('deleteBalanceReq',2,'Delete a BalanceReq',NULL,NULL,1670254804,1670254804),
+('deleteClient',2,'Delete a Client',NULL,NULL,1670254804,1670254804),
+('deleteConfig',2,'Delete a Config',NULL,NULL,1670254804,1670254804),
+('deleteEmployee',2,'Delete a Employee',NULL,NULL,1670254804,1670254804),
+('deleteFlight',2,'Delete a Flight',NULL,NULL,1670254804,1670254804),
+('deleteRefund',2,'Delete a Refund',NULL,NULL,1670254804,1670254804),
+('deleteTariff',2,'Delete a Tariff',NULL,NULL,1670254804,1670254804),
+('deleteTicket',2,'Delete a Ticket',NULL,NULL,1670254804,1670254804),
+('listAdmin',2,'List a Admin',NULL,NULL,1670254804,1670254804),
+('listAirplane',2,'List a Airplane',NULL,NULL,1670254804,1670254804),
+('listAirport',2,'List a Airport',NULL,NULL,1670254804,1670254804),
+('listBalanceReq',2,'List a BalanceReq',NULL,NULL,1670254804,1670254804),
+('listClient',2,'List a Client',NULL,NULL,1670254804,1670254804),
+('listConfig',2,'List a Config',NULL,NULL,1670254804,1670254804),
+('listEmployee',2,'List a Employee',NULL,NULL,1670254804,1670254804),
+('listFlight',2,'List a Flight',NULL,NULL,1670254804,1670254804),
+('listRefund',2,'List a Refund',NULL,NULL,1670254804,1670254804),
+('listTariff',2,'List a Tariff',NULL,NULL,1670254804,1670254804),
+('listTicket',2,'List a Ticket',NULL,NULL,1670254804,1670254804),
+('readAdmin',2,'Read a Admin',NULL,NULL,1670254804,1670254804),
+('readAirplane',2,'Read a Airplane',NULL,NULL,1670254804,1670254804),
+('readAirport',2,'Read a Airport',NULL,NULL,1670254804,1670254804),
+('readBalanceReq',2,'Read a BalanceReq',NULL,NULL,1670254804,1670254804),
+('readClient',2,'Read a Client',NULL,NULL,1670254804,1670254804),
+('readConfig',2,'Read a Config',NULL,NULL,1670254804,1670254804),
+('readEmployee',2,'Read a Employee',NULL,NULL,1670254804,1670254804),
+('readFlight',2,'Read a Flight',NULL,NULL,1670254804,1670254804),
+('readRefund',2,'Read a Refund',NULL,NULL,1670254804,1670254804),
+('readTariff',2,'Read a Tariff',NULL,NULL,1670254804,1670254804),
+('readTicket',2,'Read a Ticket',NULL,NULL,1670254804,1670254804),
+('supervisor',1,NULL,NULL,NULL,1670254804,1670254804),
+('ticketOperator',1,NULL,NULL,NULL,1670254804,1670254804),
+('updateAdmin',2,'Update a Admin',NULL,NULL,1670254804,1670254804),
+('updateAirplane',2,'Update a Airplane',NULL,NULL,1670254804,1670254804),
+('updateAirport',2,'Update a Airport',NULL,NULL,1670254804,1670254804),
+('updateBalanceReq',2,'Update a BalanceReq',NULL,NULL,1670254804,1670254804),
+('updateClient',2,'Update a Client',NULL,NULL,1670254804,1670254804),
+('updateConfig',2,'Update a Config',NULL,NULL,1670254804,1670254804),
+('updateEmployee',2,'Update a Employee',NULL,NULL,1670254804,1670254804),
+('updateFlight',2,'Update a Flight',NULL,NULL,1670254804,1670254804),
+('updateRefund',2,'Update a Refund',NULL,NULL,1670254804,1670254804),
+('updateTariff',2,'Update a Tariff',NULL,NULL,1670254804,1670254804),
+('updateTicket',2,'Update a Ticket',NULL,NULL,1670254804,1670254804);
 /*!40000 ALTER TABLE `auth_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -242,6 +255,7 @@ INSERT INTO `auth_item_child` VALUES
 ('client','createClient'),
 ('client','createRefund'),
 ('client','createTicket'),
+('client','deleteBalanceReq'),
 ('client','deleteRefund'),
 ('client','listAirport'),
 ('client','listBalanceReq'),
@@ -257,7 +271,6 @@ INSERT INTO `auth_item_child` VALUES
 ('client','readRefund'),
 ('client','readTariff'),
 ('client','readTicket'),
-('client','updateBalanceReq'),
 ('client','updateClient'),
 ('supervisor','createConfig'),
 ('supervisor','createTariff'),
@@ -336,7 +349,7 @@ CREATE TABLE `balanceReq` (
   PRIMARY KEY (`id`),
   KEY `fk_client_id` (`client_id`),
   CONSTRAINT `fk_client_id` FOREIGN KEY (`client_id`) REFERENCES `clients` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -396,6 +409,9 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
+INSERT INTO `clients` VALUES
+(6,0.00,0),
+(7,0.00,0);
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -413,7 +429,7 @@ CREATE TABLE `configs` (
   `price` double(10,2) NOT NULL,
   `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -422,6 +438,9 @@ CREATE TABLE `configs` (
 
 LOCK TABLES `configs` WRITE;
 /*!40000 ALTER TABLE `configs` DISABLE KEYS */;
+INSERT INTO `configs` VALUES
+(1,'20KG travel bag.',20,39.99,1),
+(2,'10KG travel bag.',10,24.99,1);
 /*!40000 ALTER TABLE `configs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -509,11 +528,11 @@ LOCK TABLES `migration` WRITE;
 INSERT INTO `migration` VALUES
 ('m000000_000000_base',1666799296),
 ('m130524_201442_init',1666799298),
-('m140506_102106_rbac_init',1667386891),
-('m170907_052038_rbac_add_index_on_auth_assignment_user_id',1667386891),
-('m180523_151638_rbac_updates_indexes_without_prefix',1667386891),
+('m140506_102106_rbac_init',1670254797),
+('m170907_052038_rbac_add_index_on_auth_assignment_user_id',1670254797),
+('m180523_151638_rbac_updates_indexes_without_prefix',1670254797),
 ('m190124_110200_add_verification_token_column_to_user_table',1666799298),
-('m200409_110543_rbac_update_mssql_trigger',1667386891);
+('m200409_110543_rbac_update_mssql_trigger',1670254797);
 /*!40000 ALTER TABLE `migration` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -694,7 +713,7 @@ CREATE TABLE `user` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -704,7 +723,9 @@ CREATE TABLE `user` (
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` VALUES
-(1,'admin','tRmAX9Ui90tRYlGaVcbV8A51ivNxHwRw','$2y$13$/Clj2.AkHYqcihE40fa1A.XpBS8XjOvl0TX4rCaajFocG2jTknTNy',NULL,'admin@gmail.com',10,1666799925,1666799925,'PGF9gv1CFKHFwb2Xmhekqsqnkhc0zf3C_1666799925');
+(1,'admin','tRmAX9Ui90tRYlGaVcbV8A51ivNxHwRw','$2y$13$/Clj2.AkHYqcihE40fa1A.XpBS8XjOvl0TX4rCaajFocG2jTknTNy',NULL,'admin@gmail.com',10,1666799925,1666799925,'PGF9gv1CFKHFwb2Xmhekqsqnkhc0zf3C_1666799925'),
+(6,'pedro','Whj18W7LxaX20P55cloIGoMufulci7f1','$2y$13$Rb7KtwBB4GNP1bLtdz9Iu.V99vgU1.iUCfiAdseV94rzHxiTU42tC',NULL,'pedro@gmail.com',10,1670255085,1670255085,'ftJiU4uv0rd8HdII-PSrfJ42TV0QrBiJ_1670255085'),
+(7,'teste','GY7V6VHq7Q-6VrgMnsqjs7ES9yd6xWKK','$2y$13$Gu1wJd4W0QJM6FbpGXRlK.wVx7wbA0NG/aSg.R64ee0LeF6TYp0XG',NULL,'teste@gmail.com',10,1670255105,1670255105,'BGjOggKeppWgy3yWMkfE1IU2PfvGeRe6_1670255105');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -749,4 +770,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-29 13:13:38
+-- Dump completed on 2022-12-05 15:46:51
