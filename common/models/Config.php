@@ -47,8 +47,8 @@ class Config extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'description' => 'Description',
-            'weight' => 'Weight',
-            'price' => 'Price',
+            'weight' => 'Weight (Kg)',
+            'price' => 'Price (€)',
             'active' => 'Active',
         ];
     }

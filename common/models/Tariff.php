@@ -37,7 +37,7 @@ class Tariff extends \yii\db\ActiveRecord
             [['startDate'], 'safe'],
             [['economicPrice', 'normalPrice', 'luxuryPrice'], 'number'],
             [['flight_id', 'active'], 'integer'],
-            [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flights::class, 'targetAttribute' => ['flight_id' => 'id']],
+            [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flight::class, 'targetAttribute' => ['flight_id' => 'id']],
         ];
     }
 
