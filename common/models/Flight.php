@@ -55,12 +55,12 @@ class Flight extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => 'Flight ID',
+            'airplane.id' => 'Airplane ID',
+            'airportDeparture.country' => 'Departure',
+            'airportArrival.country' => 'Destination',
             'departureDate' => 'Departure Date',
             'arrivalDate' => 'Arrival Date',
-            'airplane_id' => 'Airplane ID',
-            'airportDeparture_id' => 'Airport Departure ID',
-            'airportArrival_id' => 'Airport Arrival ID',
             'status' => 'Status',
         ];
     }

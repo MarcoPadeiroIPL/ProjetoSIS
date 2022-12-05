@@ -33,9 +33,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'email',
             'userData.phone',
-            'userData.gender',
+            [ 
+                'label' => 'Gender',
+                'value' => function ($model) {
+                    if ($model->userData->gender == 'M') 
+                     return $model->userData->gender = 'Male';
+                    else
+                     return $model->userData->gender = 'Female';
+                }
+            ],
             'authAssignment.item_name',
-            'employee.salary',
+            [
+                'label' => 'Salary',
+                'value' => function ($model) {
+                    return $model->employee->salary . ' €';
+                }
+            ],
             [
                 'label' => 'Airport',
                 'value' => function ($model) {
@@ -43,9 +56,42 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, User $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'user_id' => $model->id]);
+                'class' => ActionColumn::class,
+                'template' => '{view} {update} {delete}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-eye"></i>', $url, [
+                            'title' => Yii::t('app', 'View'),
+                            'class' => 'btn btn-sm btn-primary',
+                        ]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-edit"></i>', $url, [
+                            'title' => Yii::t('app', 'Update'),
+                            'class' => 'btn btn-sm btn-primary',
+                        ]);
+                    },
+                    'delete' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-trash"></i>', $url, [
+                            'title' => Yii::t('app', 'Delete'),
+                            'class' => 'btn btn-sm btn-danger',
+                            'data' => [
+                                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                                'method' => 'post',
+                            ],
+                        ]);
+                    },
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view') {
+                        return Url::to(['view', 'user_id' => $model->id]);
+                    }
+                    if ($action === 'update') {
+                        return Url::to(['update', 'user_id' => $model->id]);
+                    }
+                    if ($action === 'delete') {
+                        return Url::to(['delete', 'user_id' => $model->id]);
+                    }
                 }
             ],
         ],
