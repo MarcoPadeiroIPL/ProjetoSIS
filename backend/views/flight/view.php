@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use common\helpers\AirplaneBuilder;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
@@ -26,17 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'departureDate',
-            'arrivalDate',
-            'airplane_id',
-            'airportDeparture_id',
-            'airportArrival_id',
-            'status',
-        ],
-    ]) ?>
+    <?= AirplaneBuilder::drawAirplane($model->airplane); ?>
 
 </div>
