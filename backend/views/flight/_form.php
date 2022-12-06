@@ -3,7 +3,8 @@
 use Codeception\Attribute\Depends;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\jui\DatePicker;
+use kartik\date\DatePicker;
+use kartik\widgets\TimePicker;
 
 /** @var yii\web\View $this */
 /** @var common\models\Flight $model */
@@ -15,33 +16,22 @@ use yii\jui\DatePicker;
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col d-flex justify-content-center">
+        <div class="col">
             <?=
-            $form->field($model, 'departureDate')->widget(DatePicker::classname(), [
-                'language' => 'en',
-                'dateFormat' => 'yyyy-MM-dd',
-                'inline' => true,
-                'clientOptions' => [
-                    'changeMonth' => true,
-                    'changeYear' => true,
-                    'minDate' => date('Y-m-d'),
-                    'maxDate' => '+1Y',
-                ],
-            ]) ?>
-        </div>
-        <div class="col d-flex justify-content-center">
-            <?=
-            $form->field($model, 'arrivalDate')->widget(DatePicker::classname(), [
-                'language' => 'en',
-                'dateFormat' => 'yyyy-MM-dd',
-                'inline' => true,
-                'clientOptions' => [
-                    'changeMonth' => true,
-                    'changeYear' => true,
-                    'minDate' => date('Y-m-d'),
-                    'maxDate' => '+1Y',
-                ],
-            ]) ?>
+            DatePicker::widget([
+                'model' => $model,
+                'attribute' => 'departureDate',
+                'attribute2' => 'arrivalDate',
+                'options' => ['placeholder' => 'Departure date'],
+                'options2' => ['placeholder' => 'Arrival date'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
+                'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',
+                    'autoclose' => false,
+                ]
+            ]);
+            ?>
         </div>
     </div>
     <div class="row">
