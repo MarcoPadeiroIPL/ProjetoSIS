@@ -29,6 +29,7 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+    const STATUS_FIRSTLOGIN = 8;
 
 
     /**
@@ -64,8 +65,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            ['status', 'default', 'value' => self::STATUS_FIRSTLOGIN],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED, self::STATUS_FIRSTLOGIN]],
         ];
     }
 
@@ -74,7 +75,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['id' => $id, 'status' => [self::STATUS_ACTIVE, self::STATUS_FIRSTLOGIN]]);
     }
 
     /**
@@ -93,7 +94,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['username' => $username, 'status' => [self::STATUS_ACTIVE, self::STATUS_FIRSTLOGIN]]);
     }
 
     /**
@@ -244,5 +245,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function getAuthAssignment()
     {
         return $this->hasOne(AuthAssignment::class, ['user_id' => 'id']);
+    }
+    public function setActive()
+    {
+        $this->status = self::STATUS_ACTIVE;
+        $this->save();
     }
 }

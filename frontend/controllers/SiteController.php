@@ -15,6 +15,8 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\UserData;
+use common\models\User;
 
 /**
  * Site controller
@@ -89,14 +91,36 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            if (Yii::$app->user->identity->status == 8) {
+                return $this->redirect('fill');
+            }
             return $this->goBack();
         }
 
         $model->password = '';
 
         return $this->render('login', [
+            'model' => $model,
+        ]);
+    }
+    public function actionFill()
+    {
+        $model = new UserData();
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                $user = User::findOne([$model['user_id']]);
+                $user->setActive();
+                return $this->redirect(['index']);
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        return $this->render('fill', [
             'model' => $model,
         ]);
     }
