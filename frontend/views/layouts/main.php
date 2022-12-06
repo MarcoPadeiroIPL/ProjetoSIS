@@ -40,7 +40,7 @@ AppAsset::register($this);
                     </div>
                     <div class="col-xs-8 text-right menu-1">
                         <ul>
-                            <li><?= Html::a('Flights', ['/flight/index']) ?></li>
+                            <li><?= Html::a('Flights', ['/flight/select-airport']) ?></li>
                             <li><?= Html::a('About', ['/site/about']) ?></li>
                             <li><?= Html::a('Contact', ['/site/contact']) ?></li>
                             <?php if (Yii::$app->user->isGuest) {
