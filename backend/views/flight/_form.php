@@ -10,21 +10,6 @@ use yii\jui\DatePicker;
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<?= ''
-/*todo: quando seleciono a data de partida, a data de chegada deve ser maior que a data de partida
-                // e não deverá deixar selecionar uma data anterior a data de partida no calendário da data de chegada
-
-                 'options' => [
-                    'onchange' => '
-                        var departureDate = $("#flight-departuredate").val();
-                        var arrivalDate = $("#flight-arrivaldate").val();
-                        if (departureDate > arrivalDate) {
-                            alert("Arrival date must be after departure date");
-                            $("#flight-arrivaldate").val("");
-                        }
-                    ',
-                ], */ ?>
-
 <div class="flight-form">
 
     <?php $form = ActiveForm::begin(); ?>

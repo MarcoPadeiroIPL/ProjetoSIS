@@ -6,8 +6,10 @@
 
 use common\models\BalanceReq;
 use common\models\Airport;
+use yii\helpers\Url;
+use yii\helpers\Html;
 
-$this->title = 'Starter Page';
+$this->title = 'Dashboard';
 $this->params['breadcrumbs'] = [['label' => $this->title]];
 ?>
 <div class="container-fluid">
@@ -19,21 +21,15 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                     'body' => '<h3>There are no Balance Requests Pending!</h3>',
                 ]) ?>
             <?php } else { ?>
-                <?= \hail812\adminlte\widgets\Callout::widget([
-                    'type' => 'danger',
-                    'body' => '<h3>' . $balanceReqCount . ' Balance Requests Pending!</h3>'
+                <?= \hail812\adminlte\widgets\Alert::widget([
+                    'type' => 'warning',
+                    'body' => Html::a(
+                        '<h3>' . $balanceReqCount . ' Balance Requests Pending!</h3>',
+                        Url::to(['balance-req/index']),
+                        ['class' => 'btn btn-warning btn-block text-decoration-none']
+                    ),
                 ]) ?>
             <?php } ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'CPU Traffic',
-                'number' => '10 <small>%</small>',
-                'icon' => 'fas fa-cog',
-            ]) ?>
         </div>
     </div>
 

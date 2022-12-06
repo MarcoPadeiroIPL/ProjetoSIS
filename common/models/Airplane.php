@@ -44,7 +44,6 @@ class Airplane extends \yii\db\ActiveRecord
             [['status'], 'string'],
             [['minCol', 'maxCol', 'economicStart', 'economicStop', 'normalStart', 'normalStop', 'luxuryStart', 'luxuryStop'], 'string', 'max' => 1],
             [['maxLinha'], 'integer','min' => 1, 'max' => 9, 'tooSmall' => 'The maximum line must be between 1 and 9', 'tooBig' => 'The maximum line must be between 1 and 9'],
-            //Se a letra da minCol for "maior" que a letra da maxCol vai dar erro
             ['minCol', 'compare', 'compareAttribute' => 'maxCol', 'operator' => '<=', 'message' => 'The minimum column must be before the maximum column.'],
             ['maxCol', 'compare', 'compareValue' => 'I', 'operator' => '<=', 'message' => 'Columns range from A to I.'],
         ];

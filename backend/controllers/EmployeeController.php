@@ -148,30 +148,25 @@ class EmployeeController extends Controller
     public function actionUpdate($user_id)
     {
         if (\Yii::$app->user->can('updateEmployee')) {
-            $model = $this->findModel($user_id);
+            $model = new RegisterEmployee();
             $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $roles = (new \yii\db\Query())
-                ->select(['name'])
-                ->from('auth_item')
-                ->where('type = 1 and name != "client"')
-                ->all();
-            $temp = [];
+            $temp = \Yii::$app->authManager->getRoles();
+            $roles = [];
 
-            foreach ($roles as $role) {
-                $temp[$role['name']] = $role['name'];
+            foreach ($temp as $role) {
+                if ($role->name != 'client')
+                    $roles[$role->name] = $role->name;
             }
 
             if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['update', 'user_id' => $model->user_id]);
+                if ($model->load($this->request->post()) && $model->register()) {
+                    return $this->redirect(['view', 'user_id' => $model->user_id]);
                 }
             }
-            dd($model);
-
             return $this->render('update', [
                 'model' => $model,
                 'airports' => $airports,
-                'roles' => $temp,
+                'roles' => $roles
             ]);
         }
     }
