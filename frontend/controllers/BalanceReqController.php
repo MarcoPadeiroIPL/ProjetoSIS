@@ -127,8 +127,7 @@ class BalanceReqController extends Controller
     public function actionDelete($id)
     {
         if (\Yii::$app->user->can('deleteBalanceReq')) {
-            $this->findModel($id)->delete();
-
+            $this->findModel($id)->deleteBalanceReq();
             return $this->redirect(['index']);
         }
     }
