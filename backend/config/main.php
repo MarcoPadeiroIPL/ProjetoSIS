@@ -44,7 +44,7 @@ return [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/flight'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/airports'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/airport'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/balanceReq'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/receipt'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/config'],
