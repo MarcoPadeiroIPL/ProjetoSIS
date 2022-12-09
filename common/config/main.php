@@ -1,4 +1,5 @@
 <?php
+
 return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -12,10 +13,12 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
+        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [],
         ],
+        */
     ],
 ];

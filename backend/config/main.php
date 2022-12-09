@@ -1,4 +1,5 @@
 <?php
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -37,13 +38,26 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [],
+            'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/flight'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/airports'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/balanceReq'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/receipt'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/config'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/tariff'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/ticket'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/airplane'],
+            ],
         ],
-         */
     ],
     'params' => $params,
+    'modules' => [
+        'api' => [
+            'class' => 'backend\modules\api\ModuleAPI',
+        ],
+    ],
 ];
