@@ -40,22 +40,9 @@ class ClientController extends Controller
     public function actionIndex()
     {
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => Client::find()->where(['user_id' => Yii::$app->user->identity]),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'user_id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
-
+        $client = Client::findOne([Yii::$app->user->identity->getId()]);
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'client' => $client,
         ]);
     }
 
