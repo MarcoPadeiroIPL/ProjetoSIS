@@ -15,7 +15,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6">
-            <?php if ($balanceReqCount == 0) { ?>
+            <?php if ($balanceReq['count'] == 0) { ?>
                 <?= \hail812\adminlte\widgets\Alert::widget([
                     'type' => 'success',
                     'body' => '<h3>There are no Balance Requests Pending!</h3>',
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
 
             <?= \hail812\adminlte\widgets\InfoBox::widget([
                 'text' => 'Pending Balance Requests',
-                'number' => $balanceReqCount,
+                'number' => $balanceReq['count'],
                 'icon' => 'fas fa-comment-dollar',
             ]) ?>
         </div>
@@ -73,14 +73,14 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
             ]) ?>
         </div>
         <div class="col-md-4 col-sm-6 col-12">
-            <?php if ($airportCount != 0) { ?>
+            <?php if ($airports['count'] != 0) { ?>
                 <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
                     'text' => 'Most Popular Destination',
-                    'number' => $mostSearchedAirport->country . ' - ' . $mostSearchedAirport->city,
+                    'number' => $airports['mostSearched']->country . ' - ' . $airports['mostSearched']->city,
                     'theme' => 'success',
                     'icon' => 'far fa-thumbs-up',
                     'progress' => [
-                        'width' => $mostSearchedAirportPercentage . '%',
+                        'width' => $airports['mostSearched']->search . '%',
                         'description' => 'The destination with most searches.'
                     ]
                 ]) ?>
@@ -101,14 +101,14 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
             <?php \hail812\adminlte\widgets\InfoBox::end() ?>
         </div>
         <div class="col-md-4 col-sm-6 col-12">
-            <?php if ($airportCount != 0) { ?>
+            <?php if ($airports['count'] != 0) { ?>
                 <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
                     'text' => 'Least popular Destination',
-                    'number' => $leastSearchedAirport->country . ' - ' . $leastSearchedAirport->city,
+                    'number' => $airports['leastSearched']->country . ' - ' . $airports['leastSearched']->city,
                     'theme' => 'danger',
                     'icon' => 'far fa-thumbs-down',
                     'progress' => [
-                        'width' => $leastSearchedAirportPercentage . '%',
+                        'width' => $airports['leastSearched']->search . '%',
                         'description' => 'The destination with least searches.'
                     ]
                 ]) ?> <?php } else { ?>

@@ -16,9 +16,6 @@ use common\models\Airport;
  */
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -55,10 +52,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-
     public function actions()
     {
         return [
@@ -68,44 +61,24 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        $airportCount = Airport::find()->count();
+        $airports = [
+            'count' => Airport::find()->count(),
+            'mostSearched' => Airport::find()->orderBy(['search' => SORT_DESC])->one(),
+            'leastSearched' => Airport::find()->orderBy(['search' => SORT_ASC])->one(),
+        ];
 
-        $mostSearchedAirport = Airport::find()->orderBy(['search' => SORT_DESC])->one();
-        if(!is_null($mostSearchedAirport)) 
-            $mostSearchedAirportPercentage = $mostSearchedAirport->search;
-        else 
-            $mostSearchedAirportPercentage = 0;
-
-        $leastSearchedAirport = Airport::find()->orderBy(['search' => SORT_ASC])->one();
-        if(!is_null($leastSearchedAirport)) 
-            $leastSearchedAirportPercentage = $leastSearchedAirport->search;
-        else 
-        $leastSearchedAirportPercentage = 0;
-
-        $balanceReqCount = BalanceReq::find()->where(['status' => 'Ongoing'])->count();
+        $balanceReq = [
+            'count' => BalanceReq::find()->where(['status' => 'Ongoing'])->count(),
+        ];
 
         return $this->render('index', [
-            'balanceReqCount' => $balanceReqCount,
-            'mostSearchedAirport' => $mostSearchedAirport,
-            'mostSearchedAirportPercentage' => $mostSearchedAirportPercentage,
-            'leastSearchedAirport' => $leastSearchedAirport,
-            'leastSearchedAirportPercentage' => $leastSearchedAirportPercentage,
-            'airportCount' => $airportCount,
+            'airports' => $airports,
+            'balanceReq' => $balanceReq,
         ]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return string|Response
-     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -126,11 +99,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
@@ -138,3 +106,4 @@ class SiteController extends Controller
         return $this->goHome();
     }
 }
+
