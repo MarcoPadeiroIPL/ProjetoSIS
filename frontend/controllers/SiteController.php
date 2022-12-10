@@ -18,14 +18,8 @@ use frontend\models\ContactForm;
 use common\models\UserData;
 use common\models\User;
 
-/**
- * Site controller
- */
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -39,7 +33,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'error'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -70,21 +64,11 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
     public function actionIndex()
     {
         return $this->render('index');
     }
 
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -93,6 +77,7 @@ class SiteController extends Controller
 
 
         $model = new LoginForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             if (Yii::$app->user->identity->status == 8) {
                 return $this->redirect('fill');
@@ -110,26 +95,20 @@ class SiteController extends Controller
     {
         $model = new UserData();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                $user = User::findOne([$model['user_id']]);
-                $user->setActive();
-                return $this->redirect(['index']);
-            }
-        } else {
+        if (!$this->request->isPost) {
             $model->loadDefaultValues();
+            return $this->render('fill', [
+                'model' => $model,
+            ]);
         }
 
-        return $this->render('fill', [
-            'model' => $model,
-        ]);
+        if ($model->load($this->request->post()) && $model->save()) {
+            $user = User::findOne([$model['user_id']]);
+            $user->setActive();
+            return $this->redirect(['index']);
+        }
     }
 
-    /**
-     * Logs out the current user.
-     *
-     * @return mixed
-     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
@@ -137,11 +116,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
     public function actionContact()
     {
         $model = new ContactForm();
@@ -160,21 +134,19 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
     public function actionAbout()
     {
         return $this->render('about');
     }
 
-    /**
-     * Signs user up.
-     *
-     * @return mixed
-     */
+    public function actionError()
+    {
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception !== null) {
+            return $this->render('error', ['exception' => $exception]);
+        }
+    }
+
     public function actionSignup()
     {
         $model = new SignupForm();
@@ -187,11 +159,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Requests password reset.
-     *
-     * @return mixed
-     */
     public function actionRequestPasswordReset()
     {
         $model = new PasswordResetRequestForm();
@@ -210,13 +177,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Resets password.
-     *
-     * @param string $token
-     * @return mixed
-     * @throws BadRequestHttpException
-     */
     public function actionResetPassword($token)
     {
         try {
@@ -236,13 +196,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Verify email address
-     *
-     * @param string $token
-     * @throws BadRequestHttpException
-     * @return yii\web\Response
-     */
     public function actionVerifyEmail($token)
     {
         try {
@@ -259,11 +212,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Resend verification email
-     *
-     * @return mixed
-     */
     public function actionResendVerificationEmail()
     {
         $model = new ResendVerificationEmailForm();

@@ -11,16 +11,8 @@ use yii\filters\VerbFilter;
 use common\models\Client;
 use yii\filters\AccessControl;
 
-
-
-/**
- * BalanceReqController implements the CRUD actions for BalanceReq model.
- */
 class BalanceReqController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return [
@@ -53,117 +45,98 @@ class BalanceReqController extends Controller
         ];
     }
 
-    /**
-     * Lists all BalanceReq models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        if (\Yii::$app->user->can('listBalanceReq')) {
-            $client = Client::findOne([Yii::$app->user->getId()]);
-            $dataProvider = new ActiveDataProvider([
-                'query' => BalanceReq::find()->where(['client_id' => Yii::$app->user->identity])->andWhere(['status' => 'Ongoing']),
-
-                'pagination' => [
-                    'pageSize' => 5
-                ],
-                'sort' => [
-                    'defaultOrder' => [
-                        'id' => SORT_ASC,
-                    ]
-                ],
-            ]);
-
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-                'client' => $client,
-
-
-            ]);
+        if (!\Yii::$app->user->can('listBalanceReq')) {
+            return;
         }
+
+        $client = Client::findOne([\Yii::$app->user->getId()]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => BalanceReq::find()
+                ->where(['client_id' => \Yii::$app->user->getId()])
+                ->andWhere(['status' => 'Ongoing']),
+            'pagination' => [
+                'pageSize' => 5
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_ASC,
+                ]
+            ],
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+            'client' => $client,
+        ]);
     }
 
-    /**
-     * Displays a single BalanceReq model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
+        if (!\Yii::$app->user->can('readBalanceReq')) {
+            return;
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
-    /**
-     * Creates a new BalanceReq model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
-        if (\Yii::$app->user->can('createBalanceReq')) {
-            $model = new BalanceReq();
+        if (!\Yii::$app->user->can('createBalanceReq')) {
+            return;
+        }
 
+        $model = new BalanceReq();
 
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-            } else {
-                $model->loadDefaultValues();
-            }
-
+        if (!$this->request->isPost) {
+            $model->loadDefaultValues();
             return $this->render('create', [
                 'model' => $model,
             ]);
         }
+
+        if ($model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
     }
-
-
 
     public function actionDelete($id)
     {
-        if (\Yii::$app->user->can('deleteBalanceReq')) {
-            $this->findModel($id)->deleteBalanceReq();
-            return $this->redirect(['index']);
+        if (!\Yii::$app->user->can('deleteBalanceReq')) {
+            return;
         }
+
+        $this->findModel($id)->deleteBalanceReq();
+        return $this->redirect(['index']);
     }
 
     public function actionHistory()
     {
-        if (\Yii::$app->user->can('listBalanceReq')) {
-            if (\Yii::$app->user->can('listBalanceReq')) {
-                $dataProvider = new ActiveDataProvider([
-                    'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
-
-                    'pagination' => [
-                        'pageSize' => 10
-                    ],
-                    'sort' => [
-                        'defaultOrder' => [
-                            'id' => SORT_ASC,
-                        ]
-                    ],
-
-                ]);
-
-                return $this->render('history', [
-                    'dataProvider' => $dataProvider,
-                ]);
-            }
+        if (!\Yii::$app->user->can('listBalanceReq')) {
+            return;
         }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
+            'pagination' => [
+                'pageSize' => 10
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_ASC,
+                ]
+            ],
+
+        ]);
+
+        return $this->render('history', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
-    /**
-     * Finds the BalanceReq model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return BalanceReq the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = BalanceReq::findOne(['id' => $id])) !== null) {
