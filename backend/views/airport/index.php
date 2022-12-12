@@ -29,7 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Search',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    //sort by number
                     return $model->search . '%';
                 },
             ],

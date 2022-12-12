@@ -3,60 +3,35 @@
 use Codeception\Attribute\Depends;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\jui\DatePicker;
+use kartik\date\DatePicker;
+use kartik\widgets\TimePicker;
 
 /** @var yii\web\View $this */
 /** @var common\models\Flight $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<?= ''
-/*todo: quando seleciono a data de partida, a data de chegada deve ser maior que a data de partida
-                // e não deverá deixar selecionar uma data anterior a data de partida no calendário da data de chegada
-
-                 'options' => [
-                    'onchange' => '
-                        var departureDate = $("#flight-departuredate").val();
-                        var arrivalDate = $("#flight-arrivaldate").val();
-                        if (departureDate > arrivalDate) {
-                            alert("Arrival date must be after departure date");
-                            $("#flight-arrivaldate").val("");
-                        }
-                    ',
-                ], */ ?>
-
 <div class="flight-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col d-flex justify-content-center">
+        <div class="col">
             <?=
-            $form->field($model, 'departureDate')->widget(DatePicker::classname(), [
-                'language' => 'en',
-                'dateFormat' => 'yyyy-MM-dd',
-                'inline' => true,
-                'clientOptions' => [
-                    'changeMonth' => true,
-                    'changeYear' => true,
-                    'minDate' => date('Y-m-d'),
-                    'maxDate' => '+1Y',
-                ],
-            ]) ?>
-        </div>
-        <div class="col d-flex justify-content-center">
-            <?=
-            $form->field($model, 'arrivalDate')->widget(DatePicker::classname(), [
-                'language' => 'en',
-                'dateFormat' => 'yyyy-MM-dd',
-                'inline' => true,
-                'clientOptions' => [
-                    'changeMonth' => true,
-                    'changeYear' => true,
-                    'minDate' => date('Y-m-d'),
-                    'maxDate' => '+1Y',
-                ],
-            ]) ?>
+            DatePicker::widget([
+                'model' => $model,
+                'attribute' => 'departureDate',
+                'attribute2' => 'arrivalDate',
+                'options' => ['placeholder' => 'Departure date'],
+                'options2' => ['placeholder' => 'Arrival date'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
+                'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',
+                    'autoclose' => false,
+                ]
+            ]);
+            ?>
         </div>
     </div>
     <div class="row">

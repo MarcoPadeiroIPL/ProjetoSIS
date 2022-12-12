@@ -28,25 +28,36 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => 'Full Name',
                 'value' => function ($model) {
-                    return $model->userData->fName . '   ' . $model->userData->surname;
+                    return (isset($model->userData->fName) ? $model->userData->fName : 'Not set') . '   ' . (isset($model->userData->surname) ? $model->userData->surname : 'Not set');
                 }
             ],
-            'email',
-            'userData.phone',
+        [
+            'label' => 'Email',
+            'value' => function ($model) {
+                return isset($model->email) ? $model->email : "Not set";
+            }
+        ],
+            [
+                'label' => 'Phone',
+                'value' => function ($model) {
+                    return isset($model->userData->phone) ? $model->userData->phone : "Not set";
+                }],
             [
                 'label' => 'Gender',
                 'value' => function ($model) {
-                    if ($model->userData->gender == 'M')
-                        return $model->userData->gender = 'Male';
-                    else
-                        return $model->userData->gender = 'Female';
+                    return isset($model->userData->gender) ? ($model->userData->gender = 'M' ? 'Male' : 'Female') : "Not set";
                 }
             ],
-            'authAssignment.item_name',
+            [
+                'label' => 'Role',
+                'value' => function ($model) {
+                    return isset($model->authAssignment->item_name) ? $model->authAssignment->item_name : "Not set";
+                }
+            ],
             [
                 'label' => 'Salary',
                 'value' => function ($model) {
-                    return $model->employee->salary . ' €';
+                    return isset($model->employee->salary) ? $model->employee->salary . '€' : "Not set";
                 }
             ],
             [
