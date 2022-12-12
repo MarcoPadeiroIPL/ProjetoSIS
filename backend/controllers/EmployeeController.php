@@ -60,11 +60,14 @@ class EmployeeController extends Controller
 
     public function actionIndex()
     {
-        if (\Yii::$app->user->can('listEmployee')) {
-            $dataProvider = new ActiveDataProvider([
+        if (!\Yii::$app->user->can('listEmployee')) {
+            return;
+        }
 
-                'query' => User::find()->where('status=10')->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')->andWhere('auth_assignment.item_name != "client"'),
-            ]);
+        $dataProvider = new ActiveDataProvider([
+
+            'query' => User::find()->where('status=10')->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')->andWhere('auth_assignment.item_name != "client"'),
+        ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
