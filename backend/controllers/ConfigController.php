@@ -52,7 +52,7 @@ class ConfigController extends Controller
 
     public function actionCreate()
     {
-        if (\Yii::$app->user->can('createConfig')) {
+        if (!\Yii::$app->user->can('createConfig')) {
             return;
         }
 
@@ -109,4 +109,3 @@ class ConfigController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-
