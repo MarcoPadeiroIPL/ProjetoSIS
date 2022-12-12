@@ -18,33 +18,40 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="row">
                 <div class="col-4 text-center align-self-center">
                     <i class='fas fa-fa-solid fa-user-tie'></i>
+                    <h3><?= $client->user->userData->fName, ' ', $client->user->userData->surname ?></h3>
+                    <h3><?= $client->user->email ?></h3>
+                    <h3><?= $client->user->userData->phone ?></h3>
 
-                    <?= Html::a('Create Balance Req', ['create'], ['class' => 'btn btn-success']) ?>
+                    <?= Html::a('Edit profile', ['create'], ['class' => 'btn btn-success']) ?>
                 </div>
                 <div class="col">
                     <div class="row">
                         <div class="col-6">
-                            <h2>Current balance requests</h2>
-                        </div>
-                        <div class=" col">
-                            <h2 class="text-right"><a href="history">View history</a></h2>
+                            <h2>
+                            </h2>
                         </div>
                     </div>
-                    <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'columns' => [
-                            ['class' => 'yii\grid\SerialColumn'],
+                    <div class="row">
+                        <div class="col-3">
+                            <h3>My flights</h3>
+                        </div>
+                        <div class="col">
+                            <a href="../flight/">See more</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <h3>My balance</h3>
+                        </div>
+                        <div class="col">
+                            <a href="../balance-req/">See more</a>
 
-                            'user_id',
-                            'balance',
-                            'application',
-                            [
-                                'class' => ActionColumn::className(),
-                                'template' => '{update}',
+                        </div>
+                        <h4> <?= $client->balance ?>€</h4>
 
-                            ],
-                        ],
-                    ]); ?>
+
+                    </div>
+
 
                 </div>
             </div>
