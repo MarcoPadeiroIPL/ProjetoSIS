@@ -24,7 +24,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                 <?= \hail812\adminlte\widgets\Alert::widget([
                     'type' => 'warning',
                     'body' => Html::a(
-                        '<h3>' . $balanceReqCount . ' Balance Requests Pending!</h3>',
+                        '<h3>' . $balanceReq['count'] . ' Balance Requests Pending!</h3>',
                         Url::to(['balance-req/index']),
                         ['class' => 'btn btn-warning btn-block text-decoration-none']
                     ),
