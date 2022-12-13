@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Active',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return $model->active ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>';
+                    return $model->active ? '<h3><span class="badge badge-success">Yes</span></h3>' : '<h3><span class="badge badge-danger">No</span></h3>';
                 }
             ],
             [

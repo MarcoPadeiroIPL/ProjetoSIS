@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\User;
 use common\models\Client;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -32,7 +33,9 @@ class ClientController extends Controller
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Client::find(),
+            'query' => User::find()->where('status=10')
+            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+            ->andWhere('auth_assignment.item_name = "client"'),
         ]);
 
         return $this->render('index', [

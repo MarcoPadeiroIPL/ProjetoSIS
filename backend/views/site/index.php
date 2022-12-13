@@ -1,11 +1,8 @@
 <?php
-/* TODO:
-    -Mostrar a percentagem do aeroporto mais procurado.
-    -Mostrar a percentagem dos aeroportos operacionais.
-*/
+/* TODO: : 
+    -Alerta de criação de novo usuário
 
-use common\models\BalanceReq;
-use common\models\Airport;
+*/
 use yii\helpers\Url;
 use yii\helpers\Html;
 
@@ -153,11 +150,10 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
         </div>
         <div class="col-lg-4 col-md-6 col-sm-6 col-12">
             <?= \hail812\adminlte\widgets\SmallBox::widget([
-                'title' => '44',
-                'text' => 'User Registrations',
+                'title' => $clients['count'],
+                'text' => 'Number of active clients',
                 'icon' => 'fas fa-user-plus',
-                'theme' => 'gradient-success',
-                'loadingStyle' => true
+                'theme' => 'warning'
             ]) ?>
         </div>
     </div>
