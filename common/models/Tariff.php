@@ -19,6 +19,11 @@ use Yii;
  */
 class Tariff extends \yii\db\ActiveRecord
 {
+    public function __construct()
+    {
+        $this->startDate = date('Y/m/d H:i:s');
+        $this->active = 1;
+    }
     /**
      * {@inheritdoc}
      */
@@ -65,5 +70,13 @@ class Tariff extends \yii\db\ActiveRecord
     public function getFlight()
     {
         return $this->hasOne(Flights::class, ['id' => 'flight_id']);
+    }
+
+    public function generateFirstTariff($flight_id, $defaultPrice, $airportDepartureSearch, $airportArrivalSearch, $airplaneSeats)
+    {
+        $this->flight_id = $flight_id;
+        $this->normalPrice = $defaultPrice + (($defaultPrice * $airportDepartureSearch) / 100) + (($defaultPrice * $airportArrivalSearch) / 100) + ($defaultPrice / ($airplaneSeats / 100));
+        $this->economicPrice = $this->normalPrice - ($this->normalPrice * 0.25);
+        $this->luxuryPrice = $this->normalPrice + ($this->normalPrice * 0.25);
     }
 }

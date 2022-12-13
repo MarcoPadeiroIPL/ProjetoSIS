@@ -85,8 +85,8 @@ class Airplane extends \yii\db\ActiveRecord
     public function countTotalSeats()
     {
         $count = 0;
-        for ($i = $this->airplane->minCol; $i <= $this->airplane->maxCol; $i++) {
-            for ($j = $this->airplane->minLinha; $j <= $this->airplane->maxLinha; $j++) {
+        for ($i = $this->minCol; $i <= $this->maxCol; $i++) {
+            for ($j = $this->minLinha; $j <= $this->maxLinha; $j++) {
                 $count++;
             }
         }
