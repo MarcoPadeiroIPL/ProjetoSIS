@@ -6,6 +6,7 @@ use common\models\Flight;
 use common\models\Airport;
 use frontend\models\SelectAirport;
 use frontend\models\SelectDate;
+use frontend\models\SelectFlight;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\helpers\ArrayHelper;
@@ -79,12 +80,40 @@ class FlightController extends Controller
         }
     }
 
+    public function actionSelectFlight($airportDeparture_id, $airportArrival_id, $departureDate)
+    {
+        $model = new SelectFlight();
+
+        // se esta action nao for chamada por post
+        if (!$this->request->isPost) {
+            // meter uma variavel que tem o top 3 flights para os criterios pedidos
+            return $this->render('select-flight', [
+                'model' => $model,
+                //'flights' => $flights,
+            ]);
+        }
+
+
+        // caso seja chamado por post, redireciona para o proximo passo
+        if (isset($_POST['SelectFlight']['flight_id'])) {
+            $form = $_POST['SelectDate'];
+            return $this->redirect([
+                'select-luggage',
+                'airportDeparture_id' => $form['airportDeparture_id'],
+                'airportArrival_id' => $form['airportArrival_id'],
+                'departureDate' => $form['departureDate'],
+                'departureDate' => $form['flight_id'],
+            ]);
+        }
+    }
+
     public function actionView($id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
+
 
     protected function findModel($id)
     {
@@ -95,4 +124,3 @@ class FlightController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-
