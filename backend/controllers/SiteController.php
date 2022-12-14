@@ -8,6 +8,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
+
+use common\backend\Employee;
+use common\models\User;
 use common\models\BalanceReq;
 use common\models\Airport;
 
@@ -69,6 +72,12 @@ class SiteController extends Controller
             'leastSearched' => Airport::find()->orderBy(['search' => SORT_ASC])->one(),
         ];
 
+        $clients = [
+            'count' => User::find()->where('status=10')
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->andWhere('auth_assignment.item_name = "client"')->count(),
+        ];
+
         $balanceReq = [
             'count' => BalanceReq::find()->where(['status' => 'Ongoing'])->count(),
         ];
@@ -76,6 +85,7 @@ class SiteController extends Controller
         return $this->render('index', [
             'airports' => $airports,
             'balanceReq' => $balanceReq,
+            'clients' => $clients,
         ]);
     }
 
@@ -106,4 +116,3 @@ class SiteController extends Controller
         return $this->goHome();
     }
 }
-

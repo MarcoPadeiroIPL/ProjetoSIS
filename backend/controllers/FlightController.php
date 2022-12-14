@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Flight;
+use backend\models\CreateFlight;
 use common\models\Airport;
 use common\models\Airplane;
 use yii\data\ActiveDataProvider;
@@ -65,13 +66,12 @@ class FlightController extends Controller
         if (!\Yii::$app->user->can('createFlight')) {
             return;
         }
-        $model = new Flight();
+        $model = new CreateFlight();
 
         // caso nao seja post
         if (!$this->request->isPost) {
             $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
             $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
-            $model->loadDefaultValues();
 
             return $this->render('create', [
                 'model' => $model,
@@ -82,7 +82,7 @@ class FlightController extends Controller
 
         // caso seja post
         if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
     }
 
@@ -126,4 +126,3 @@ class FlightController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-
