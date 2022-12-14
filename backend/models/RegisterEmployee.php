@@ -79,11 +79,38 @@ class RegisterEmployee extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
-            ['password', 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
         ];
     }
 
+    public function update($id)
+    {
+        $user = User::findOne($id);
+        $user->username = $this->username;
+        $user->email = $this->email;
+
+        $user->save();
+
+        $userData = isset($user->userData) ? $user->userData : new UserData();
+        $userData->user_id = isset($userData->user_id) ? $userData->user_id : $user->getId();
+        $userData->fName = $this->fName;
+        $userData->surname = $this->surname;
+        $userData->birthdate = date('Y/m/d', strtotime($this->birthdate));
+        $userData->phone = $this->phone;
+        $userData->nif = $this->nif;
+        $userData->gender = $this->gender;
+        $userData->accCreationDate = date('Y/m/d H:i:s');
+        $userData->accCreationDate = isset($userData->accCreationDate) ? $userData->accCreationDate : date('Y/m/d H:i:s');
+
+        $userData->save();
+
+        $employee = isset($user->userData) ? $user->employee : new Employee();
+        $employee->user_id = $user->getId();
+        $employee->salary = $this->salary;
+        $employee->airport_id = $this->airport_id;
+
+        return $employee->save();
+    }
     public function register()
     {
         if (!$this->validate()) {

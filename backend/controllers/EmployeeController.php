@@ -66,8 +66,8 @@ class EmployeeController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => User::find()->where('status=10')
-            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
-            ->andWhere('auth_assignment.item_name != "client"'),
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->andWhere('auth_assignment.item_name != "client"'),
         ]);
 
         return $this->render('index', [
@@ -133,7 +133,7 @@ class EmployeeController extends Controller
             ]);
         }
 
-        if ($model->load($this->request->post()) && $model->register()) {
+        if ($model->update($user_id)) {
             return $this->redirect(['view', 'user_id' => $model->user_id]);
         }
     }
