@@ -6,7 +6,6 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
-
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -23,24 +22,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id',
             [
                 'label' => 'Full Name',
                 'value' => function ($model) {
                     return (isset($model->userData->fName) ? $model->userData->fName : 'Not set') . '   ' . (isset($model->userData->surname) ? $model->userData->surname : 'Not set');
                 }
             ],
-        [
-            'label' => 'Email',
-            'value' => function ($model) {
-                return isset($model->email) ? $model->email : "Not set";
-            }
-        ],
+            [
+                'label' => 'Email',
+                'value' => function ($model) {
+                    return isset($model->email) ? $model->email : "Not set";
+                }
+            ],
             [
                 'label' => 'Phone',
                 'value' => function ($model) {
                     return isset($model->userData->phone) ? $model->userData->phone : "Not set";
-                }],
+                }
+            ],
             [
                 'label' => 'Gender',
                 'value' => function ($model) {

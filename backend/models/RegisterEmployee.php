@@ -132,4 +132,21 @@ class RegisterEmployee extends Model
 
         return $employee->save();
     }
+    public function setUser($user)
+    {
+        $this->username = isset($user->username) ? $user->username : null;
+        $this->email = isset($user->email) ? $user->email : null;
+
+        $this->role = $user->authAssignment->item_name;
+        $this->fName = isset($user->userData->fName) ? $user->userData->fName : null;
+        $this->surname = isset($user->userData->surname) ? $user->userData->surname : null;
+        $this->gender = isset($user->userData->gender) ? $user->userData->gender : null;
+        $this->phone = isset($user->userData->phone) ? $user->userData->phone : null;
+        $this->nif = isset($user->userData->nif) ? $user->userData->nif : null;
+        $this->birthdate = isset($user->userData->birthdate) ? $user->userData->birthdate : null;
+
+        $this->salary = isset($user->employee->salary) ? $user->employee->salary : null;
+        $this->user_id = isset($user->employee->user_id) ? $user->employee->user_id : null;
+        $this->airport_id = isset($user->employee->airport_id) ? $user->employee->airport_id : null;
+    }
 }

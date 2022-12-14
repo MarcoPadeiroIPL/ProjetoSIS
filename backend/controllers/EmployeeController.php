@@ -82,7 +82,7 @@ class EmployeeController extends Controller
         }
 
         return $this->render('view', [
-            'model' => $this->findModel($user_id),
+            'model' => User::findOne([$user_id]),
         ]);
     }
 
@@ -114,7 +114,13 @@ class EmployeeController extends Controller
         if (!\Yii::$app->user->can('updateEmployee')) {
             return;
         }
+
+        $user = User::findOne($user_id);
+
         $model = new RegisterEmployee();
+
+        $model->setUser($user);
+
 
         if (!$this->request->isPost) {
             $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
