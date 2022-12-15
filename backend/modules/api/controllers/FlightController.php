@@ -4,7 +4,16 @@ namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
 
-class FlightController extends ActiveController
+class ConfigController extends ActiveController
 {
     public $modelClass = 'common\models\Flight';
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => \yii\filters\auth\QueryParamAuth::class,
+        ];
+        return $behaviors;
+    }
 }
