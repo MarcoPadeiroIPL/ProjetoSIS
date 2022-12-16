@@ -28,6 +28,11 @@ class LoginController extends \yii\web\Controller
     }
     public function actionIndex()
     {
-        return $this->user->auth_key;
+        $response['status'] = 200;
+        $response['token'] = $this->user->auth_key;
+
+        $json = json_encode($response);
+
+        return $json;
     }
 }
