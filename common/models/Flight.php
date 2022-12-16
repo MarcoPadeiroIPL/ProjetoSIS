@@ -11,7 +11,7 @@ use common\models\Airplane;
  *
  * @property int $id
  * @property string $departureDate
- * @property string $arrivalDate
+ * @property string $duration
  * @property int $airplane_id
  * @property int $airportDeparture_id
  * @property int $airportArrival_id
@@ -39,8 +39,8 @@ class Flight extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['departureDate', 'arrivalDate', 'airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'required'],
-            [['departureDate', 'arrivalDate'], 'safe'],
+            [['departureDate', 'duration', 'airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'required'],
+            [['departureDate', 'duration'], 'safe'],
             [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
             [['status'], 'string'],
             [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplane::class, 'targetAttribute' => ['airplane_id' => 'id']],
@@ -60,7 +60,7 @@ class Flight extends \yii\db\ActiveRecord
             'airportDeparture.country' => 'Departure',
             'airportArrival.country' => 'Destination',
             'departureDate' => 'Departure Date',
-            'arrivalDate' => 'Arrival Date',
+            'Duration' => 'Duration',
             'status' => 'Status',
         ];
     }
@@ -115,6 +115,18 @@ class Flight extends \yii\db\ActiveRecord
         return $this->hasMany(Ticket::class, ['flight_id' => 'id']);
     }
 
+    public function activeTariff()
+    {
+        if (is_null($this->tariff)) {
+            return null;
+        }
+
+        foreach ($this->tariff as $t) {
+            if ($t->active) {
+                return $t;
+            }
+        }
+    }
     public function getAvailableSeats()
     {
     }

@@ -481,7 +481,7 @@ DROP TABLE IF EXISTS `flights`;
 CREATE TABLE `flights` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `departureDate` datetime NOT NULL,
-  `arrivalDate` datetime NOT NULL,
+  `duration`  time NOT NULL,
   `airplane_id` int(11) NOT NULL,
   `airportDeparture_id` int(11) NOT NULL,
   `airportArrival_id` int(11) NOT NULL,

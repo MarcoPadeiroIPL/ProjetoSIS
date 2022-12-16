@@ -20,20 +20,20 @@ use kartik\widgets\TimePicker;
             <?=
             DatePicker::widget([
                 'model' => $model,
+                'name' => 'departureDate',
                 'attribute' => 'departureDate',
-                'attribute2' => 'arrivalDate',
-                'options' => ['placeholder' => 'Departure date'],
-                'options2' => ['placeholder' => 'Arrival date'],
-                'type' => DatePicker::TYPE_RANGE,
-                'form' => $form,
+                'options' => ['placeholder' => 'Select departure date ...'],
+                'type' => DatePicker::TYPE_INPUT,
                 'pluginOptions' => [
                     'format' => 'yyyy-mm-dd',
-                    'autoclose' => false,
+                    'todayHighlight' => true
                 ]
             ]);
             ?>
         </div>
     </div>
+
+    <?= $form->field($model, 'duration')->textInput()->label('Duration') ?>
     <div class="row">
         <div class="col d-flex justify-content-center">
             <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports)->label('Airport Departure') ?>

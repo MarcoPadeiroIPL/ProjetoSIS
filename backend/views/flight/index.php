@@ -26,22 +26,41 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => 'Departure',
                 'value' => function ($model) {
-                    return $model->airportDeparture->city . ' - '. '(' . $model->airportDeparture->country . ')';
+                    return $model->airportDeparture->city . ' - ' . '(' . $model->airportDeparture->country . ')';
                 }
             ],
             [
                 'label' => 'Destination',
                 'value' => function ($model) {
-                    return $model->airportArrival->city . ' - '. '(' . $model->airportArrival->country . ')';
+                    return $model->airportArrival->city . ' - ' . '(' . $model->airportArrival->country . ')';
                 }
             ],
             'departureDate',
-            'arrivalDate',
+            'duration',
+            [
+                'label' => 'Prices',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    if (is_null($model->activeTariff())) {
+                        return 'No active tariffs found!';
+                    }
+                    return
+                        '<h5><span class="badge badge-info">Economic - ' . $model->activeTariff()->economicPrice . '€</span></h5>' .
+                        '<h5><span class="badge badge-success">Normal - ' . $model->activeTariff()->normalPrice . '€</span></h5>' .
+                        '<h5><span class="badge badge-primary">Luxury - ' . $model->activeTariff()->luxuryPrice . '€</span></h5>';
+                }
+            ],
             'status',
             [
                 'class' => ActionColumn::class,
-                'template' => '{view} {update} {delete}',
+                'template' => '{history} {view} {update} {delete}',
                 'buttons' => [
+                    'history' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-dollar-sign"></i>', $url, [
+                            'title' => Yii::t('app', 'Price History'),
+                            'class' => 'btn btn-sm btn-primary',
+                        ]);
+                    },
                     'view' => function ($url, $model) {
                         return Html::a('<i class="fas fa-eye"></i>', $url, [
                             'title' => Yii::t('app', 'View'),
@@ -66,6 +85,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'history') {
+                        return Url::to(['history', 'id' => $model->id]);
+                    }
                     if ($action === 'view') {
                         return Url::to(['view', 'id' => $model->id]);
                     }

@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Flight;
+use common\models\Tariff;
 use backend\models\CreateFlight;
 use common\models\Airport;
 use common\models\Airplane;
@@ -30,7 +31,7 @@ class FlightController extends Controller
         );
     }
 
-    public function actionIndex()
+    public function actionIndex($error = null)
     {
         if (!\Yii::$app->user->can('listFlight')) {
             return;
@@ -47,6 +48,7 @@ class FlightController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'error' => $error,
         ]);
     }
 
@@ -84,6 +86,7 @@ class FlightController extends Controller
         if ($model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
+        return $this->redirect(['index', 'error' => 'There was a error while attempting to create the flight!']);
     }
 
     public function actionUpdate($id)
@@ -115,6 +118,17 @@ class FlightController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionHistory($id)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Tariff::find()
+                ->where('flight_id =' . $id),
+        ]);
+        return $this->render('history', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     protected function findModel($id)

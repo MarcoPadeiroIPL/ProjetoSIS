@@ -15,7 +15,7 @@ use common\models\Tariff;
 class CreateFlight extends Model
 {
     public $departureDate;
-    public $arrivalDate;
+    public $duration;
     public $airportDeparture_id;
     public $airportArrival_id;
     public $airplane_id;
@@ -26,7 +26,7 @@ class CreateFlight extends Model
     {
         return [
             ['departureDate', 'required'],
-            ['arrivalDate', 'required'],
+            ['duration', 'required'],
             ['airportDeparture_id', 'required'],
             ['airportArrival_id', 'required'],
             ['airplane_id', 'required'],
@@ -38,7 +38,7 @@ class CreateFlight extends Model
     {
         $flight = new Flight();
         $flight->departureDate = $this->departureDate;
-        $flight->arrivalDate = $this->arrivalDate;
+        $flight->duration = $this->duration;
         $flight->airportDeparture_id = $this->airportDeparture_id;
         $flight->airportArrival_id = $this->airportArrival_id;
         $flight->airplane_id = $this->airplane_id;
@@ -53,6 +53,7 @@ class CreateFlight extends Model
         $airplaneSeats = Airplane::findOne($this->airplane_id)->countTotalSeats();
 
         $tariff->generateFirstTariff($flight->id, $this->normalPrice, $airportDeparureSearch, $airportArrivalSearch, $airplaneSeats);
-        $tariff->save();
+
+        return $tariff->save();
     }
 }
