@@ -22,13 +22,16 @@ class LoginController extends \yii\web\Controller
     {
         $user = User::findByUsername($username);
         if ($user && $user->validatePassword($password)) {
-            return $this->user = $user;
+            $this->user = $user;
+            return $this->user;
         }
         throw new \yii\web\ForbiddenHttpException('No authentication'); //403
     }
     public function actionIndex()
     {
         $response['status'] = 200;
+        $response['id'] = $this->user->id;
+        $response['role'] = $this->user->authAssignment->item_name;
         $response['token'] = $this->user->auth_key;
 
         $json = json_encode($response);
