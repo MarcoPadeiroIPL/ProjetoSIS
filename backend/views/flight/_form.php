@@ -35,10 +35,10 @@ use kartik\widgets\TimePicker;
 
     <?= $form->field($model, 'duration')->textInput()->label('Duration') ?>
     <div class="row">
-        <div class="col d-flex justify-content-center">
+        <div class="col">
             <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports)->label('Airport Departure') ?>
         </div>
-        <div class="col d-flex justify-content-center">
+        <div class="col">
             <?= $form->field($model, 'airportArrival_id')->dropDownList($airports, ['prompt' => ''])->label('Airport Arrival') ?>
         </div>
     </div>

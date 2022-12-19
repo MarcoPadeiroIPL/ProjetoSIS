@@ -30,18 +30,42 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'luggageCapacity',
-            'minLinha',
-            'minCol',
-            'maxLinha',
-            'maxCol',
-            'economicStart',
-            'economicStop',
-            'normalStart',
-            'normalStop',
-            'luxuryStart',
-            'luxuryStop',
-            'status',
+            [
+                'label' => 'luggageCapacity',
+                'value' => function ($model) {
+                    return $model->luggageCapacity . 'kg';
+                }
+            ],
+            [
+                'label' => 'Seats (Rows - Columns)',
+                'value' => function ($model) {
+                    return $model->minLinha . $model->minCol . ' - ' . $model->maxLinha . $model->maxCol;
+                }
+            ],
+            [
+                'label' => 'Economic',
+                'value' => function ($model) {
+                    return $model->economicStart . ' - ' . $model->economicStop;
+                }
+            ],
+            [
+                'label' => 'Normal',
+                'value' => function ($model) {
+                    return $model->normalStart . ' - ' . $model->normalStop;
+                }
+            ],
+            [
+                'label' => 'Luxury',
+                'value' => function ($model) {
+                    return $model->luxuryStart . ' - ' . $model->luxuryStop;
+                }
+            ],
+            [
+                'label' => 'Total Seats',
+                'value' => function ($model) {
+                    return $model->countTotalSeats();
+                }
+            ],
         ],
     ]) ?>
 
