@@ -17,13 +17,21 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="flight-index">
 
     <h1>Select one flight!</h1>
-    <?php $form = ActiveForm::begin(); ?>
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-4 shadow">
+                asd
+            </div>
+
+            <div class="col shadow">
+                asd
+            </div>
+        </div>
+
+
+
+
+
     </div>
-    <?php ActiveForm::end(); ?>
-
-
-
 
 </div>
