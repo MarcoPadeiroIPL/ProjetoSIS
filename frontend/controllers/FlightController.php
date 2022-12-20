@@ -54,17 +54,30 @@ class FlightController extends Controller
         ]);
     }
 
-    public function actionSelectFlight($airportDeparture_id, $airportArrival_id, $departureDate)
+    public function actionSelectFlight($airportDeparture_id, $airportArrival_id, $departureDate, $selectedFlight = 0)
     {
         $model = new SelectFlight();
 
         // se esta action nao for chamada por post
         if (!$this->request->isPost) {
             // meter uma variavel que tem o top 3 flights para os criterios pedidos
+            $airportDeparture = Airport::findOne($airportDeparture_id);
+            $airportArrival = Airport::findOne($airportArrival_id);
+            $flights = Flight::find()
+                ->where('airportDeparture_id = ' . $airportDeparture_id)
+                ->andWhere('airportArrival_id = ' . $airportArrival_id)->all();
+
+            if ($selectedFlight == 0)
+                $selectedFlight = Flight::findOne(1);
+            else
+                $selectedFlight = Flight::findOne($selectedFlight);
+
             return $this->render('select-flight', [
                 'model' => $model,
-                //'flights' => $flights,
-
+                'flights' => $flights,
+                'selectedFlight' => $selectedFlight,
+                'airportArrival' => $airportArrival,
+                'airportDeparture' => $airportDeparture,
             ]);
         }
 
@@ -98,3 +111,4 @@ class FlightController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
+
