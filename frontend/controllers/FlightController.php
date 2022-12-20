@@ -47,37 +47,11 @@ class FlightController extends Controller
         // caso seja chamado por post, redireciona para o proximo passo
         $form = $_POST['SelectAirport'];
         return $this->redirect([
-            'select-date',
+            'select-flight',
             'airportDeparture_id' => $form['airportDeparture_id'],
             'airportArrival_id' => $form['airportArrival_id'],
+            'departureDate' => $form['departureDate'],
         ]);
-    }
-    public function actionSelectDate($airportDeparture_id, $airportArrival_id)
-    {
-        $model = new SelectDate();
-
-        // se esta action nao for chamada por post
-        if (!$this->request->isPost) {
-            $model->airportDeparture_id = $airportDeparture_id;
-            $model->airportArrival_id = $airportArrival_id;
-            return $this->render('select-date', [
-                'model' => $model,
-                'airportDeparture_id' => $airportDeparture_id,
-                'airportArrival_id' => $airportArrival_id,
-            ]);
-        }
-
-
-        // caso seja chamado por post, redireciona para o proximo passo
-        if (isset($_POST['SelectDate']['airportDeparture_id'])) {
-            $form = $_POST['SelectDate'];
-            return $this->redirect([
-                'select-flight',
-                'airportDeparture_id' => $form['airportDeparture_id'],
-                'airportArrival_id' => $form['airportArrival_id'],
-                'departureDate' => $form['departureDate'],
-            ]);
-        }
     }
 
     public function actionSelectFlight($airportDeparture_id, $airportArrival_id, $departureDate)
@@ -90,6 +64,7 @@ class FlightController extends Controller
             return $this->render('select-flight', [
                 'model' => $model,
                 //'flights' => $flights,
+
             ]);
         }
 
@@ -102,7 +77,6 @@ class FlightController extends Controller
                 'airportDeparture_id' => $form['airportDeparture_id'],
                 'airportArrival_id' => $form['airportArrival_id'],
                 'departureDate' => $form['departureDate'],
-                'departureDate' => $form['flight_id'],
             ]);
         }
     }

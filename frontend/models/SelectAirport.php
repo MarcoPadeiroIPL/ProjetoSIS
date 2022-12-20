@@ -9,6 +9,7 @@ class SelectAirport extends Model
 {
     public $airportDeparture_id;
     public $airportArrival_id;
+    public $departureDate;
 
     /**
      * {@inheritdoc}
@@ -17,9 +18,8 @@ class SelectAirport extends Model
     {
         return [
             ['airportDeparture_id', 'required'],
-
             ['airportArrival_id', 'required'],
-
+            ['departureDate', 'required'],
         ];
     }
 }
