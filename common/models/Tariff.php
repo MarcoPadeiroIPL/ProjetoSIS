@@ -79,4 +79,10 @@ class Tariff extends \yii\db\ActiveRecord
         $this->economicPrice = $this->normalPrice - ($this->normalPrice * 0.25);
         $this->luxuryPrice = $this->normalPrice + ($this->normalPrice * 0.25);
     }
+
+    public function updateTariff()
+    {
+        // TODO: Deactivate last active one and create a new one with a new price
+        
+    }
 }

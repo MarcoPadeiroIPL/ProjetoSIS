@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'label' => 'luggageCapacity',
-                'value' => function (Airplane $model) {
+                'value' => function ($model) {
                     return $model->luggageCapacity . 'kg';
                 }
             ],
@@ -50,6 +50,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Luxury',
                 'value' => function ($model) {
                     return $model->luxuryStart . ' - ' . $model->luxuryStop;
+                }
+            ],
+            [
+                'label' => 'Total Seats',
+                'value' => function ($model) {
+                    return $model->countTotalSeats();
                 }
             ],
             [

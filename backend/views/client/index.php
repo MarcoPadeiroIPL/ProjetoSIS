@@ -14,10 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-index">
 
-    <div class="d-flex m-2 justify-content-end">
-        <?= Html::a('+ Create Client', ['create'], ['class' => 'btn btn-dark']) ?>
-    </div>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
