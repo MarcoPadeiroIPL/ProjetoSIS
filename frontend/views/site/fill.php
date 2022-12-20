@@ -20,9 +20,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'birthdate')->textInput() ?>
 
-    <?= $form->field($model, 'nif')->textInput() ?>
+    <?= $form->field($model, 'nif')->textInput(['maxlength' => 9]) ?>
 
-    <?= $form->field($model, 'phone')->textInput() ?>
+    <?= $form->field($model, 'phone')->textInput(['maxlength' => 9]) ?>
 
     <?= $form->field($model, 'gender')->dropDownList([
         'M' => 'Male',
