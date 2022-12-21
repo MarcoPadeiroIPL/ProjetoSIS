@@ -26,6 +26,15 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
+                        'allow' => false,
+                        'actions' => ['index'],
+                        'roles' => ['client'],
+                        'denyCallback' => function ($rule, $action) {
+                            Yii::$app->user->logout();
+                            \Yii::$app->response->redirect(['../../frontend/web/site/login']);
+                        },
+                    ],
+                    [
                         'actions' => ['login', 'error'],
                         'allow' => true,
                     ],
