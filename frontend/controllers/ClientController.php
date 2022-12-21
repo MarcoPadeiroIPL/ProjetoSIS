@@ -10,23 +10,40 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use common\models\UserData;
+use yii\filters\AccessControl;
 
 
 class ClientController extends Controller
 {
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['index', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['client']
+                    ],
+                    
+                ],
+            ],
+            
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'logout' => ['post'],
                     ],
                 ],
-            ]
-        );
+            ];
+    
+        
     }
 
     public function actionIndex()
