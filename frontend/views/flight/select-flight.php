@@ -20,8 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php } else { ?>
         <h1>Select one flight!</h1>
         <div class="container">
-            <div class="row" style="height: 400px;">
-                <div class="col-4 shadow m-3" style="overflow-y:auto; ">
+            <div class="row" style="height: 40vh;">
+                <div class="col-3 shadow m-3" style="overflow-y:auto; ">
                     <div class="row w-100 p-3">
                         <div class="col-2">ID</div>
                         <div class="col-8">Departure Date</div>
@@ -39,22 +39,64 @@ $this->params['breadcrumbs'][] = $this->title;
                             'flight/select-flight',
                             'airportDeparture_id' => $flight->airportDeparture->id,
                             'airportArrival_id' => $flight->airportArrival->id,
-                            'departureDate' => $flight->departureDate,
                             'selectedFlight' => $flight->id
                         ]); ?>
                     <?php } ?>
                 </div>
 
-                <div class="col shadow m-3">
-                    <div class="row w-75">
-                        <div class="col-4 shadow">
-                            <?= $selectedFlight->activeTariff()->economicPrice ?>
+                <div class="col m-3">
+                    <div class="row h2 d-flex justify-content-center">
+                        <?= $selectedFlight->airportDeparture->city . " -> " . $selectedFlight->airportArrival->city . " | " . $selectedFlight->departureDate   ?>
+                    </div>
+                    <div class="row" style="height: 40vh;">
+                        <div class="col m-5 shadow rounded bg-secondary text-white">
+                            <div class="row">
+                                <span class="fs-1 p-3 text-center">ECONOMIC</span>
+                            </div>
+                            <div class="row">
+                                <ul>
+                                    <li class="fs-3 text-center">Choose Economic seat</li>
+                                </ul>
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <a class='btn border w-75 fs-1 text-white' href="ticket/chooseSeat">
+                                    <?= $selectedFlight->activeTariff()->economicPrice?>€
+                                </a>
+                            </div>
                         </div>
-                        <div class="col-4 shadow">
-                            <?= $selectedFlight->activeTariff()->normalPrice ?>
+                        <div class="col m-5 shadow rounded bg-info text-white">
+                            <div class="row">
+                                <span class="fs-1 p-3 text-center">NORMAL</span>
+                            </div>
+                            <div class="row">
+                                <ul>
+                                    <li class="fs-3 text-center">Choose Normal seat</li>
+                                    <li class="fs-3 text-center">One bag of 10kg included</li>
+                                    <li class="fs-3 text-center">Refundable</li>
+                                </ul>
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <a class='btn border w-75 fs-1 text-white' href="ticket/chooseSeat">
+                                    <?= $selectedFlight->activeTariff()->normalPrice ?>€
+                                </a>
+                            </div>
                         </div>
-                        <div class="col shadow">
-                            <?= $selectedFlight->activeTariff()->luxuryPrice ?>
+                        <div class="col m-5 shadow border bg-warning text-white">
+                            <div class="row">
+                                <span class="fs-1 p-3 text-center">LUXURY</span>
+                            </div>
+                            <div class="row">
+                                <ul>
+                                    <li class="fs-3 text-center">Choose Luxury seat</li>
+                                    <li class="fs-3 text-center">One bag of 20kg included</li>
+                                    <li class="fs-3 text-center">Refundable</li>
+                                </ul>
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <a class='btn border w-75 fs-1 text-white' href="ticket/chooseSeat">
+                                    <?= $selectedFlight->activeTariff()->luxuryPrice ?>€
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

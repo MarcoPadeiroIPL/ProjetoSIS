@@ -71,7 +71,7 @@ class FlightController extends Controller
         ]);
     }
 
-    public function actionSelectFlight($airportDeparture_id, $airportArrival_id, $departureDate, $selectedFlight = 0)
+    public function actionSelectFlight($airportDeparture_id, $airportArrival_id, $departureDate = null, $selectedFlight = 0)
     {
         $model = new SelectFlight();
 
