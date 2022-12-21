@@ -33,7 +33,7 @@ class ClientController extends Controller
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => User::find()->where('status=10')
+            'query' => User::find()->where('status=10 OR status=8')
             ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
             ->andWhere('auth_assignment.item_name = "client"'),
         ]);
