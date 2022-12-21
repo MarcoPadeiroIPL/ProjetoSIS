@@ -38,12 +38,14 @@ use yii\grid\GridView;
                             'amount',
                             'status',
                             'requestDate',
-                            //'client_id',  
+                            //'client_id', 
                             [
                                 'class' => ActionColumn::className(),
-                                'template' => '{delete}',
+                                'template' => '{view} {delete}',
 
-                            ],
+                            ], 
+                            
+                           
                         ],
                     ]); ?>
                 </div>

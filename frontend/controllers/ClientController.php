@@ -7,7 +7,10 @@ use common\models\Client;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
+use common\models\UserData;
+
 
 class ClientController extends Controller
 {
@@ -43,16 +46,24 @@ class ClientController extends Controller
         if (!\Yii::$app->user->can('updateClient')) {
             return;
         }
-
-        $model = $this->findModel($user_id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'user_id' => $model->user_id]);
+        $userId = Yii::$app->user->id;
+        if ($user_id != $userId) {
+            throw new ForbiddenHttpException('You are not allowed to view this profile.');
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $model =UserData::findOne($user_id);
+
+        if (!$this->request->isPost) {
+            $model->loadDefaultValues();
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+
+        if ($model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['index']);
+        }
+       
     }
 
     public function actionDelete($user_id)
@@ -75,4 +86,3 @@ class ClientController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-

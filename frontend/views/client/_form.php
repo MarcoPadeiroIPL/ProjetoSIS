@@ -12,11 +12,23 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'user_id')->textInput() ?>
+    <?= $form->field($model, 'user_id')->hiddenInput(['value' => Yii::$app->user->identity->getId()])->label(false) ?>
 
-    <?= $form->field($model, 'balance')->textInput() ?>
+    <?= $form->field($model, 'fName')->textInput() ?>
 
-    <?= $form->field($model, 'application')->textInput() ?>
+    <?= $form->field($model, 'surname')->textInput() ?>
+
+    <?= $form->field($model, 'birthdate')->textInput() ?>
+
+    <?= $form->field($model, 'nif')->textInput(['maxlength' => 9]) ?>
+
+    <?= $form->field($model, 'phone')->textInput(['maxlength' => 9]) ?>
+
+    <?= $form->field($model, 'gender')->dropDownList([
+        'M' => 'Male',
+        'F' => 'Female'
+    ]) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

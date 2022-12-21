@@ -9,6 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
+
 $this->title = 'My Profile';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -22,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h3><?= $client->user->email ?></h3>
                     <h3><?= $client->user->userData->phone ?></h3>
 
-                    <?= Html::a('Edit profile', ['create'], ['class' => 'btn btn-success']) ?>
+                    <?= Html::a('Edit profile',['update','user_id' => $client->user_id], ['class' => 'btn btn-success']) ?>
                 </div>
                 <div class="col">
                     <div class="row">

@@ -7,6 +7,7 @@ use common\models\BalanceReq;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use common\models\Client;
 use yii\filters\AccessControl;
@@ -78,8 +79,16 @@ class BalanceReqController extends Controller
             return;
         }
 
+        $model = $this->findModel($id);
+
+        $userId=Yii::$app->user->id;
+        
+        if ($model->client_id != $userId) {
+            throw new ForbiddenHttpException('You are not allowed to view this balance request.');
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -99,7 +108,7 @@ class BalanceReqController extends Controller
         }
 
         if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
     }
 
