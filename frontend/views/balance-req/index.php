@@ -14,13 +14,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="balance-req-index">
 
-    <h1>My balance: <?=  $client->balance ?>€</h1>
+    <h1>My balance: <?= $client->balance ?>€</h1>
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
         <?= Html::a('Create Balance Req', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-   
-    
+
+
 
 
     <?= GridView::widget([
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, BalanceReq $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
         ],
     ]); ?>

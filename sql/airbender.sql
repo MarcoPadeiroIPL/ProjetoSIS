@@ -481,7 +481,7 @@ DROP TABLE IF EXISTS `flights`;
 CREATE TABLE `flights` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `departureDate` datetime NOT NULL,
-  `arrivalDate` datetime NOT NULL,
+  `duration`  time NOT NULL,
   `airplane_id` int(11) NOT NULL,
   `airportDeparture_id` int(11) NOT NULL,
   `airportArrival_id` int(11) NOT NULL,
@@ -547,7 +547,7 @@ CREATE TABLE `receipts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `purchaseDate` datetime NOT NULL,
   `total` double(10,2) NOT NULL,
-  `status` enum('Complete','Refunded') DEFAULT NULL,
+  `status` enum('Complete','Pending' , 'Refunded') DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

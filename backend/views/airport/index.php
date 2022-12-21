@@ -22,15 +22,54 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id',
             'country',
             'code',
             'city',
-            'search',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Airport $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
+                'label' => 'Search',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return $model->search . '%';
+                },
+            ],
+            'status',
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view} {update} {delete}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-eye"></i>', $url, [
+                            'title' => Yii::t('app', 'View'),
+                            'class' => 'btn btn-sm btn-primary',
+                        ]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-edit"></i>', $url, [
+                            'title' => Yii::t('app', 'Update'),
+                            'class' => 'btn btn-sm btn-primary',
+                        ]);
+                    },
+                    'delete' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-trash"></i>', $url, [
+                            'title' => Yii::t('app', 'Delete'),
+                            'class' => 'btn btn-sm btn-danger',
+                            'data' => [
+                                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                                'method' => 'post',
+                            ],
+                        ]);
+                    },
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view') {
+                        return Url::to(['view', 'id' => $model->id]);
+                    }
+                    if ($action === 'update') {
+                        return Url::to(['update', 'id' => $model->id]);
+                    }
+                    if ($action === 'delete') {
+                        return Url::to(['delete', 'id' => $model->id]);
+                    }
                 }
             ],
         ],

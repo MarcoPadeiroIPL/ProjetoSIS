@@ -43,6 +43,10 @@ class Airplane extends \yii\db\ActiveRecord
             [['luggageCapacity', 'minLinha', 'maxLinha'], 'integer'],
             [['status'], 'string'],
             [['minCol', 'maxCol', 'economicStart', 'economicStop', 'normalStart', 'normalStop', 'luxuryStart', 'luxuryStop'], 'string', 'max' => 1],
+            [['maxLinha'], 'integer', 'min' => 1, 'max' => 18, 'tooSmall' => 'The maximum line must be between 1 and 9', 'tooBig' => 'The maximum line must be between 1 and 9'],
+            //Se a letra da minCol for "maior" que a letra da maxCol vai dar erro
+            ['minCol', 'compare', 'compareAttribute' => 'maxCol', 'operator' => '<=', 'message' => 'The minimum column must be before the maximum column.'],
+            ['maxCol', 'compare', 'compareValue' => 'I', 'operator' => '<=', 'message' => 'Columns range from A to I.'],
         ];
     }
 
@@ -54,9 +58,9 @@ class Airplane extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'luggageCapacity' => 'Luggage Capacity',
-            'minLinha' => 'Min Linha',
+            'minLinha' => 'Min Row',
             'minCol' => 'Min Col',
-            'maxLinha' => 'Max Linha',
+            'maxLinha' => 'Max Row',
             'maxCol' => 'Max Col',
             'economicStart' => 'Economic Start',
             'economicStop' => 'Economic Stop',
@@ -76,5 +80,16 @@ class Airplane extends \yii\db\ActiveRecord
     public function getFlights()
     {
         return $this->hasMany(Flights::class, ['airplane_id' => 'id']);
+    }
+
+    public function countTotalSeats()
+    {
+        $count = 0;
+        for ($i = $this->minCol; $i <= $this->maxCol; $i++) {
+            for ($j = $this->minLinha; $j <= $this->maxLinha; $j++) {
+                $count++;
+            }
+        }
+        return $count;
     }
 }
