@@ -59,9 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <a class='btn border w-75 fs-1 text-white' href="ticket/chooseSeat">
-                                    <?= $selectedFlight->activeTariff()->economicPrice?>€
-                                </a>
+                                <?= Html::a($selectedFlight->activeTariff()->economicPrice. '€',['/ticket/chooseSeat'],['class' => 'btn border w-75 fs-1 text-white']); ?>
                             </div>
                         </div>
                         <div class="col m-5 shadow rounded bg-info text-white">
@@ -76,9 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <a class='btn border w-75 fs-1 text-white' href="ticket/chooseSeat">
-                                    <?= $selectedFlight->activeTariff()->normalPrice ?>€
-                                </a>
+                                <?= Html::a($selectedFlight->activeTariff()->normalPrice. '€',['/ticket/chooseSeat'],['class' => 'btn border w-75 fs-1 text-white']); ?>
                             </div>
                         </div>
                         <div class="col m-5 shadow border bg-warning text-white">
@@ -93,10 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <a class='btn border w-75 fs-1 text-white' href="ticket/chooseSeat">
-                                    <?= $selectedFlight->activeTariff()->luxuryPrice ?>€
-                                </a>
-                            </div>
+                                <?= Html::a($selectedFlight->activeTariff()->luxuryPrice. '€',['/ticket/chooseSeat'],['class' => 'btn border w-75 fs-1 text-white']); ?>
                         </div>
                     </div>
                 </div>
