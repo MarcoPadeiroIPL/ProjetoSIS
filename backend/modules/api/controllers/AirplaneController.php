@@ -4,6 +4,7 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
+use yii\filters\AccessControl;
 
 class AirplaneController extends ActiveController
 {

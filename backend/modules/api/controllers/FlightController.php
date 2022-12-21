@@ -3,8 +3,10 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
+use common\models\Flight;
+use common\models\Ticket;
 
-class ConfigController extends ActiveController
+class FlightController extends ActiveController
 {
     public $modelClass = 'common\models\Flight';
 
@@ -15,5 +17,13 @@ class ConfigController extends ActiveController
             'class' => \yii\filters\auth\QueryParamAuth::class,
         ];
         return $behaviors;
+    }
+    public function actions()
+    {
+        $actions = parent::actions();
+
+        unset($actions['create'], $actions['delete'], $actions['update']);
+
+        return $actions;
     }
 }

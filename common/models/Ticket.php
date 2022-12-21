@@ -87,7 +87,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getCheckedIn0()
     {
-        return $this->hasOne(Employees::class, ['user_id' => 'checkedIn']);
+        return $this->hasOne(backend\models\Employee::class, ['user_id' => 'checkedIn']);
     }
 
     /**
@@ -97,7 +97,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getClient()
     {
-        return $this->hasOne(Clients::class, ['user_id' => 'client_id']);
+        return $this->hasOne(Client::class, ['user_id' => 'client_id']);
     }
 
     /**
@@ -107,7 +107,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getFlight()
     {
-        return $this->hasOne(Flights::class, ['id' => 'flight_id']);
+        return $this->hasOne(Flight::class, ['id' => 'flight_id']);
     }
 
     /**
@@ -117,7 +117,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getLuggage1()
     {
-        return $this->hasOne(Configs::class, ['id' => 'luggage_1']);
+        return $this->hasOne(Config::class, ['id' => 'luggage_1']);
     }
 
     /**
@@ -127,7 +127,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getLuggage2()
     {
-        return $this->hasOne(Configs::class, ['id' => 'luggage_2']);
+        return $this->hasOne(Config::class, ['id' => 'luggage_2']);
     }
 
     /**
@@ -137,6 +137,6 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getReceipt()
     {
-        return $this->hasOne(Receipts::class, ['id' => 'receipt_id']);
+        return $this->hasOne(Receipt::class, ['id' => 'receipt_id']);
     }
 }

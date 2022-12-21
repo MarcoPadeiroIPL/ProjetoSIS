@@ -49,6 +49,24 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function fields()
+    {
+        return [
+            'id',
+            'username',
+            'email',
+            'role' => function ($model) {
+                return $model->authAssignment->item_name;
+            },
+            'status',
+            'userData' => function ($model) {
+                return $model->userData;
+            },
+            'client' => function ($model) {
+                return $model->client;
+            },
+        ];
+    }
     public function attributeLabels()
     {
         return [

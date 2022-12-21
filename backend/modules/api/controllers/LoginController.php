@@ -18,6 +18,17 @@ class LoginController extends \yii\web\Controller
         ];
         return $behaviors;
     }
+
+    public function actions()
+    {
+        $actions = parent::actions();
+
+        // dar disable de todas as actions desnecessarias
+        unset($actions['delete'], $actions['create'], $actions['view'], $actions['update'], $actions['options']);
+
+        return $actions;
+    }
+
     public function auth($username, $password)
     {
         $user = User::findByUsername($username);
