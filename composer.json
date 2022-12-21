@@ -46,7 +46,6 @@
     "allow-plugins": {
       "yiisoft/yii2-composer": true
     },
-<<<<<<< HEAD
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.4.0",
@@ -87,8 +86,7 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
-=======
+    ],
     "process-timeout": 1800,
     "fxp-asset": {
       "enabled": false
@@ -100,5 +98,4 @@
       "url": "https://asset-packagist.org"
     }
   ]
->>>>>>> frontend
 }

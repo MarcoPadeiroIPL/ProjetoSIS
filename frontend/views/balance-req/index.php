@@ -31,36 +31,6 @@ use yii\grid\GridView;
                         </div>
                     </div>
 
-<<<<<<< HEAD
-    <h1>My balance: <?= $client->balance ?>€</h1>
-    <h1><?= Html::encode($this->title) ?></h1>
-    <p>
-        <?= Html::a('Create Balance Req', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-
-
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'amount',
-            'status',
-            'requestDate',
-            'decisionDate',
-            //'client_id',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, BalanceReq $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                }
-            ],
-        ],
-    ]); ?>
-=======
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'columns' => [
@@ -72,7 +42,6 @@ use yii\grid\GridView;
                             [
                                 'class' => ActionColumn::className(),
                                 'template' => '{view} {delete}',
->>>>>>> frontend
 
                             ], 
                             
