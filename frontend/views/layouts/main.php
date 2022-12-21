@@ -31,7 +31,7 @@ AppAsset::register($this);
     <div class="gtco-loader"></div>
     <div id="page">
         <!-- <div class="page-inner"> -->
-        <nav class="gtco-nav" role="navigation">
+        <nav class="gtco-nav bg-dark" role="navigation">
             <div class="gtco-container">
 
                 <div class="row">
@@ -69,27 +69,6 @@ AppAsset::register($this);
 
             </div>
         </nav>
-        <header id="gtco-header" class="gtco-cover gtco-cover-sm" role="banner" style="background-image: url('" . <?= Yii::getAlias('@web') . "/images/img_6.jpg" ?>')">
-            <div class="overlay"></div>
-            <div class="gtco-container">
-                <div class="row">
-                    <div class="col-md-12 col-md-offset-0 text-center">
-                        <div class="row row-mt-15em">
-
-                            <div class="col-md-12 mt-text animate-box" data-animate-effect="fadeInUp">
-                                <?php if (Yii::$app->user->isGuest) { ?>
-                                    <h1>Welcome to airbender!</h1>
-                                <?php } else { ?>
-                                    <h1>Welcome back, <?= Yii::$app->user->identity->username ?>!</h1>
-                                <?php } ?>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </header>
 
         <main role="main" class="flex-shrink-0">
             <div class="container">

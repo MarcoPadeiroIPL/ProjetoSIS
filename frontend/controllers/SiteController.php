@@ -27,9 +27,29 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['signup', 'login', 'error'],
+                        'actions' => ['index', 'signup', 'login', 'error'],
                         'allow' => true,
                         'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => false,
+                        'actions' => ['index', 'contact', 'about'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
+                            \Yii::$app->response->redirect(['site/fill']);
+                        },
+                    ],
+                    [
+                        'allow' => false,
+                        'actions' => ['index', 'contact', 'about'],
+                        'roles' => ['admin', 'ticketOperator', 'supervisor'],
+                        'denyCallback' => function ($rule, $action) {
+                            Yii::$app->user->logout();
+                            \Yii::$app->response->redirect(['../../backend/web/site/index']);
+                        },
                     ],
                     [
                         'actions' => ['index', 'contact', 'about'],
@@ -37,7 +57,7 @@ class SiteController extends Controller
                         'roles' => ['client'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 10;
-                        }
+                        },
                     ],
                     [
                         'actions' => ['fill'],
@@ -45,7 +65,7 @@ class SiteController extends Controller
                         'roles' => ['client'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 8;
-                        }
+                        },
                     ],
                     [
                         'actions' => ['logout', 'error'],

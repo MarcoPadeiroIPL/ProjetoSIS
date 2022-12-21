@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use common\models\Flight;
 use common\models\Airport;
 use frontend\models\SelectAirport;
@@ -23,15 +24,16 @@ class FlightController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['select-flight', 'select-airport', 'view'],
                         'allow' => true,
+                        'roles' => ['client', '?'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->isGuest || Yii::$app->user->identity->status == 10;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            throw new \Exception('nigger');
+                        }
                     ],
-                    [
-                        'actions' => ['select-airport', 'select-flight', 'view'],
-                        'allow' => true,
-                        'roles' => ['client', '?']
-                    ],
-                    
                 ],
             ],
             
@@ -85,7 +87,9 @@ class FlightController extends Controller
                 ->andWhere('airportArrival_id = ' . $airportArrival_id)->all();
 
             if ($selectedFlight == 0)
-                $selectedFlight = Flight::findOne(1);
+                $selectedFlight = Flight::find()
+                    ->where('airportDeparture_id = ' . $airportDeparture_id)
+                    ->andWhere('airportArrival_id = ' . $airportArrival_id)->one();
             else
                 $selectedFlight = Flight::findOne($selectedFlight);
 
