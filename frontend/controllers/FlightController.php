@@ -12,22 +12,39 @@ use yii\web\Controller;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 class FlightController extends Controller
 {
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['select-airport', 'select-flight', 'view'],
+                        'allow' => true,
+                        'roles' => ['client', '?']
+                    ],
+                    
+                ],
+            ],
+            
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'logout' => ['post'],
                     ],
                 ],
-            ]
-        );
+            ];
+        
+        
     }
 
     public function actionSelectAirport()
