@@ -25,12 +25,27 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['signup', 'login', 'error'],
                         'allow' => true,
                         'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['index', 'contact', 'about'],
+                        'allow' => true,
+                        'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 10;
+                        }
+                    ],
+                    [
+                        'actions' => ['fill'],
+                        'allow' => true,
+                        'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        }
                     ],
                     [
                         'actions' => ['logout', 'error'],
@@ -64,6 +79,12 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
+    }
+
+    // Match callback called! This page can be accessed only each October 31st
+    public function actionNeedFill()
+    {
+        return $this->redirect(['fill']);
     }
 
     public function actionIndex()
