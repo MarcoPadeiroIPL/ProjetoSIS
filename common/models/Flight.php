@@ -114,7 +114,6 @@ class Flight extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Ticket::class, ['flight_id' => 'id']);
     }
-
     public function activeTariff()
     {
         if (is_null($this->tariff)) {

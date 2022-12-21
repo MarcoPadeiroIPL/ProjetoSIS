@@ -4,18 +4,19 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var common\models\BalanceReq $model */
+/** @var common\models\Flight $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Balance Reqs', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Flights', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="balance-req-view">
+<div class="flight-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -23,22 +24,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-        <a href="index">Voltar atrás</a>
     </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            'amount',
+            'departureDate',
+            'arrivalDate',
+            'airplane_id',
+            'airportDeparture_id',
+            'airportArrival_id',
             'status',
-            'requestDate',
-            [
-                'label' =>'Decision Date',
-                'value' => function ($model) {
-                    return isset($model->decisionDate) ? $model->decisionDate : "To be decided";
-                }
-            ],
         ],
     ]) ?>
 
