@@ -2,6 +2,13 @@
 
 use yii\helpers\Html;
 ?>
+<?php if (Yii::$app->session->hasFlash('error')) : ?>
+    <div class="alert alert-danger alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <h4><i class="icon fa fa-minus"></i>Error!</h4>
+        <?= Yii::$app->session->getFlash('error') ?>
+    </div>
+<?php endif; ?>
 <div class="card">
     <div class="card-body login-card-body">
         <p class="login-box-msg">Sign in to start your session</p>

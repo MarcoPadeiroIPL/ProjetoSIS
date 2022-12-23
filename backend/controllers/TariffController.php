@@ -20,36 +20,15 @@ class TariffController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['index'],
                         'allow' => true,
+                        'roles' => ['admin', 'supervisor', 'ticketOperator'],
                     ],
                     [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
-                        'allow' => true,
-                        'roles' => ['admin','supervisor'],
-                    ],
-                    [
-                        'actions' => ['view','index'],
-                        'allow' => true,
-                        'roles' => ['ticketOperator'],
-                    ],
-                    [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'actions' => ['index'],
                         'allow' => false,
                         'roles' => ['client', '?'],
                     ],
-                    [
-                        'actions' => ['create', 'delete', 'update'],
-                        'allow' => false,
-                        'roles' => ['ticketOperator'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -57,15 +36,15 @@ class TariffController extends Controller
 
     public function actionIndex($flight_id)
     {
-        if (!\Yii::$app->user->can('listTariff')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listTariff'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $flight = Flight::findOne([$flight_id]);
         $dataProvider = new ActiveDataProvider([
             'query' => Tariff::find()
-            ->where('flight_id =' . $flight_id)
-            ->orderBy(['startDate' => SORT_DESC]),
+                ->where('flight_id =' . $flight_id)
+                ->orderBy(['startDate' => SORT_DESC]),
         ]);
         return $this->render('index', [
             'flight' => $flight,
@@ -82,4 +61,3 @@ class TariffController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-

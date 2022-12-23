@@ -18,28 +18,17 @@ class ReceiptController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'actions' => ['index', 'update', 'view'],
                         'allow' => true,
                         'roles' => ['admin','supervisor'],
                     ],
                    
                     [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'actions' => ['index',  'update', 'view'],
                         'allow' => false,
                         'roles' => ['client', '?','ticketOperator'],
                     ],
                     
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -47,9 +36,9 @@ class ReceiptController extends Controller
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listReceipt')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listReceipt')) 
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => Receipt::find(),
@@ -62,9 +51,9 @@ class ReceiptController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readReceipt')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readReceipt')) 
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $this->render('view', [
             'model' => $this->findModel($id),
@@ -73,9 +62,9 @@ class ReceiptController extends Controller
 
     public function actionCreate()
     {
-        if (!\Yii::$app->user->can('createReceipt')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('createReceipt')) 
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = new Receipt();
 
@@ -85,38 +74,34 @@ class ReceiptController extends Controller
             return $this->render('create', ['model' => $model]);
         }
 
-        // caso seja post
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())){
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Receipt created successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Receipt not saved.");
+            return $this->redirect(['index']);
         }
     }
 
     public function actionUpdate($id)
     {
-        if (!\Yii::$app->user->can('updateReceipt')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateReceipt')) 
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())){
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Receipt updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Receipt not updated successfully.");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
-    }
-
-    public function actionDelete($id)
-    {
-        if (!\Yii::$app->user->can('deleteReceipt')) {
-            return;
-        }
-
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     protected function findModel($id)

@@ -18,16 +18,12 @@ class ConfigController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
                         'actions' => ['index', 'create', 'delete', 'update', 'view'],
                         'allow' => true,
-                        'roles' => ['admin','supervisor'],
+                        'roles' => ['admin', 'supervisor'],
                     ],
                     [
-                        'actions' => ['view','index'],
+                        'actions' => ['view', 'index'],
                         'allow' => true,
                         'roles' => ['ticketOperator'],
                     ],
@@ -46,7 +42,6 @@ class ConfigController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
                     'delete' => ['POST'],
                 ],
             ],
@@ -55,9 +50,9 @@ class ConfigController extends Controller
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => Config::find(),
@@ -70,9 +65,9 @@ class ConfigController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -80,9 +75,9 @@ class ConfigController extends Controller
 
     public function actionCreate()
     {
-        if (!\Yii::$app->user->can('createConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('createConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = new Config();
 
@@ -94,22 +89,29 @@ class ConfigController extends Controller
             ]);
         }
 
-        // caso seja post guarda
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Config created successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Config not saved.");
+            return $this->redirect(['index']);
         }
     }
 
     public function actionUpdate($id)
     {
-        if (!\Yii::$app->user->can('updateConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Config updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Config not updated successfully.");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -119,9 +121,9 @@ class ConfigController extends Controller
 
     public function actionDelete($id)
     {
-        if (!\Yii::$app->user->can('deleteConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('deleteConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = $this->findModel($id);
 
@@ -129,8 +131,11 @@ class ConfigController extends Controller
         // '$model->active = !$model->active'
         // nao funciona por algum motivo
         $model->active = $model->active ? 0 : 1;
-        $model->save();
 
+        if ($model->save())
+            \Yii::$app->session->setFlash('success', "Config deleted successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Config not deleted successfully.");
         return $this->redirect(['index']);
     }
 

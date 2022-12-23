@@ -18,28 +18,17 @@ class RefundController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'actions' => ['index', 'update', 'view'],
                         'allow' => true,
                         'roles' => ['admin','supervisor'],
                     ],
                    
                     [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'actions' => ['index', 'update', 'view'],
                         'allow' => false,
                         'roles' => ['client', '?','ticketOperator'],
                     ],
                     
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -47,9 +36,9 @@ class RefundController extends Controller
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listRefund')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listRefund')) 
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => Refund::find(),
@@ -62,63 +51,34 @@ class RefundController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readRefund')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readRefund')) 
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
-    public function actionCreate()
-    {
-        if (!\Yii::$app->user->can('createRefund')) {
-            return;
-        }
-
-        $model = new Refund();
-
-        // caso nao seja post
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-
-        // caso seja post
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-    }
-
     public function actionUpdate($id)
     {
-        if (!\Yii::$app->user->can('updateRefund')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateRefund')) 
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())){
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Refund updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Refund not updated successfully.");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
-    }
-
-    public function actionDelete($id)
-    {
-        if (!\Yii::$app->user->can('deleteRefund')) {
-            return;
-        }
-
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     protected function findModel($id)

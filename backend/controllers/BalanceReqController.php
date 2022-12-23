@@ -26,25 +26,20 @@ class BalanceReqController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['index', 'history', 'accept', 'decline', 'view'],
+                        'actions' => ['index', 'accept', 'decline', 'view'],
                         'allow' => true,
                         'roles' => ['admin', 'supervisor'],
                     ],
                     [
-                        'actions' => ['index', 'accept', 'history', 'decline', 'view'],
+                        'actions' => ['index', 'accept', 'decline', 'view'],
                         'allow' => false,
-                        'roles' => ['ticketOperator', 'client'],
+                        'roles' => ['ticketOperator', 'client', '?'],
                     ],
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
                     'delete' => ['POST'],
                 ],
             ],
@@ -53,9 +48,9 @@ class BalanceReqController extends Controller
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listBalanceReq')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => BalanceReq::find()->where('status="Ongoing"'),
@@ -67,9 +62,9 @@ class BalanceReqController extends Controller
     }
     public function actionHistory()
     {
-        if (!\Yii::$app->user->can('listBalanceReq')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
@@ -82,9 +77,9 @@ class BalanceReqController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readBalanceReq')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -93,15 +88,15 @@ class BalanceReqController extends Controller
 
     public function actionAccept($id)
     {
-        if (!\Yii::$app->user->can('updateBalanceReq')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $balanceReq = $this->findModel($id);
 
         if ($balanceReq->status != 'Ongoing') {
-            // Not allowed to change status of not ongoing balance req
-            return;
+            \Yii::$app->session->setFlash('error', "Decision was already made");
+            return $this->redirect(['index']);
         }
 
         $employee_id = \Yii::$app->user->getId();
@@ -112,33 +107,41 @@ class BalanceReqController extends Controller
 
         // assign responsible employee
         $balanceReqEmployee = new BalanceReqEmployee($id, $employee_id);
-        $balanceReqEmployee->save();
+        $balanceReq->status = 'Accepted';
+        $balanceReq->decisionDate = date('Y-m-d H:i:s');
 
-        $balanceReq->setStatus('Accepted');
-        $client->save();
+        if (!$balanceReq->save() || !$balanceReqEmployee->save() || !$client->save())
+            \Yii::$app->session->setFlash('error', "Error while trying to save");
+        else 
+            \Yii::$app->session->setFlash('success', "Accepted successfuly");
+            
 
         return $this->redirect('index');
     }
     public function actionDecline($id)
     {
-        if (!\Yii::$app->user->can('updateBalanceReq')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $balanceReq = $this->findModel($id);
 
         if ($balanceReq->status != 'Ongoing') {
-            // Not allowed to change status of not ongoing balance req
-            return;
+            \Yii::$app->session->setFlash('error', "Decision was already made");
+            return $this->redirect(['index']);
         }
 
         $employee_id = \Yii::$app->user->getId();
 
         // assign responsible employee
         $balanceReqEmployee = new BalanceReqEmployee($id, $employee_id);
-        $balanceReqEmployee->save();
+        $balanceReq->status = 'Declined';
+        $balanceReq->decisionDate = date('Y-m-d H:i:s');
 
-        $balanceReq->setStatus('Declined');
+        if (!$balanceReqEmployee->save() || !$balanceReq->save())
+            \Yii::$app->session->setFlash('error', "Error while trying to save");
+        else 
+            \Yii::$app->session->setFlash('success', "Declined successfuly");
 
         return $this->redirect('index');
     }
@@ -153,3 +156,4 @@ class BalanceReqController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
+
