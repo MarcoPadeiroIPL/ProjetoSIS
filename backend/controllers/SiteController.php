@@ -31,7 +31,6 @@ class SiteController extends Controller
                         'roles' => ['client'],
                         'denyCallback' => function ($rule, $action) {
                             Yii::$app->user->logout();
-                            \Yii::$app->session->setFlash('error', "Access denied to backend");
                             \Yii::$app->response->redirect(['../../frontend/web/site/login']);
                         },
                     ],
