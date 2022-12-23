@@ -123,7 +123,10 @@ class AirportController extends Controller
         if (!\Yii::$app->user->can('deleteAirport')) {
             return;
         }
-        $this->findModel($id)->delete();
+
+        $model = $this->findModel($id);
+        $model->status = $model->status == "Operational" ? "Not Operational" : "Operational";
+        $model->save();
 
         return $this->redirect(['index']);
     }

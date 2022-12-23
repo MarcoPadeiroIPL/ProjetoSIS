@@ -72,4 +72,5 @@ class Config extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Tickets::class, ['luggage_2' => 'id']);
     }
+
 }

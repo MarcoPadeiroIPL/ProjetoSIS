@@ -74,19 +74,21 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'delete' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-trash"></i>', $url, [
-                            'title' => Yii::t('app', 'Delete'),
-                            'class' => 'btn btn-sm btn-danger',
-                            'data' => [
-                                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                                'method' => 'post',
-                            ],
-                        ]);
+                        if ($model->status != "Canceled") {
+                            return Html::a('<i class="fas fa-trash"></i>', $url, [
+                                'title' => Yii::t('app', 'Delete'),
+                                'class' => 'btn btn-sm btn-danger',
+                                'data' => [
+                                    'confirm' => Yii::t('app', 'Are you sure you want to cancel this flight?'),
+                                    'method' => 'post',
+                                ],
+                            ]);
+                        }
                     },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'history') {
-                        return Url::to(['history', 'id' => $model->id]);
+                        return Url::to(['tariff/index', 'flight_id' => $model->id]);
                     }
                     if ($action === 'view') {
                         return Url::to(['view', 'id' => $model->id]);

@@ -49,7 +49,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->client->balance . '€';
                 }
             ],
-            'application',
+            [
+                'label' => 'Application',
+                'value' => function ($model) {
+                    return $model->client->application ? 'Yes' : 'No';
+                }
+            ],
             [
                 'class' => ActionColumn::class,
                 'template' => '{view} {update} {delete}',

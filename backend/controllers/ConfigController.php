@@ -123,7 +123,13 @@ class ConfigController extends Controller
             return;
         }
 
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        // desisto, isto nao faz sentido nenhum
+        // '$model->active = !$model->active'
+        // nao funciona por algum motivo
+        $model->active = $model->active ? 0 : 1;
+        $model->save();
 
         return $this->redirect(['index']);
     }

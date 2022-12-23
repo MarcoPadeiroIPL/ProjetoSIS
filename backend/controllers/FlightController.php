@@ -140,23 +140,15 @@ class FlightController extends Controller
 
     public function actionDelete($id)
     {
-        if (\Yii::$app->user->can('deleteFlight')) {
+        if (!\Yii::$app->user->can('deleteFlight')) {
             return;
         }
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        $model->status = "Canceled";
+        $model->save();
 
         return $this->redirect(['index']);
-    }
-
-    public function actionHistory($id)
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Tariff::find()
-                ->where('flight_id =' . $id),
-        ]);
-        return $this->render('history', [
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     protected function findModel($id)

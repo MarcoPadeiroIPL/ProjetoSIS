@@ -58,6 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->countTotalSeats();
                 }
             ],
+            'status',
             [
                 'class' => ActionColumn::class,
                 'template' => '{view} {update} {delete}',
@@ -75,14 +76,23 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'delete' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-trash"></i>', $url, [
-                            'title' => Yii::t('app', 'Delete'),
-                            'class' => 'btn btn-sm btn-danger',
-                            'data' => [
-                                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                                'method' => 'post',
-                            ],
-                        ]);
+                        if ($model->status == "Active") {
+                            return Html::a('<i class="fas fa-minus"></i>', $url, [
+                                'title' => Yii::t('app', 'Deactivate'),
+                                'class' => 'btn btn-sm btn-danger',
+                                'data' => [
+                                    'method' => 'post',
+                                ],
+                            ]);
+                        } else {
+                            return Html::a('<i class="fas fa-check"></i>', $url, [
+                                'title' => Yii::t('app', 'Activate'),
+                                'class' => 'btn btn-sm btn-success',
+                                'data' => [
+                                    'method' => 'post',
+                                ],
+                            ]);
+                        }
                     },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {

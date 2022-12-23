@@ -125,7 +125,9 @@ class AirplaneController extends Controller
             return;
         }
 
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->status = $model->status == "Active" ? "Not working" : "Active";
+        $model->save();
 
         return $this->redirect(['index']);
     }
