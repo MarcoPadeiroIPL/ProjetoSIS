@@ -48,7 +48,6 @@ class SiteController extends Controller
                         'roles' => ['admin', 'ticketOperator', 'supervisor'],
                         'denyCallback' => function ($rule, $action) {
                             Yii::$app->user->logout();
-                            \Yii::$app->session->setFlash('error', 'You cannot access frontend');
                             \Yii::$app->response->redirect(['../../backend/web/site/index']);
                         },
                     ],

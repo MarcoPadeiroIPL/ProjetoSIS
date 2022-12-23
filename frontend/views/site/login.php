@@ -9,13 +9,6 @@ use yii\bootstrap5\ActiveForm;
 
 $this->title = 'Login';
 ?>
-<?php if (Yii::$app->session->hasFlash('error')): ?>
-    <div class="alert alert-danger alert-dismissable">
-         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-         <h4><i class="icon fa fa-check"></i>Saved!</h4>
-         <?= Yii::$app->session->getFlash('error') ?>
-    </div>
-<?php endif; ?>
 <div class="gtco-section" id="login-section">
     <div class="gtco-container">
         <div class="row justify-content-center">
