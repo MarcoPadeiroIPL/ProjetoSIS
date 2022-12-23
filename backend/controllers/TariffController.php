@@ -9,22 +9,50 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 
 class TariffController extends Controller
 {
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin','supervisor'],
+                    ],
+                    [
+                        'actions' => ['view','index'],
+                        'allow' => true,
+                        'roles' => ['ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+                    [
+                        'actions' => ['create', 'delete', 'update'],
+                        'allow' => false,
+                        'roles' => ['ticketOperator'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     public function actionIndex()
