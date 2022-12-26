@@ -36,6 +36,7 @@ class AppAsset extends AssetBundle
         'js/magnific-popup-options.js',
         'js/bootstrap-datepicker.min.js',
         'js/modernizr-2.6.2.min.js',
+        'https://kit.fontawesome.com/969e538b19.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

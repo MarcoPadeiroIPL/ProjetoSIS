@@ -10,178 +10,35 @@ $this->title = 'My Yii Application';
     <div class="gtco-container">
         <div class="row d-flex justify-content-center">
             <div class="col-md-8 text-center gtco-heading">
-                <h2>Trip With Your Favourite Destination</h2>
-                <p>Dignissimos asperiores vitae velit veniam totam fuga molestias accusamus alias autem provident. Odit ab aliquam dolor eius.</p>
+                <h2>Trip To Your Favourite Destination</h2>
             </div>
         </div>
         <div class="row">
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_1.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_1.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>New York, USA</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_2.jpg" class="fh5co-card-item image-popup">
+                <h1>Popular destinations</h1>
+            <?php foreach ($airports as $airport) { ?>
+    <div class="col-lg-4 col-md-4 col-sm-6">
+                <a href="index" class="fh5co-card-item ">
                     <figure>
                         <div class="overlay"><i class="ti-plus"></i></div>
                         <?= Html::img(Yii::getAlias('@web') . '/images/img_2.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
                     </figure>
                     <div class="fh5co-text">
-                        <h2>Seoul, South Korea</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
+                    <h3><?= $airport->city . ', ' . $airport->country ?></h3>
                         <p><span class="btn btn-primary">Schedule a Trip</span></p>
                     </div>
                 </a>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_3.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_3.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Paris, France</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_4.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_4.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Sydney, Australia</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_5.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_5.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Greece, Europe</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_6.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_6.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Spain, Europe</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_1.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_1.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>New York, USA</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_2.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_2.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Seoul, South Korea</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_3.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_3.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Paris, France</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_4.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_4.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Sydney, Australia</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_5.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_5.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Greece, Europe</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <a href="images/img_6.jpg" class="fh5co-card-item image-popup">
-                    <figure>
-                        <div class="overlay"><i class="ti-plus"></i></div>
-                        <?= Html::img(Yii::getAlias('@web') . '/images/img_6.jpg', ['class' => 'img-responsive', 'alt' => 'Image']); ?>
-                    </figure>
-                    <div class="fh5co-text">
-                        <h2>Spain, Europe</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia..</p>
-                        <p><span class="btn btn-primary">Schedule a Trip</span></p>
-                    </div>
-                </a>
-            </div>
-
+            <?php } ?>
+        </div>
+        <div class="row">
+                <h1>Upcoming Flights</h1>
+            <?php foreach ($flights as $flight) { ?>
+                <div class="col-4 col-md-4 col-sm-6 mb-5">
+                    <h3><?= $flight->airportDeparture->city . ' -> ' . $flight->airportArrival->city ?></h3>
+                    <p><?= date('d M y G.i', strtotime($flight->departureDate))?> -  Est(<?= date('G.i', strtotime($flight->duration))?>h)</p>
+                    <a class="btn btn-primary" href="index"><?= $flight->activeTariff()->economicPrice ?>€</a>
+                </div>
+            <?php } ?>
         </div>
     </div>
-
 </div>

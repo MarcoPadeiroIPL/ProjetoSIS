@@ -17,6 +17,8 @@ use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use common\models\UserData;
 use common\models\User;
+use common\models\Airport;
+use common\models\Flight;
 
 class SiteController extends Controller
 {
@@ -27,7 +29,7 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'signup', 'login', 'error'],
+                        'actions' => ['index', 'signup', 'login', 'error', 'contact', 'about'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -44,7 +46,7 @@ class SiteController extends Controller
                     ],
                     [
                         'allow' => false,
-                        'actions' => ['index', 'contact', 'about'],
+                        'actions' => ['index'],
                         'roles' => ['admin', 'ticketOperator', 'supervisor'],
                         'denyCallback' => function ($rule, $action) {
                             Yii::$app->user->logout();
@@ -71,10 +73,10 @@ class SiteController extends Controller
                         'actions' => ['logout', 'error'],
                         'allow' => true,
                         'roles' => ['@'],
-                        
+
                     ],
                 ],
-                
+
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -109,7 +111,9 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $airports = Airport::find()->orderBy('search')->limit(6)->all();
+        $flights = Flight::find()->orderBy('departureDate')->limit(6)->all();
+        return $this->render('index', ['airports' => $airports, 'flights' => $flights]);
     }
 
     public function actionLogin()
