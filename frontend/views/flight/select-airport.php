@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
 <div class="flight-index">
 
 <div class="container mt-5" style="width:35%">
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['action' => ['flight/select-flight']]); ?>
 
     <div class="row">
         <div class="col btn btn-primary" id="bothWays" onClick="bothWays()">

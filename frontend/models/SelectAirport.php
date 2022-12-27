@@ -9,7 +9,7 @@ class SelectAirport extends Model
 {
     public $airportDeparture_id;
     public $airportArrival_id;
-    public $departureDate;
+    public $departureDate = null;
     public $arrivalDate = null;
     public $passangers;
 
@@ -19,10 +19,9 @@ class SelectAirport extends Model
     public function rules()
     {
         return [
-            ['airportDeparture_id', 'required'],
-            ['airportArrival_id', 'required'],
-            ['departureDate', 'required'],
-            ['passangers', 'required'],
+            ['airportDeparture_id', 'required', 'message' => 'Cannot be empty'],
+            ['airportArrival_id', 'required', 'message' => 'Cannot be empty'],
+            ['passangers', 'required', 'message' => 'Cannot be empty'],
         ];
     }
 }

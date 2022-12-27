@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use common\models\User;
 use common\models\Client;
+use common\models\Ticket;
 
 /**
  * Signup form
@@ -23,7 +24,6 @@ class TicketBuilder extends Model
     public $seatCol;
     public $luggage_1;
     public $luggage_2;
-    public $receipt_id;
 
     /**
      * {@inheritdoc}
@@ -31,19 +31,7 @@ class TicketBuilder extends Model
     public function rules()
     {
         return [
-            ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-
-            ['email', 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-
-            ['password', 'required'],
-            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+            [['fName', 'surname', 'gender', 'age', 'client_id', 'flight_id', 'seatLinha', 'seatCol'], 'required'],
         ];
     }
 
@@ -52,53 +40,27 @@ class TicketBuilder extends Model
      *
      * @return bool whether the creating new account was successful and email was sent
      */
-    public function signup()
+    public function generateTicket($receipt_id)
     {
         if (!$this->validate()) {
-            return null;
+            return false;
         }
 
-        $user = new User();
-        $client = new Client();
+        $ticket = new Ticket();
+        $ticket->fName = $this->fName;
+        $ticket->surname = $this->surname;
+        $ticket->gender = $this->gender;
+        $ticket->age = $this->age;
+        $ticket->checkedIn = null;
+        $ticket->client_id = $this->client_id;
+        $ticket->flight_id = $this->flight_id;
+        $ticket->seatLinha = $this->seatLinha;
+        $ticket->seatCol = $this->seatCol;
+        $ticket->luggage_1 = $this->luggage_1;
+        $ticket->luggage_2 = $this->luggage_2;
+        $ticket->receipt_id = $receipt->id;
+        
 
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        $user->generateEmailVerificationToken();
-        $user->status = self::STATUS_ACTIVE;
-        $user->save();
-
-        $this->user_id = $user->getId();
-        // the following three lines were added:
-        $auth = \Yii::$app->authManager;
-        $role = $auth->getRole('client');
-        $auth->assign($role, $user->getId());
-
-
-        $client->user_id = $this->user_id;
-        $client->balance = 0;
-        $client->application = 0;
-
-        return $client->save();
-    }
-
-    /**
-     * Sends confirmation email to user
-     * @param User $user user model to with email should be send
-     * @return bool whether the email was sent
-     */
-    protected function sendEmail($user)
-    {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
+        return $ticket->save();
     }
 }
