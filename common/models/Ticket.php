@@ -1,7 +1,7 @@
 <?php
 
 namespace common\models;
-
+use backend\models\Employee;
 use Yii;
 
 /**
@@ -49,12 +49,12 @@ class Ticket extends \yii\db\ActiveRecord
             [['age', 'checkedIn', 'client_id', 'flight_id', 'seatCol', 'luggage_1', 'luggage_2', 'receipt_id'], 'integer'],
             [['fName', 'surname'], 'string', 'max' => 25],
             [['seatLinha'], 'string', 'max' => 1],
-            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::class, 'targetAttribute' => ['client_id' => 'user_id']],
-            [['checkedIn'], 'exist', 'skipOnError' => true, 'targetClass' => Employees::class, 'targetAttribute' => ['checkedIn' => 'user_id']],
-            [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flights::class, 'targetAttribute' => ['flight_id' => 'id']],
-            [['luggage_1'], 'exist', 'skipOnError' => true, 'targetClass' => Configs::class, 'targetAttribute' => ['luggage_1' => 'id']],
-            [['luggage_2'], 'exist', 'skipOnError' => true, 'targetClass' => Configs::class, 'targetAttribute' => ['luggage_2' => 'id']],
-            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipts::class, 'targetAttribute' => ['receipt_id' => 'id']],
+            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'user_id']],
+            [['checkedIn'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::class, 'targetAttribute' => ['checkedIn' => 'user_id']],
+            [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flight::class, 'targetAttribute' => ['flight_id' => 'id']],
+            [['luggage_1'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_1' => 'id']],
+            [['luggage_2'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_2' => 'id']],
+            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::class, 'targetAttribute' => ['receipt_id' => 'id']],
         ];
     }
 

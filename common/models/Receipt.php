@@ -57,6 +57,6 @@ class Receipt extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Tickets::class, ['receipt_id' => 'id']);
+        return $this->hasMany(Ticket::class, ['receipt_id' => 'id']);
     }
 }

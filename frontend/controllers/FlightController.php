@@ -6,7 +6,6 @@ use Yii;
 use common\models\Flight;
 use common\models\Airport;
 use frontend\models\SelectAirport;
-use frontend\models\SelectDate;
 use frontend\models\SelectFlight;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -31,7 +30,7 @@ class FlightController extends Controller
                             return Yii::$app->user->isGuest || Yii::$app->user->identity->status == 10;
                         },
                         'denyCallback' => function ($rule, $action) {
-                            throw new \Exception('nigger');
+                            throw new \Exception('Access denied');
                         }
                     ],
                 ],

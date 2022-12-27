@@ -3,14 +3,13 @@
 namespace frontend\controllers;
 
 use frontend\models\TicketBuilder;
+use common\models\Ticket;
 use yii;
-use common\models\BalanceReq;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
-use common\models\Client;
 use common\models\Flight;
 use common\models\Config;
 use common\models\Receipt;
@@ -55,81 +54,50 @@ class TicketController extends Controller
         for ($i = 1; $i <= $passangers; $i++) {
             $tickets[$i] = new TicketBuilder;
         }
-        $temp = Config::find()
-        ->select(['weight', 'price'])
-        ->where('active = 1')
-        ->all();
 
-        foreach($temp as $t) {
-            $config[] = $t->weight . 'kg | ' . $t->price . '€';
-        }
-        if (!$this->request->isPost) {
-            return $this->render('passanger', [
-                'tickets' => $tickets,
-                'config' => $config,
-                'flight' => Flight::findOne([$flight_id]),
-            ]);
-        }
-
-        $receipt = new Receipt();
-        $receipt->purchaseDate = date('Y/m/d H:i:s');
-        $receipt->total = 0;
-        $receipt->status = 'Pending';
-        $receipt->save();
-
-        for ($i = 1; $i <= $passangers; $i++) {
-            if (!$tickets[$i]->load($this->request->post()) || !$tickets[$i]->generateTicket($receipt->id)) {
-                return false;
+        $currentPassanger = 0;
+        if ($this->request->isPost) {
+            $currentPassanger = $_POST['TicketBuilder']['currentPassanger'];
+            if ($currentPassanger == $passangers) {
+                return $this->redirect(['pay']);
+            }
+            if ($currentPassanger == 0) {
+                $receipt = new Receipt();
+                $receipt->purchaseDate = date('Y/m/d H:i:s');
+                $receipt->total = 0;
+                $receipt->status = 'Pending';
+                $receipt->save();
+            } else {
+                $receipt = Receipt::findOne([$_POST['TicketBuilder']['receipt_id']]);
+            }
+            if ($tickets[$currentPassanger + 1]->load($this->request->post()) && $tickets[$currentPassanger + 1]->generateTicket($receipt->id)) {
+                $currentPassanger++;
             }
         }
 
-        return $this->redirect(['index']);
-    }
+        $temp = Config::find()
+            ->select(['weight', 'price'])
+            ->where('active = 1')
+            ->all();
 
-    public function actionView($id)
-    {
-        if (!\Yii::$app->user->can('readBalanceReq')) {
-            return;
+        foreach ($temp as $t) {
+            $config[] = $t->weight . 'kg | ' . $t->price . '€';
         }
-
-        $model = $this->findModel($id);
-
-        $userId = Yii::$app->user->id;
-
-        if ($model->client_id != $userId) {
-            throw new ForbiddenHttpException('You are not allowed to view this balance request.');
-        }
-
-        return $this->render('view', [
-            'model' => $model,
+        return $this->render('passanger', [
+            'ticket' => $tickets[$currentPassanger + 1],
+            'config' => $config,
+            'flight' => Flight::findOne([$flight_id]),
+            'receipt_id' => $receipt->id,
+            'currentPassanger' => $currentPassanger,
         ]);
     }
 
-    public function actionCreate()
-    {
-        if (!\Yii::$app->user->can('createBalanceReq')) {
-            return;
-        }
-
-        $model = new BalanceReq();
-
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
-        }
-    }
 
 
 
     protected function findModel($id)
     {
-        if (($model = BalanceReq::findOne(['id' => $id])) !== null) {
+        if (($model = Ticket::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

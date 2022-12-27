@@ -4,8 +4,6 @@ namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
-use common\models\User;
-use common\models\Client;
 use common\models\Ticket;
 
 /**
@@ -24,6 +22,8 @@ class TicketBuilder extends Model
     public $seatCol;
     public $luggage_1;
     public $luggage_2;
+    public $currentPassanger;
+    public $receipt_id;
 
     /**
      * {@inheritdoc}
@@ -58,8 +58,8 @@ class TicketBuilder extends Model
         $ticket->seatCol = $this->seatCol;
         $ticket->luggage_1 = $this->luggage_1;
         $ticket->luggage_2 = $this->luggage_2;
-        $ticket->receipt_id = $receipt->id;
-        
+        $ticket->receipt_id = $receipt_id;
+
 
         return $ticket->save();
     }
