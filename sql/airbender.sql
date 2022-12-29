@@ -666,6 +666,8 @@ CREATE TABLE `tickets` (
   `luggage_1` int(11) DEFAULT NULL,
   `luggage_2` int(11) DEFAULT NULL,
   `receipt_id` int(11) NOT NULL,
+  `tariff_id` int(11) NOT NULL,
+  `tariffType` enum('economic', 'normal', 'luxury') NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_employeeTicket_id` (`checkedIn`),
   KEY `fk_clientTicket_id` (`client_id`),
@@ -678,7 +680,8 @@ CREATE TABLE `tickets` (
   CONSTRAINT `fk_flight_id` FOREIGN KEY (`flight_id`) REFERENCES `flights` (`id`),
   CONSTRAINT `fk_luggage_1` FOREIGN KEY (`luggage_1`) REFERENCES `configs` (`id`),
   CONSTRAINT `fk_luggage_2` FOREIGN KEY (`luggage_2`) REFERENCES `configs` (`id`),
-  CONSTRAINT `fk_receipt_id` FOREIGN KEY (`receipt_id`) REFERENCES `receipts` (`id`)
+  CONSTRAINT `fk_receipt_id` FOREIGN KEY (`receipt_id`) REFERENCES `receipts` (`id`),
+  CONSTRAINT `fk_tariff_id` FOREIGN KEY (`tariff_id`) REFERENCES `tariffs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
