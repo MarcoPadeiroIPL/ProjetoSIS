@@ -24,16 +24,12 @@ class TicketController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['buy-ticket', 'create', 'history', 'delete', 'view'],
+                        'actions' => ['create', 'delete', 'view'],
                         'allow' => true,
                         'roles' => ['client'],
                     ],
                     [
-                        'actions' => ['index', 'create', 'history', 'delete'],
+                        'actions' => ['create', 'delete', 'view'],
                         'allow' => false,
                         'roles' => ['admin', 'supervisor', '?', 'ticketOperator'],
                     ],
@@ -42,37 +38,44 @@ class TicketController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
                     'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
-    public function actionBuyTicket($flight_id, $passangers)
+    public function getReceipt($receipt_id)
     {
-        for ($i = 1; $i <= $passangers; $i++) {
-            $tickets[$i] = new TicketBuilder;
-        }
+        // caso ja exista a fatura vai buscar a existente
+        if (!is_null($receipt_id))
+            return Receipt::findOne([$receipt_id]);
 
-        $currentPassanger = 0;
+        $receipt = new Receipt();
+        $receipt->purchaseDate = date('Y/m/d H:i:s');
+        $receipt->total = 0;
+        $receipt->status = 'Pending';
+        $receipt->save();
+        return $receipt->save() ? $receipt : $receipt->save();
+    }
+
+    public function actionView($id)
+    {
+    }
+
+    public function actionCreate($flight_id, $tariffType, $receipt_id = null)
+    {
+        $flight = Flight::findOne([$flight_id]);
+        $ticket = new TicketBuilder;
+
         if ($this->request->isPost) {
-            $currentPassanger = $_POST['TicketBuilder']['currentPassanger'];
-            if ($currentPassanger == $passangers) {
-                return $this->redirect(['pay']);
+            $receipt = $this->getReceipt($receipt_id);
+            // caso consiga criar o bilhete incrementa o current passanger
+            if ($ticket->load($this->request->post()) && $ticket->generateTicket($receipt->id, $flight, $tariffType)) {
+                return $this->redirect(['receipt/pay', 'id' => $receipt->id]);
             }
-            if ($currentPassanger == 0) {
-                $receipt = new Receipt();
-                $receipt->purchaseDate = date('Y/m/d H:i:s');
-                $receipt->total = 0;
-                $receipt->status = 'Pending';
-                $receipt->save();
-            } else {
-                $receipt = Receipt::findOne([$_POST['TicketBuilder']['receipt_id']]);
-            }
-            if ($tickets[$currentPassanger + 1]->load($this->request->post()) && $tickets[$currentPassanger + 1]->generateTicket($receipt->id)) {
-                $currentPassanger++;
-            }
+
+            // caso nao crie o bilhete apaga a fatura
+            $receipt->delete();
         }
 
         $temp = Config::find()
@@ -83,17 +86,23 @@ class TicketController extends Controller
         foreach ($temp as $t) {
             $config[] = $t->weight . 'kg | ' . $t->price . '€';
         }
-        return $this->render('passanger', [
-            'ticket' => $tickets[$currentPassanger + 1],
+        return $this->render('create', [
+            'ticket' => $ticket,
             'config' => $config,
-            'flight' => Flight::findOne([$flight_id]),
-            'receipt_id' => $receipt->id,
-            'currentPassanger' => $currentPassanger,
+            'flight' => $flight,
         ]);
     }
 
-
-
+    public function actionDelete($id)
+    {
+        $ticket = Ticket::findOne([$id]);
+        if ($ticket->shred) {
+        // sucesso
+        }
+        else {
+            // error
+        }
+    }
 
     protected function findModel($id)
     {

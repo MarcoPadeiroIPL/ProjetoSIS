@@ -46,7 +46,7 @@ class FlightController extends Controller
         ];
     }
 
-    public function actionSelectAirport()
+    public function actionSelectAirport($receipt_id = null)
     {
         $model = new SelectAirport();
 
@@ -58,10 +58,11 @@ class FlightController extends Controller
         return $this->render('select-airport', [
             'model' => $model,
             'airports' => $airports,
+            'receipt_id' => $receipt_id,
         ]);
     }
 
-    public function actionSelectFlight()
+    public function actionSelectFlight($receipt_id = null)
     {
         $selectFlight = new SelectFlight();
         $selectAirport = new SelectAirport();
@@ -70,9 +71,9 @@ class FlightController extends Controller
         if ($this->request->isPost && $selectAirport->load($this->request->post()) && $selectAirport->validate()) {
             $flights = Flight::find()
                 ->where('airportDeparture_id = ' . $selectAirport->airportDeparture_id)
-            ->andWhere('airportArrival_id = ' . $selectAirport->airportArrival_id)
-            ->orderBy('departureDate')
-            ->all();
+                ->andWhere('airportArrival_id = ' . $selectAirport->airportArrival_id)
+                ->orderBy('departureDate')
+                ->all();
 
             return $this->render('select-flight', [
                 'model' => $selectFlight,
@@ -80,8 +81,10 @@ class FlightController extends Controller
                 'airportArrival' => Airport::findOne($selectAirport->airportArrival_id),
                 'airportDeparture' => Airport::findOne($selectAirport->airportDeparture_id),
                 'passangers' => $selectAirport->passangers + 1,
+                'receipt_id' => $receipt_id,
             ]);
         }
+        return $this->redirect(['select-airport']);
     }
 
     public function actionView($id)

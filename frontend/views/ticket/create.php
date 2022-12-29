@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
         <?php $form = ActiveForm::begin(); ?>
         <div class="row shadow mb-4">
             <div class="col-8 p-5">
-                <div class="h1 row">Passanger</div>
+                <div class="h1 row">Ticket</div>
                 <div class="row">
                     <div class="col"><?= $form->field($ticket, 'fName'); ?></div>
                     <div class="col"><?= $form->field($ticket, 'surname'); ?></div>
@@ -32,10 +32,7 @@ use yii\widgets\ActiveForm;
                 <div class="row">
                     <div class="col"><?= $form->field($ticket, 'seatCol') ?></div>
                     <div class="col"><?= $form->field($ticket, 'seatLinha') ?></div>
-                    <div class="col"><?= $form->field($ticket, 'flight_id')->hiddenInput(['value' => $flight->id]) ?></div>
-                    <div class="col"><?= $form->field($ticket, 'client_id')->hiddenInput(['value' => Yii::$app->user->identity->getId()]) ?></div>
-                    <div class="col"><?= $form->field($ticket, 'currentPassanger')->hiddenInput(['value' => $currentPassanger]) ?></div>
-                    <div class="col"><?= $form->field($ticket, 'receipt_id')->hiddenInput(['value' => $receipt_id]) ?></div>
+                    <div class="col"><?= $form->field($ticket, 'client_id')->hiddenInput(['value' => Yii::$app->user->identity->getId()])->label('') ?></div>
                 </div>
             </div>
             <div class="col">
@@ -43,7 +40,7 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
         <div class="form-group row d-flex justify-content-center">
-            <?= Html::submitButton('Pay', ['class' => 'btn btn-primary mt-5 w-75']) ?>
+            <?= Html::submitButton('Next', ['class' => 'btn btn-primary mt-5 w-75']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

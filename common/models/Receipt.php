@@ -59,4 +59,24 @@ class Receipt extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Ticket::class, ['receipt_id' => 'id']);
     }
+
+    public function shred(){
+        if($this->status != "Pending")
+            return false;
+
+        foreach($this->tickets as $ticket) {
+            $ticket->delete();
+        }
+
+        return $this->delete();
+
+    }
+
+    public function refreshTotal() {
+        $this->total = 0;
+        foreach($this->tickets as $ticket){
+            $this->total += $ticket->getTicketPrice();
+        }
+        return $this->save();
+    }
 }
