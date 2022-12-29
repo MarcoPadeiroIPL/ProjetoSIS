@@ -114,15 +114,32 @@ class Flight extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Ticket::class, ['flight_id' => 'id']);
     }
-    public function activeTariff()
+
+    public function activeTariff($tariffType = null)
     {
         if (is_null($this->tariff)) {
             return null;
         }
 
-        foreach ($this->tariff as $t) {
-            if ($t->active) {
-                return $t;
+        foreach ($this->tariff as $tariff) {
+            if ($tariff->active) {
+                // devolve tarifa em si
+                if(is_null($tariffType)) 
+                    return $tariff;
+                else {
+                    switch($tariffType){
+                        case 'economic':
+                            return $tariff->economicPrice;
+                            break;
+                        case 'normal':
+                            return $tariff->normalPrice;
+                            break;
+                        case 'luxury':
+                            return $tariff->luxuryPrice;
+                            break;
+
+                    }
+                }
             }
         }
     }

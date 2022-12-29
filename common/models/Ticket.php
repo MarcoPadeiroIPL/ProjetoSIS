@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\models\Employee;
 use Yii;
 
 /**
@@ -20,13 +21,16 @@ use Yii;
  * @property int|null $luggage_1
  * @property int|null $luggage_2
  * @property int $receipt_id
+ * @property int $tariff_id
+ * @property string $tariffType
  *
- * @property Employees $checkedIn0
- * @property Clients $client
- * @property Flights $flight
- * @property Configs $luggage1
- * @property Configs $luggage2
- * @property Receipts $receipt
+ * @property Employee $checkedIn0
+ * @property Client $client
+ * @property Flight $flight
+ * @property Config $luggage1
+ * @property Config $luggage2
+ * @property Receipt $receipt
+ * @property Tariff $tariff
  */
 class Ticket extends \yii\db\ActiveRecord
 {
@@ -44,17 +48,18 @@ class Ticket extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fName', 'surname', 'gender', 'age', 'client_id', 'flight_id', 'seatLinha', 'seatCol', 'receipt_id'], 'required'],
-            [['gender'], 'string'],
-            [['age', 'checkedIn', 'client_id', 'flight_id', 'seatCol', 'luggage_1', 'luggage_2', 'receipt_id'], 'integer'],
+            [['fName', 'surname', 'gender', 'age', 'client_id', 'flight_id', 'seatLinha', 'seatCol', 'receipt_id', 'tariff_id', 'tariffType'], 'required'],
+            [['gender', 'tariffType'], 'string'],
+            [['age', 'checkedIn', 'client_id', 'flight_id', 'seatCol', 'luggage_1', 'luggage_2', 'receipt_id', 'tariff_id'], 'integer'],
             [['fName', 'surname'], 'string', 'max' => 25],
             [['seatLinha'], 'string', 'max' => 1],
-            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::class, 'targetAttribute' => ['client_id' => 'user_id']],
-            [['checkedIn'], 'exist', 'skipOnError' => true, 'targetClass' => Employees::class, 'targetAttribute' => ['checkedIn' => 'user_id']],
-            [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flights::class, 'targetAttribute' => ['flight_id' => 'id']],
-            [['luggage_1'], 'exist', 'skipOnError' => true, 'targetClass' => Configs::class, 'targetAttribute' => ['luggage_1' => 'id']],
-            [['luggage_2'], 'exist', 'skipOnError' => true, 'targetClass' => Configs::class, 'targetAttribute' => ['luggage_2' => 'id']],
-            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipts::class, 'targetAttribute' => ['receipt_id' => 'id']],
+            [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'user_id']],
+            [['checkedIn'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::class, 'targetAttribute' => ['checkedIn' => 'user_id']],
+            [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flight::class, 'targetAttribute' => ['flight_id' => 'id']],
+            [['luggage_1'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_1' => 'id']],
+            [['luggage_2'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_2' => 'id']],
+            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::class, 'targetAttribute' => ['receipt_id' => 'id']],
+            [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::class, 'targetAttribute' => ['receipt_id' => 'id']],
         ];
     }
 
@@ -77,6 +82,8 @@ class Ticket extends \yii\db\ActiveRecord
             'luggage_1' => 'Luggage 1',
             'luggage_2' => 'Luggage 2',
             'receipt_id' => 'Receipt ID',
+            'tariff_id' => 'Tariff ID',
+            'tariffType' => 'Tariff Type',
         ];
     }
 
@@ -85,9 +92,9 @@ class Ticket extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCheckedIn0()
+    public function getCheckedIn()
     {
-        return $this->hasOne(Employees::class, ['user_id' => 'checkedIn']);
+        return $this->hasOne(Employee::class, ['user_id' => 'checkedIn']);
     }
 
     /**
@@ -97,7 +104,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getClient()
     {
-        return $this->hasOne(Clients::class, ['user_id' => 'client_id']);
+        return $this->hasOne(Client::class, ['user_id' => 'client_id']);
     }
 
     /**
@@ -107,7 +114,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getFlight()
     {
-        return $this->hasOne(Flights::class, ['id' => 'flight_id']);
+        return $this->hasOne(Flight::class, ['id' => 'flight_id']);
     }
 
     /**
@@ -117,7 +124,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getLuggage1()
     {
-        return $this->hasOne(Configs::class, ['id' => 'luggage_1']);
+        return $this->hasOne(Config::class, ['id' => 'luggage_1']);
     }
 
     /**
@@ -127,7 +134,7 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getLuggage2()
     {
-        return $this->hasOne(Configs::class, ['id' => 'luggage_2']);
+        return $this->hasOne(Config::class, ['id' => 'luggage_2']);
     }
 
     /**
@@ -137,6 +144,42 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getReceipt()
     {
-        return $this->hasOne(Receipts::class, ['id' => 'receipt_id']);
+        return $this->hasOne(Receipt::class, ['id' => 'receipt_id']);
+    }
+
+    public function getTariff()
+    {
+        return $this->hasOne(Tariff::class, ['id' => 'tariff_id']);
+    }
+
+    public function isCheckedin()
+    {
+        if ($this->checkedIn == null)
+            return false;
+
+        // devolve o id do employee que deu checkin
+        return $this->checkedIn;
+    }
+    public function shred()
+    {
+        $receipt = Receipt::findOne($this->receipt_id);
+
+        if ($receipt->status != "Pending")
+            return false;
+
+        return $this->delete();
+    }
+    public function getTicketPrice()
+    {
+        $tariff = Tariff::findOne([$this->tariff_id]);
+
+        switch ($this->tariffType) {
+            case 'economic':
+                return $tariff->economicPrice;
+            case 'normal':
+                return $tariff->normalPrice;
+            case 'luxury':
+                return $tariff->luxuryPrice;
+        }
     }
 }
