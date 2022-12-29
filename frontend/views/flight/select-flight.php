@@ -31,7 +31,7 @@ $this->title = 'Flights';
                         <div class="row w-100 p-3" style="cursor: pointer;" id="select<?= $flight->id ?>" onclick="changeActive(<?= $flight->id . ', ' . $flight->activeTariff()->economicPrice . ', ' . $flight->activeTariff()->normalPrice . ', ' . $flight->activeTariff()->luxuryPrice ?>)">
                             <div class="col-8"><?= $flight->departureDate ?></div>
                             <div class="col"></div>
-                            <div class="col"><?= $flight->activeTariff()->economicPrice ?>€</div>
+                            <div class="col"><?= $flight->activeTariff('economic') ?>€</div>
                         </div>
                     <?php } ?>
                 </div>
@@ -50,7 +50,7 @@ $this->title = 'Flights';
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <?= Html::a($flights[0]->activeTariff()->economicPrice . '€', ['/ticket/buy-ticket', 'flight_id' => $flights[0]->id, 'tariff' => 'economic', 'passangers' => $passangers], ['id' => 'economicPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
+                                <?= Html::a($flights[0]->activeTariff('economic') . '€', ['/ticket/create', 'flight_id' => $flights[0]->id, 'tariffType' => 'economic', 'receipt_id' => $receipt_id], ['id' => 'economicPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
                             </div>
                         </div>
                         <div class="col m-5 shadow rounded bg-info text-white">
@@ -65,7 +65,7 @@ $this->title = 'Flights';
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <?= Html::a($flights[0]->activeTariff()->normalPrice . '€', ['/ticket/buy-ticket', 'flight_id' => $flights[0]->id, 'tariff' => 'normal', 'passangers' => $passangers], ['id' => 'normalPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
+                                <?= Html::a($flights[0]->activeTariff('normal') . '€', ['/ticket/create', 'flight_id' => $flights[0]->id, 'tariffType' => 'normal', 'receipt_id' => $receipt_id], ['id' => 'normalPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
                             </div>
                         </div>
                         <div class="col m-5 shadow border bg-warning text-white">
@@ -80,7 +80,7 @@ $this->title = 'Flights';
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <?= Html::a($flights[0]->activeTariff()->luxuryPrice . '€', ['/ticket/buy-ticket', 'flight_id' => $flights[0]->id, 'tariff' => 'normal', 'passangers' => $passangers], ['id' => 'luxuryPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
+                                <?= Html::a($flights[0]->activeTariff('luxury') . '€', ['/ticket/create', 'flight_id' => $flights[0]->id, 'tariffType' => 'luxury', 'receipt_id' => $receipt_id], ['id' => 'luxuryPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
                             </div>
                         </div>
                     </div>
