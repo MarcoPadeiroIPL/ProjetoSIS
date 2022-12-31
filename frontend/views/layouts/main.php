@@ -51,8 +51,8 @@ AppAsset::register($this);
                                                 <ul class="dropdown">
                                                     <li>' . Html::a('Profile', ['/client/index']) . '</li>
                                                     <li>' . Html::a('My balance', ['/balance-req/index']) . '</li>
-                                                    <li>' . Html::a('My flights', ['/flight/view']) . '</li>
-                                                    <li>' . Html::a('My receipts', ['/receipt/view']) . '</li>
+                                                    <li>' . Html::a('My flights', ['/flight/index']) . '</li>
+                                                    <li>' . Html::a('My receipts', ['/receipt/index']) . '</li>
                                                     <li>' . Html::beginForm(['/site/logout'], 'post')
                                     . Html::submitButton(
                                         'Logout '

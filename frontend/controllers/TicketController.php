@@ -74,18 +74,13 @@ class TicketController extends Controller
                 return $this->redirect(['receipt/pay', 'id' => $receipt->id]);
             }
 
-            // caso nao crie o bilhete apaga a fatura
-            $receipt->delete();
+            // caso nao crie o bilhete apaga a fatura se nao tiver mais nenhum bilhete associado
+            if ($receipt->tickets == null)
+                $receipt->delete();
         }
 
-        $temp = Config::find()
-            ->select(['weight', 'price'])
-            ->where('active = 1')
-            ->all();
+        $config = Config::find()->orderBy('price')->all();
 
-        foreach ($temp as $t) {
-            $config[] = $t->weight . 'kg | ' . $t->price . '€';
-        }
         return $this->render('create', [
             'ticket' => $ticket,
             'config' => $config,
@@ -97,9 +92,8 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOne([$id]);
         if ($ticket->shred) {
-        // sucesso
-        }
-        else {
+            // sucesso
+        } else {
             // error
         }
     }

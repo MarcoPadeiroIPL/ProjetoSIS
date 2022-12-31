@@ -30,7 +30,15 @@ class TicketBuilder extends Model
     public function rules()
     {
         return [
-            [['fName', 'surname', 'gender', 'age', 'client_id', 'seatLinha', 'seatCol'], 'required'],
+            [['fName', 'surname', 'gender', 'age', 'client_id', 'seatLinha', 'seatCol', 'luggage_1', 'luggage_2'], 'required'],
+            [['fName', 'surname'], 'string', 'max' => 20],
+            [['age'], 'integer', 'min' => 0, 'max' => 100],
+        ];
+    }
+    public function attributeLabels()
+    {
+        return [
+            'fName' => 'First name',
         ];
     }
 
@@ -50,8 +58,8 @@ class TicketBuilder extends Model
         $ticket->flight_id = $flight->id;
         $ticket->seatLinha = $this->seatLinha;
         $ticket->seatCol = $this->seatCol;
-        $ticket->luggage_1 = $this->luggage_1;
-        $ticket->luggage_2 = $this->luggage_2;
+        $ticket->luggage_1 = $this->luggage_1 != "0" ? $this->luggage_1 : null;
+        $ticket->luggage_2 = $this->luggage_2 != "0" ? $this->luggage_2 : null;
         $ticket->tariff_id = $flight->activeTariff()->id;
         $ticket->tariffType = $tariffType;
         $ticket->receipt_id = $receipt_id;
