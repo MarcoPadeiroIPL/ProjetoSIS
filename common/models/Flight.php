@@ -110,7 +110,7 @@ class Flight extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTicket()
+    public function getTickets()
     {
         return $this->hasMany(Ticket::class, ['flight_id' => 'id']);
     }
@@ -142,5 +142,18 @@ class Flight extends \yii\db\ActiveRecord
                 }
             }
         }
+    }
+
+    public function getAvailableSeats()
+    {
+        $seats = $this->airplane->getSeats();
+
+        foreach($this->tickets as $ticket) {
+            if($ticket->receipt->status == 'Complete') {
+                // set to false == not available
+                $seats[$ticket->seatLinha][$ticket->seatCol]['status'] = 0;
+            }
+        }
+        return $seats;
     }
 }

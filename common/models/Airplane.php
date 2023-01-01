@@ -75,6 +75,49 @@ class Airplane extends \yii\db\ActiveRecord
      */
     public function getFlights()
     {
-        return $this->hasMany(Flights::class, ['airplane_id' => 'id']);
+        return $this->hasMany(Flight::class, ['airplane_id' => 'id']);
+    }
+
+    public function countTotalSeats()
+    {
+        $count = 0;
+        for ($i = $this->minCol; $i <= $this->maxCol; $i++) {
+            for ($j = $this->minLinha; $j <= $this->maxLinha; $j++) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public function checkSeatClass($col) {
+        // check luxury
+        for ($i = $this->luxuryStart; $i <= $this->luxuryStop; $i++) {
+            if($col == $i) {
+                return 'luxury';
+            }
+        }
+        // check normal
+        for ($i = $this->normalStart; $i <= $this->normalStop; $i++) {
+            if($col == $i) {
+                return 'normal';
+            }
+        }
+        // check luxury
+        for ($i = $this->economicStart; $i <= $this->economicStop; $i++) {
+            if($col == $i) {
+                return 'economic';
+            }
+        }
+
+    }
+    public function getSeats()
+    {
+        // function to return an arrau with all the airplane seats  ex: A-1 A-2 A-3 etc..
+        for ($i = $this->minCol; $i <= $this->maxCol; $i++) {
+            for ($j = $this->minLinha; $j <= $this->maxLinha; $j++) {
+                $seats[$i][$j] = ['status' => 1, 'type' => $this->checkSeatClass($i)];
+            }
+        }
+        return $seats;
     }
 }

@@ -55,14 +55,50 @@ use yii\widgets\ActiveForm;
                         </div>
                     <?php } ?>
                 </div>
-                <div class="row">
-                    <div class="col"><?= $form->field($ticket, 'seatCol') ?></div>
-                    <div class="col"><?= $form->field($ticket, 'seatLinha') ?></div>
-                    <div class="col"><?= $form->field($ticket, 'client_id')->hiddenInput(['value' => Yii::$app->user->identity->getId()])->label('') ?></div>
-                </div>
+                <?= $form->field($ticket, 'client_id')->hiddenInput(['value' => Yii::$app->user->identity->getId()])->label('') ?>
             </div>
-            <div class="col">
-                airplanes seats lmao
+            <div class="col mt-5">
+                <span class="h2 d-flex justify-content-center">Choose a seat!</span>
+                <?php foreach ($flight->getAvailableSeats() as $col => $linha) { ?>
+                    <div class="row mb-3" style="margin-left: 6%; margin-right: 6%;">
+                        <div class="col"><?= $col ?></div>
+                        <?php foreach ($linha as $key => $l) {
+                            if ($l['status']) {
+                                switch ($l['type']) {
+                                    case 'economic':
+                                        $extraClasses = "bg-secondary";
+                                        $active = true;
+                                        break;
+                                    case 'normal':
+                                        $extraClasses = $tariffType == "economic" ? "bg-info opacity-50" : "bg-info";
+                                        $active = $tariffType != "economic";
+                                        break;
+                                    case 'luxury':
+                                        $extraClasses = $tariffType != "luxury" ? "bg-warning opacity-50" : "bg-warning";
+                                        $active = $tariffType == "luxury";
+                                        break;
+                                    default:
+                                        $active = 0;
+                                }
+                            } else {
+                                $extraClasses = "bg-danger opacity-50";
+                                $active = 0;
+                            }
+                        ?>
+                            <div id="<?= $col . '-' . $key ?>" class="col text-white rounded m-1 text-center <?= $extraClasses ?>" <?php if ($active) echo 'role="button"' ?> onclick="chooseSeat(<?= "'" . $col . "', " . $key . ', ' . $active ?>)"><?= $key ?></div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+                <div class="row text-center m-3">
+                    <div class="col text-white rounded bg-secondary m-3">Economic</div>
+                    <div class="col text-white rounded bg-info m-3">Normal</div>
+                    <div class="col text-white rounded bg-warning m-3">Luxury</div>
+                    <div class="col text-white rounded bg-danger m-3">Taken</div>
+                </div>
+                <div class="row text-center m-3">
+                    <div class="col"><?= $form->field($ticket, 'seatCol')->textInput(['readonly' => true]) ?></div>
+                    <div class="col"><?= $form->field($ticket, 'seatLinha')->textInput(['readonly' => true]) ?></div>
+                </div>
             </div>
         </div>
         <div class="form-group row d-flex justify-content-center">
@@ -78,6 +114,8 @@ use yii\widgets\ActiveForm;
 <script>
     currentConfig = [0, 0];
 
+    currentSeat = [null, null];
+
     function switchConfig(config, luggage) {
         if (currentConfig[luggage - 1] != config) {
             $('#config' + config + '_luggage' + luggage).addClass('border-primary');
@@ -88,5 +126,18 @@ use yii\widgets\ActiveForm;
 
             currentConfig[luggage - 1] = config;
         }
+    }
+
+    function chooseSeat(col, linha, active = 0) {
+        if ((currentSeat[0] != col || currentSeat[1] != linha) && active == 1) {
+            $('#' + col + '-' + linha).addClass('border border-primary border-4');
+            $('#' + currentSeat[0] + '-' + currentSeat[1]).removeClass('border border-primary border-4');
+            $('#ticketbuilder-seatcol').val("" + linha);
+            $('#ticketbuilder-seatlinha').val("" + col);
+
+            currentSeat[0] = col;
+            currentSeat[1] = linha;
+        }
+
     }
 </script>

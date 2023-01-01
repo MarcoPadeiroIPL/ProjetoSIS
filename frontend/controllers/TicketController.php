@@ -85,6 +85,7 @@ class TicketController extends Controller
             'ticket' => $ticket,
             'config' => $config,
             'flight' => $flight,
+            'tariffType' => $tariffType,
         ]);
     }
 
