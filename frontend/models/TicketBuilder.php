@@ -65,13 +65,13 @@ class TicketBuilder extends Model
 
         switch($tariffType) {
             case 'economic':
-                if($flight->airplane->checkSeatClass($this->seatCol) != "economic"){
+                if($flight->airplane->checkSeatClass($this->seatLinha) != "economic"){
                     \Yii::$app->session->setFlash('error', "You need to choose a economic seat!");
                     return false;
                 }
                 break;
             case 'normal':
-                if($flight->airplane->checkSeatClass($this->seatCol) == "luxury"){
+                if($flight->airplane->checkSeatClass($this->seatLinha) == "luxury"){
                     \Yii::$app->session->setFlash('error', "You need to choose a normal or economic seat!");
                     return false;
                 }

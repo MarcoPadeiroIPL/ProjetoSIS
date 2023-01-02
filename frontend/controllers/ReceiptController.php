@@ -44,7 +44,7 @@ class ReceiptController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Receipt::find(),
+            'query' => Receipt::find()->where(['client_id' => \Yii::$app->user->identity->getId()])
             /*
             'pagination' => [
                 'pageSize' => 50

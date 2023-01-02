@@ -102,7 +102,7 @@ class Airplane extends \yii\db\ActiveRecord
                 return 'normal';
             }
         }
-        // check luxury
+        // check economic
         for ($i = $this->economicStart; $i <= $this->economicStop; $i++) {
             if($col == $i) {
                 return 'economic';

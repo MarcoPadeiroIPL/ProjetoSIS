@@ -61,7 +61,7 @@ class TicketController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Ticket::find(),
+            'query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -81,6 +81,12 @@ class TicketController extends Controller
 
     public function actionView($id)
     {
+        $ticket = Ticket::findOne([$id]);
+        if (!$ticket->client_id == \Yii::$app->user->identity->getId()) {
+            \Yii::$app->session->setFlash('error', "Not your ticket!");
+        }
+
+        return $this->render('view', ['model' => $ticket]);
     }
 
     public function actionCreate($flight_id, $tariffType, $receipt_id = null)
@@ -113,7 +119,7 @@ class TicketController extends Controller
     public function actionDelete($id)
     {
         $ticket = Ticket::findOne([$id]);
-        if ($ticket->shred) {
+        if ($ticket->shred && $ticket->client_id == \Yii::$app->user->identity->getId()) {
             // sucesso
         } else {
             // error
