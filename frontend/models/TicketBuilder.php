@@ -44,7 +44,7 @@ class TicketBuilder extends Model
         ];
     }
 
-    public function generateTicket($receipt_id, $flight, $tariffType)
+    public function generateTicket($receipt, $flight, $tariffType)
     {
         if (!$this->validate()) {
             return false;
@@ -78,6 +78,9 @@ class TicketBuilder extends Model
                 break;
         }
 
+        $receipt->client_id = $this->client_id;
+        $receipt->save();
+
         $ticket = new Ticket();
         $ticket->fName = $this->fName;
         $ticket->surname = $this->surname;
@@ -92,9 +95,7 @@ class TicketBuilder extends Model
         $ticket->luggage_2 = $this->luggage_2 != "0" ? $this->luggage_2 : null;
         $ticket->tariff_id = $flight->activeTariff()->id;
         $ticket->tariffType = $tariffType;
-        $ticket->receipt_id = $receipt_id;
-
-        $receipt = Receipt::findOne([$receipt_id]);
+        $ticket->receipt_id = $receipt->id;
 
         return $ticket->save() && $receipt->refreshTotal();
     }

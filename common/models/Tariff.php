@@ -19,6 +19,11 @@ use Yii;
  */
 class Tariff extends \yii\db\ActiveRecord
 {
+    public function __construct()
+    {
+        $this->startDate = date('Y/m/d H:i:s');
+        $this->active = 1;
+    }
     /**
      * {@inheritdoc}
      */
@@ -37,7 +42,7 @@ class Tariff extends \yii\db\ActiveRecord
             [['startDate'], 'safe'],
             [['economicPrice', 'normalPrice', 'luxuryPrice'], 'number'],
             [['flight_id', 'active'], 'integer'],
-            [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flights::class, 'targetAttribute' => ['flight_id' => 'id']],
+            [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flight::class, 'targetAttribute' => ['flight_id' => 'id']],
         ];
     }
 
@@ -65,5 +70,19 @@ class Tariff extends \yii\db\ActiveRecord
     public function getFlight()
     {
         return $this->hasOne(Flights::class, ['id' => 'flight_id']);
+    }
+
+    public function generateFirstTariff($flight_id, $defaultPrice, $airportDepartureSearch, $airportArrivalSearch, $airplaneSeats)
+    {
+        $this->flight_id = $flight_id;
+        $this->normalPrice = $defaultPrice + (($defaultPrice * $airportDepartureSearch) / 100) + (($defaultPrice * $airportArrivalSearch) / 100) + ($defaultPrice / ($airplaneSeats / 10));
+        $this->economicPrice = $this->normalPrice - ($this->normalPrice * 0.25);
+        $this->luxuryPrice = $this->normalPrice + ($this->normalPrice * 0.25);
+    }
+
+    public function updateTariff()
+    {
+        // TODO: Deactivate last active one and create a new one with a new price
+        
     }
 }

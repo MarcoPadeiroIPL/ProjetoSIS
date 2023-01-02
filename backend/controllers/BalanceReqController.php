@@ -26,149 +26,127 @@ class BalanceReqController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['index', 'history', 'accept', 'decline', 'view'],
+                        'actions' => ['index', 'accept', 'decline', 'view'],
                         'allow' => true,
                         'roles' => ['admin', 'supervisor'],
                     ],
                     [
-                        'actions' => ['index', 'accept', 'history', 'decline', 'view'],
+                        'actions' => ['index', 'accept', 'decline', 'view'],
                         'allow' => false,
-                        'roles' => ['ticketOperator', 'client'],
+                        'roles' => ['ticketOperator', 'client', '?'],
                     ],
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
                     'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
-    /**
-     * Lists all BalanceReq models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        if (\Yii::$app->user->can('listBalanceReq')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => BalanceReq::find()->where('status="Ongoing"'),
-                /*
-                'pagination' => [
-                    'pageSize' => 50
-                ],
-                'sort' => [
-                    'defaultOrder' => [
-                        'user_id' => SORT_DESC,
-                    ]
-                ],
-                */
-            ]);
+        if (!\Yii::$app->user->can('listBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-            ]);
-        }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => BalanceReq::find()->where('status="Ongoing"'),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
     public function actionHistory()
     {
-        if (\Yii::$app->user->can('listBalanceReq')) {
-            if (\Yii::$app->user->can('listBalanceReq')) {
-                $dataProvider = new ActiveDataProvider([
-                    'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
-                    /*
-                'pagination' => [
-                    'pageSize' => 50
-                ],
-                'sort' => [
-                    'defaultOrder' => [
-                        'user_id' => SORT_DESC,
-                    ]
-                ],
-                */
-                ]);
+        if (!\Yii::$app->user->can('listBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-                return $this->render('history', [
-                    'dataProvider' => $dataProvider,
-                ]);
-            }
-        }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
+        ]);
+
+        return $this->render('history', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
-    /**
-     * Displays a single BalanceReq model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
-        if (\Yii::$app->user->can('readBalanceReq')) {
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        }
+        if (!\Yii::$app->user->can('readBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     public function actionAccept($id)
     {
-        $employee_id = \Yii::$app->user->getId();
-        if (\Yii::$app->user->can('updateBalanceReq')) {
-            $balanceReq = $this->findModel($id);
-            if ($balanceReq->status == 'Ongoing') {
-                // add balance to account
-                $client = Client::findOne(['user_id' => $balanceReq->client_id]);
-                $client->addBalance($balanceReq->amount);
+        if (!\Yii::$app->user->can('updateBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-                // assign responsible employee
-                $balanceReqEmployee = new BalanceReqEmployee();
-                $balanceReqEmployee->balanceReq_id = $id;
-                $balanceReqEmployee->employee_id = $employee_id;
-                $balanceReqEmployee->save();
 
-                $balanceReq->setStatus('Accepted');
-                $client->save();
-            } else {
-                // Not allowed to change status
-            }
-            return $this->redirect('index');
+        $balanceReq = $this->findModel($id);
+
+        if ($balanceReq->status != 'Ongoing') {
+            \Yii::$app->session->setFlash('error', "Decision was already made");
+            return $this->redirect(['index']);
         }
+
+        $employee_id = \Yii::$app->user->getId();
+
+        // add balance to account
+        $client = Client::findOne(['user_id' => $balanceReq->client_id]);
+        $client->addBalance($balanceReq->amount);
+
+        // assign responsible employee
+        $balanceReqEmployee = new BalanceReqEmployee($id, $employee_id);
+        $balanceReq->status = 'Accepted';
+        $balanceReq->decisionDate = date('Y-m-d H:i:s');
+
+        if (!$balanceReq->save() || !$balanceReqEmployee->save() || !$client->save())
+            \Yii::$app->session->setFlash('error', "Error while trying to save");
+        else 
+            \Yii::$app->session->setFlash('success', "Accepted successfuly");
+            
+
+        return $this->redirect('index');
     }
     public function actionDecline($id)
     {
-        $employee_id = \Yii::$app->user->getId();
-        if (\Yii::$app->user->can('updateBalanceReq')) {
-            $balanceReq = $this->findModel($id);
-            if ($balanceReq->status == 'Ongoing') {
-                // assign responsible employee
-                $balanceReqEmployee = new BalanceReqEmployee();
-                $balanceReqEmployee->balanceReq_id = $id;
-                $balanceReqEmployee->employee_id = $employee_id;
-                $balanceReqEmployee->save();
-                $balanceReq->setStatus('Accepted');
-            } else {
-                // Not allowed to change status
-            }
-            return $this->redirect('index');
+        if (!\Yii::$app->user->can('updateBalanceReq'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        $balanceReq = $this->findModel($id);
+
+        if ($balanceReq->status != 'Ongoing') {
+            \Yii::$app->session->setFlash('error', "Decision was already made");
+            return $this->redirect(['index']);
         }
+
+        $employee_id = \Yii::$app->user->getId();
+
+        // assign responsible employee
+        $balanceReqEmployee = new BalanceReqEmployee($id, $employee_id);
+        $balanceReq->status = 'Declined';
+        $balanceReq->decisionDate = date('Y-m-d H:i:s');
+
+        if (!$balanceReqEmployee->save() || !$balanceReq->save())
+            \Yii::$app->session->setFlash('error', "Error while trying to save");
+        else 
+            \Yii::$app->session->setFlash('success', "Declined successfuly");
+
+        return $this->redirect('index');
     }
 
 
-    /**
-     * Finds the BalanceReq model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return BalanceReq the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = BalanceReq::findOne(['id' => $id])) !== null) {
@@ -178,3 +156,4 @@ class BalanceReqController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
+

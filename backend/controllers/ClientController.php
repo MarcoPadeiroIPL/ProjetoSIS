@@ -2,147 +2,118 @@
 
 namespace backend\controllers;
 
+use common\models\User;
 use common\models\Client;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * ClientController implements the CRUD actions for Client model.
- */
 class ClientController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin', 'supervisor'],
+                    ],
+                    [
+                        'actions' => ['view', 'index'],
+                        'allow' => true,
+                        'roles' => ['ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+                    [
+                        'actions' => ['create', 'delete', 'update'],
+                        'allow' => false,
+                        'roles' => ['ticketOperator'],
                     ],
                 ],
-            ]
-        );
+            ],
+
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
-    /**
-     * Lists all Client models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        if (\Yii::$app->user->can('listClient')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Client::find(),
-                /*
-                'pagination' => [
-                    'pageSize' => 50
-                ],
-                'sort' => [
-                    'defaultOrder' => [
-                        'user_id' => SORT_DESC,
-                    ]
-                ],
-                */
-            ]);
+        if (!\Yii::$app->user->can('listClient'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-            ]);
-        }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => User::find()->where('status=10 OR status=8')
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->andWhere('auth_assignment.item_name = "client"'),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
-    /**
-     * Displays a single Client model.
-     * @param int $user_id User ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($user_id)
     {
-        if (\Yii::$app->user->can('readClient')) {
-            return $this->render('view', [
-                'model' => $this->findModel($user_id),
-            ]);
-        }
+        if (!\Yii::$app->user->can('readClient'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        return $this->render('view', [
+            'model' => $this->findModel($user_id),
+        ]);
     }
 
-    /**
-     * Creates a new Client model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        if (\Yii::$app->user->can('createClient')) {
-            $model = new Client();
-
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'user_id' => $model->user_id]);
-                }
-            } else {
-                $model->loadDefaultValues();
-            }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Client model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $user_id User ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($user_id)
     {
-        if (\Yii::$app->user->can('updateClient')) {
-            $model = $this->findModel($user_id);
+        if (!\Yii::$app->user->can('updateClient'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'user_id' => $model->user_id]);
-            }
 
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
+        $model = $this->findModel($user_id);
 
-    /**
-     * Deletes an existing Client model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $user_id User ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($user_id)
-    {
-        if (\Yii::$app->user->can('deleteClient')) {
-            $this->findModel($user_id)->delete();
-
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Client updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Client not updated sucessfully.");
             return $this->redirect(['index']);
         }
+
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
-    /**
-     * Finds the Client model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $user_id User ID
-     * @return Client the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    public function actionDelete($user_id)
+    {
+        if (!\Yii::$app->user->can('deleteClient'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        if ($this->findModel($user_id)->deleteUser())
+            \Yii::$app->session->setFlash('success', "Client deleted successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Client not deleted sucessfully.");
+
+        return $this->redirect(['index']);
+    }
+
     protected function findModel($user_id)
     {
         if (($model = Client::findOne(['user_id' => $user_id])) !== null) {

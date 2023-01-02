@@ -4,145 +4,141 @@ namespace backend\controllers;
 
 use common\models\Airplane;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * AirplaneController implements the CRUD actions for Airplane model.
- */
 class AirplaneController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['view', 'index'],
+                        'allow' => true,
+                        'roles' => ['supervisor', 'ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+                    [
+                        'actions' => ['create', 'delete', 'update'],
+                        'allow' => false,
+                        'roles' => ['supervisor', 'ticketOperator'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
-    /**
-     * Lists all Airplane models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        if (\Yii::$app->user->can('listAirplane')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Airplane::find(),
-                /*
-                'pagination' => [
-                    'pageSize' => 50
-                ],
-                'sort' => [
-                    'defaultOrder' => [
-                        'user_id' => SORT_DESC,
-                    ]
-                ],
-                */
-            ]);
+        if (!\Yii::$app->user->can('listAirplane'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-            ]);
-        }
+        $dataProvider = new ActiveDataProvider([
+            'query' => Airplane::find(),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
-    /**
-     * Displays a single Airplane model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
-        if (\Yii::$app->user->can('readAirplane')) {
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        }
+        if (!\Yii::$app->user->can('readAirplane'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
-    /**
-     * Creates a new Airplane model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
-        if (\Yii::$app->user->can('createAirplane')) {
-            $model = new Airplane();
+        if (!\Yii::$app->user->can('createAirplane'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-            } else {
-                $model->loadDefaultValues();
-            }
 
+        $model = new Airplane();
+
+        // caso nao seja post redireciona para o formulario
+        if (!$this->request->isPost) {
+            $model->loadDefaultValues();
             return $this->render('create', [
                 'model' => $model,
             ]);
         }
-    }
 
-    /**
-     * Updates an existing Airplane model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        if (\Yii::$app->user->can('updateAirplane')) {
-            $model = $this->findModel($id);
-
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Airplane model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        if (\Yii::$app->user->can('deleteAirplane')) {
-            $this->findModel($id)->delete();
+        // caso seja post
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Airplane created successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Airplane not saved.");
 
             return $this->redirect(['index']);
         }
     }
 
-    /**
-     * Finds the Airplane model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Airplane the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    public function actionUpdate($id)
+    {
+        if (!\Yii::$app->user->can('updateAirplane'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        $model = $this->findModel($id);
+
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Airplane updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Airplane not updated sucessfully.");
+
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionDelete($id)
+    {
+        if (!\Yii::$app->user->can('deleteAirplane'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        $model = $this->findModel($id);
+        $model->status = $model->status == "Active" ? "Not working" : "Active";
+
+        if ($model->save())
+            \Yii::$app->session->setFlash('success', "Airplane deleted successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Airplane not deleted.");
+
+        return $this->redirect(['index']);
+    }
+
     protected function findModel($id)
     {
         if (($model = Airplane::findOne(['id' => $id])) !== null) {

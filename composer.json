@@ -24,7 +24,7 @@
         "yiisoft/yii2-bootstrap5": "~2.0.2",
         "yiisoft/yii2-symfonymailer": "~2.0.3",
         "hail812/yii2-adminlte3": "~1.1",
-        "yiisoft/yii2-jui": "2.0.0",
+        "yiisoft/yii2-jui": "~2.0.0",
         "kartik-v/yii2-date-range": "dev-master",
         "kartik-v/yii2-widget-activeform": "dev-master",
         "kartik-v/yii2-widget-datepicker": "dev-master",
@@ -45,7 +45,11 @@
     },
     "config": {
         "allow-plugins": {
+<<<<<<< HEAD
+            "yiisoft/yii2-composer" : true
+=======
             "yiisoft/yii2-composer": true
+>>>>>>> frontend
         },
         "process-timeout": 1800,
         "fxp-asset": {
@@ -57,5 +61,20 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
+<<<<<<< HEAD
+    ],
+    "process-timeout": 1800,
+    "fxp-asset": {
+      "enabled": false
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ]
+=======
     ]
+>>>>>>> frontend
 }

@@ -54,8 +54,7 @@ class TicketController extends Controller
         $receipt->purchaseDate = date('Y/m/d H:i:s');
         $receipt->total = 0;
         $receipt->status = 'Pending';
-        $receipt->save();
-        return $receipt->save() ? $receipt : $receipt->save();
+        return $receipt;
     }
 
     public function actionIndex()
@@ -97,7 +96,7 @@ class TicketController extends Controller
         if ($this->request->isPost) {
             $receipt = $this->getReceipt($receipt_id);
             // caso consiga criar o bilhete incrementa o current passanger
-            if ($ticket->load($this->request->post()) && $ticket->generateTicket($receipt->id, $flight, $tariffType)) {
+            if ($ticket->load($this->request->post()) && $ticket->generateTicket($receipt, $flight, $tariffType)) {
                 return $this->redirect(['receipt/pay', 'id' => $receipt->id]);
             }
 
