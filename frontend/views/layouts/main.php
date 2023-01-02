@@ -43,26 +43,23 @@ AppAsset::register($this);
                             <li><?= Html::a('Flights', ['/flight/select-airport']) ?></li>
                             <li><?= Html::a('About', ['/site/about']) ?></li>
                             <li><?= Html::a('Contact', ['/site/contact']) ?></li>
-                            <?php if (Yii::$app->user->isGuest) {
-                                echo '<li>' . Html::a('Login', ['/site/login', '#' => 'login-section']) . '</li>';
-                            } else {
-                                echo '<li class="has-dropdown">
-                                            <a href="#">' . Yii::$app->user->identity->username . '</a>
-                                                <ul class="dropdown">
-                                                    <li>' . Html::a('Profile', ['/client/index']) . '</li>
-                                                    <li>' . Html::a('My balance', ['/balance-req/index']) . '</li>
-                                                    <li>' . Html::a('My flights', ['/flight/view']) . '</li>
-                                                    <li>' . Html::a('My receipts', ['/receipt/view']) . '</li>
-                                                    <li>' . Html::beginForm(['/site/logout'], 'post')
-                                    . Html::submitButton(
-                                        'Logout '
-                                    )
-                                    . Html::endForm() . '</li>
-                                                </ul>
-                                        </li>
-                                   ';
-                            } ?>
+                            <?php if (Yii::$app->user->isGuest) { ?>
+                                <li><?= Html::a('Login', ['/site/login', '#' => 'login-section']) ?> </li>
+                            <?php } else { ?>
+                                <li class="has-dropdown">
+                                    <a href="#"><?= Yii::$app->user->identity->username ?></a>
+                                    <ul class="dropdown">
+                                        <li><?= Html::a('Profile', ['/client/index']) ?></li>
+                                        <li><?= Html::a('My balance', ['/balance-req/index']) ?></li>
+                                        <li><?= Html::a('My tickets', ['/ticket/index']) ?></li>
+                                        <li><?= Html::a('My receipts', ['/receipt/index']) ?></li>
+                                        <li><?= Html::a('Logout', ['/site/logout'], ['data-method' => 'post']) ?></li>
 
+                                    </ul>
+                                </li>
+                            <?php } ?>
+
+                            </li>
                         </ul>
                     </div>
                 </div>

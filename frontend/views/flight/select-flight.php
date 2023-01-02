@@ -12,9 +12,9 @@ use yii\jui\DatePicker;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Flights';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="flight-index">
+<div class="flight-index mt-5">
+    <?= Html::a('<i class="fa-solid fa-arrow-left"></i> Go back', ['flight/select-airport']) ?>
     <?php if (count($flights) == 0) { ?>
         <h1>There are no flights available from <?= $airportDeparture->city ?> to <?= $airportArrival->city ?></h1>
     <?php } else { ?>
@@ -23,30 +23,21 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="row" style="height: 40vh;">
                 <div class="col-3 shadow m-3" style="overflow-y:auto; ">
                     <div class="row w-100 p-3">
-                        <div class="col-2">ID</div>
                         <div class="col-8">Departure Date</div>
-                        <div class="col-2">Price</div>
+                        <div class="col"></div>
+                        <div class="col">Price</div>
                     </div>
-                    <?php Html::a('nigger', ['selectFlight']) ?>
                     <?php foreach ($flights as $flight) { ?>
-                        <?= Html::a('
-                        <div class="row w-100 p-3" style="cursor: pointer;">
-                            <div class="col-2">' .  $flight->id  . '</div>
-                            <div class="col-8">' .  $flight->departureDate  . '</div>
-                            <div class="col-2">' .  $flight->activeTariff()->economicPrice  . '€</div>
+                        <div class="row w-100 p-3" style="cursor: pointer;" id="select<?= $flight->id ?>" onclick="changeActive(<?= $flight->id . ', ' . $flight->activeTariff()->economicPrice . ', ' . $flight->activeTariff()->normalPrice . ', ' . $flight->activeTariff()->luxuryPrice ?>)">
+                            <div class="col-8"><?= $flight->departureDate ?></div>
+                            <div class="col"></div>
+                            <div class="col"><?= $flight->activeTariff('economic') ?>€</div>
                         </div>
-                        ', [
-                            'flight/select-flight',
-                            'airportDeparture_id' => $flight->airportDeparture->id,
-                            'airportArrival_id' => $flight->airportArrival->id,
-                            'selectedFlight' => $flight->id
-                        ]); ?>
                     <?php } ?>
                 </div>
 
                 <div class="col m-3">
-                    <div class="row h2 d-flex justify-content-center">
-                        <?= $selectedFlight->airportDeparture->city . " -> " . $selectedFlight->airportArrival->city . " | " . $selectedFlight->departureDate   ?>
+                    <div class="row h2 d-flex justify-content-center" id="flightName">
                     </div>
                     <div class="row" style="height: 40vh;">
                         <div class="col m-5 shadow rounded bg-secondary text-white">
@@ -59,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <?= Html::a($selectedFlight->activeTariff()->economicPrice. '€',['/ticket/chooseSeat'],['class' => 'btn border w-75 fs-1 text-white']); ?>
+                                <?= Html::a($flights[0]->activeTariff('economic') . '€', ['/ticket/create', 'flight_id' => $flights[0]->id, 'tariffType' => 'economic', 'receipt_id' => $receipt_id], ['id' => 'economicPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
                             </div>
                         </div>
                         <div class="col m-5 shadow rounded bg-info text-white">
@@ -74,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <?= Html::a($selectedFlight->activeTariff()->normalPrice. '€',['/ticket/chooseSeat'],['class' => 'btn border w-75 fs-1 text-white']); ?>
+                                <?= Html::a($flights[0]->activeTariff('normal') . '€', ['/ticket/create', 'flight_id' => $flights[0]->id, 'tariffType' => 'normal', 'receipt_id' => $receipt_id], ['id' => 'normalPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
                             </div>
                         </div>
                         <div class="col m-5 shadow border bg-warning text-white">
@@ -89,13 +80,23 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </ul>
                             </div>
                             <div class="row d-flex justify-content-center">
-                                <?= Html::a($selectedFlight->activeTariff()->luxuryPrice. '€',['/ticket/chooseSeat'],['class' => 'btn border w-75 fs-1 text-white']); ?>
+                                <?= Html::a($flights[0]->activeTariff('luxury') . '€', ['/ticket/create', 'flight_id' => $flights[0]->id, 'tariffType' => 'luxury', 'receipt_id' => $receipt_id], ['id' => 'luxuryPrice', 'class' => 'btn border w-75 fs-1 text-white']); ?>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        <?php } ?>
+
+
         </div>
-    <?php } ?>
-
-
-</div>
+        <script>
+            function changeActive(flight_id, economicPrice, normalPrice, luxuryPrice) {
+                $("#economicPrice").text(economicPrice + '€');
+                $("#economicPrice").attr('href', '../ticket/buy-ticket?flight_id=' + flight_id + '&tariff=economic' + '&passangers=' + <?= $passangers ?>);
+                $("#normalPrice").text(normalPrice + '€');
+                $("#normalPrice").attr('href', '../ticket/buy-ticket?flight_id=' + flight_id + '&tariff=normal' + '&passangers=' + <?= $passangers ?>);
+                $("#luxuryPrice").text(luxuryPrice + '€');
+                $("#luxuryPrice").attr('href', '../ticket/buy-ticket?flight_id=' + flight_id + '&tariff=luxury' + '&passangers=' + <?= $passangers ?>);
+            }
+        </script>

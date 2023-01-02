@@ -1,4 +1,4 @@
--- MariaDB dump 10.19  Distrib 10.9.4-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.19  Distrib 10.9.4-MariaDB, for Linux (x86_64)sql
 --
 -- Host: localhost    Database: airbender
 -- ------------------------------------------------------
@@ -547,8 +547,11 @@ CREATE TABLE `receipts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `purchaseDate` datetime NOT NULL,
   `total` double(10,2) NOT NULL,
-  `status` enum('Complete','Pending' , 'Refunded') DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `status` enum('Complete','Refunded') DEFAULT NULL,
+  `client_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_clientTicket_id` (`client_id`),
+  CONSTRAINT `fk_clientReceipt_id` FOREIGN KEY (`client_id`) REFERENCES `clients` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -11,19 +11,18 @@ use yii\grid\GridView;
 
 
 $this->title = 'My Profile';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-index">
     <div class="gtco-section">
         <div class="gtco-container">
             <div class="row">
                 <div class="col-4 text-center align-self-center">
-                    <i class='fas fa-fa-solid fa-user-tie'></i>
-                    <h3><?= $client->user->userData->fName, ' ', $client->user->userData->surname ?></h3>
+                    <h1><i class='fas fa-fa-solid fa-user'></i></h1>
+                    <h3><?= $client->user->userData->fName . ' ' . $client->user->userData->surname ?></h3>
                     <h3><?= $client->user->email ?></h3>
                     <h3><?= $client->user->userData->phone ?></h3>
 
-                    <?= Html::a('Edit profile',['update','user_id' => $client->user_id], ['class' => 'btn btn-success']) ?>
+                    <?= Html::a('Edit profile', ['update', 'user_id' => $client->user_id], ['class' => 'btn btn-success']) ?>
                 </div>
                 <div class="col">
                     <div class="row">
@@ -34,10 +33,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="row">
                         <div class="col-3">
-                            <h3>My flights</h3>
+                            <h3>My tickets</h3>
                         </div>
                         <div class="col">
-                            <a href="../flight/">See more</a>
+                            <?= Html::a('See more', ['ticket/index']) ?>
                         </div>
                     </div>
                     <div class="row">
@@ -45,8 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <h3>My balance</h3>
                         </div>
                         <div class="col">
-                            <a href="../balance-req/">See more</a>
-
+                            <?= Html::a('See more', ['balance-req/index']) ?>
                         </div>
                         <h4> <?= $client->balance ?>€</h4>
 

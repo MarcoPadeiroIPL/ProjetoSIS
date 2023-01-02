@@ -6,7 +6,6 @@ use Yii;
 use common\models\Flight;
 use common\models\Airport;
 use frontend\models\SelectAirport;
-use frontend\models\SelectDate;
 use frontend\models\SelectFlight;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -31,88 +30,61 @@ class FlightController extends Controller
                             return Yii::$app->user->isGuest || Yii::$app->user->identity->status == 10;
                         },
                         'denyCallback' => function ($rule, $action) {
-                            throw new \Exception('nigger');
+                            throw new \Exception('Access denied');
                         }
                     ],
                 ],
             ],
-            
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                        'logout' => ['post'],
-                    ],
+
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
-            ];
-        
-        
+            ],
+        ];
     }
 
-    public function actionSelectAirport()
+    public function actionSelectAirport($receipt_id = null)
     {
         $model = new SelectAirport();
 
-        // se esta action nao for chamada por post
-        if (!$this->request->isPost) {
-            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        // se esta action for chamada por post
 
-            return $this->render('select-airport', [
-                'model' => $model,
-                'airports' => $airports,
-            ]);
-        }
+        // caso nao seja chamado por post, redireciona para o proximo passo
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
 
-        // caso seja chamado por post, redireciona para o proximo passo
-        $form = $_POST['SelectAirport'];
-        return $this->redirect([
-            'select-flight',
-            'airportDeparture_id' => $form['airportDeparture_id'],
-            'airportArrival_id' => $form['airportArrival_id'],
-            'departureDate' => $form['departureDate'],
+        return $this->render('select-airport', [
+            'model' => $model,
+            'airports' => $airports,
+            'receipt_id' => $receipt_id,
         ]);
     }
 
-    public function actionSelectFlight($airportDeparture_id, $airportArrival_id, $departureDate = null, $selectedFlight = 0)
+    public function actionSelectFlight($receipt_id = null)
     {
-        $model = new SelectFlight();
+        $selectFlight = new SelectFlight();
+        $selectAirport = new SelectAirport();
 
         // se esta action nao for chamada por post
-        if (!$this->request->isPost) {
-            // meter uma variavel que tem o top 3 flights para os criterios pedidos
-            $airportDeparture = Airport::findOne($airportDeparture_id);
-            $airportArrival = Airport::findOne($airportArrival_id);
+        if ($this->request->isPost && $selectAirport->load($this->request->post()) && $selectAirport->validate()) {
             $flights = Flight::find()
-                ->where('airportDeparture_id = ' . $airportDeparture_id)
-                ->andWhere('airportArrival_id = ' . $airportArrival_id)->all();
-
-            if ($selectedFlight == 0)
-                $selectedFlight = Flight::find()
-                    ->where('airportDeparture_id = ' . $airportDeparture_id)
-                    ->andWhere('airportArrival_id = ' . $airportArrival_id)->one();
-            else
-                $selectedFlight = Flight::findOne($selectedFlight);
+                ->where('airportDeparture_id = ' . $selectAirport->airportDeparture_id)
+                ->andWhere('airportArrival_id = ' . $selectAirport->airportArrival_id)
+                ->orderBy('departureDate')
+                ->all();
 
             return $this->render('select-flight', [
-                'model' => $model,
+                'model' => $selectFlight,
                 'flights' => $flights,
-                'selectedFlight' => $selectedFlight,
-                'airportArrival' => $airportArrival,
-                'airportDeparture' => $airportDeparture,
+                'airportArrival' => Airport::findOne($selectAirport->airportArrival_id),
+                'airportDeparture' => Airport::findOne($selectAirport->airportDeparture_id),
+                'passangers' => $selectAirport->passangers + 1,
+                'receipt_id' => $receipt_id,
             ]);
         }
-
-
-        // caso seja chamado por post, redireciona para o proximo passo
-        if (isset($_POST['SelectFlight']['flight_id'])) {
-            $form = $_POST['SelectDate'];
-            return $this->redirect([
-                'select-luggage',
-                'airportDeparture_id' => $form['airportDeparture_id'],
-                'airportArrival_id' => $form['airportArrival_id'],
-                'departureDate' => $form['departureDate'],
-            ]);
-        }
+        return $this->redirect(['select-airport']);
     }
 
     public function actionView($id)
@@ -132,4 +104,3 @@ class FlightController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-
