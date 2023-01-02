@@ -34,7 +34,7 @@ class BalanceReq extends \yii\db\ActiveRecord
     {
         return [
             [['amount', 'requestDate', 'client_id'], 'required'],
-            [['amount'], 'number'],
+            [['amount'], 'number', 'min' => 10],
             [['status'], 'string'],
             [['requestDate', 'decisionDate'], 'safe'],
             [['client_id'], 'integer'],
@@ -77,4 +77,18 @@ class BalanceReq extends \yii\db\ActiveRecord
         return $this->hasOne(Client::class, ['user_id' => 'client_id']);
     }
 
+
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        $this->decisionDate = date('Y-m-d H:i:s');
+        $this->save();
+    }
+
+    public function deleteBalanceReq()
+    {
+        if ($this->status = 'Ongoing')
+            return $this->delete();
+    }
 }
