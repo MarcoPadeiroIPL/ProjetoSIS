@@ -93,22 +93,23 @@ class Airplane extends \yii\db\ActiveRecord
         return $count;
     }
 
-    public function checkSeatClass($col) {
+    public function checkSeatClass($col)
+    {
         // check luxury
         for ($i = $this->luxuryStart; $i <= $this->luxuryStop; $i++) {
-            if($col == $i) {
+            if ($col == $i) {
                 return 'luxury';
             }
         }
         // check normal
         for ($i = $this->normalStart; $i <= $this->normalStop; $i++) {
-            if($col == $i) {
+            if ($col == $i) {
                 return 'normal';
             }
         }
         // check economic
         for ($i = $this->economicStart; $i <= $this->economicStop; $i++) {
-            if($col == $i) {
+            if ($col == $i) {
                 return 'economic';
             }
         }
@@ -125,14 +126,4 @@ class Airplane extends \yii\db\ActiveRecord
         return $seats;
     }
 
-    public function countTotalSeats()
-    {
-        $count = 0;
-        for ($i = $this->minCol; $i <= $this->maxCol; $i++) {
-            for ($j = $this->minLinha; $j <= $this->maxLinha; $j++) {
-                $count++;
-            }
-        }
-        return $count;
-    }
 }
