@@ -24,12 +24,12 @@ class TicketController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['create', 'delete', 'view'],
+                        'actions' => ['index', 'create', 'delete', 'view'],
                         'allow' => true,
                         'roles' => ['client'],
                     ],
                     [
-                        'actions' => ['create', 'delete', 'view'],
+                        'actions' => ['index', 'create', 'delete', 'view'],
                         'allow' => false,
                         'roles' => ['admin', 'supervisor', '?', 'ticketOperator'],
                     ],
@@ -56,6 +56,27 @@ class TicketController extends Controller
         $receipt->status = 'Pending';
         $receipt->save();
         return $receipt->save() ? $receipt : $receipt->save();
+    }
+
+    public function actionIndex()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Ticket::find(),
+            /*
+            'pagination' => [
+                'pageSize' => 50
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
+            */
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     public function actionView($id)

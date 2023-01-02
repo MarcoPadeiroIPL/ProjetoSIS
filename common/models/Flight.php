@@ -124,10 +124,10 @@ class Flight extends \yii\db\ActiveRecord
         foreach ($this->tariff as $tariff) {
             if ($tariff->active) {
                 // devolve tarifa em si
-                if(is_null($tariffType)) 
+                if (is_null($tariffType))
                     return $tariff;
                 else {
-                    switch($tariffType){
+                    switch ($tariffType) {
                         case 'economic':
                             return $tariff->economicPrice;
                             break;
@@ -137,7 +137,6 @@ class Flight extends \yii\db\ActiveRecord
                         case 'luxury':
                             return $tariff->luxuryPrice;
                             break;
-
                     }
                 }
             }
@@ -148,12 +147,37 @@ class Flight extends \yii\db\ActiveRecord
     {
         $seats = $this->airplane->getSeats();
 
-        foreach($this->tickets as $ticket) {
-            if($ticket->receipt->status == 'Complete') {
+        foreach ($this->tickets as $ticket) {
+            if ($ticket->receipt->status == 'Complete') {
                 // set to false == not available
                 $seats[$ticket->seatLinha][$ticket->seatCol]['status'] = 0;
             }
         }
         return $seats;
+    }
+
+    public function getAvailableLuggage()
+    {
+        foreach ($this->tickets as $ticket) {
+            if ($ticket->receipt->status == 'Complete') {
+                // set to false == not available
+                if (isset($ticket->luggage_1->weight) && !is_null($ticket->luggage_2->weight))
+                    $this->airplane->luggageCapacity -= $ticket->luggage_1->weight;
+                if (isset($ticket->luggage_2->weight) && !is_null($ticket->luggage_2->weight))
+                    $this->airplane->luggageCapacity -= $ticket->luggage_2->weight;
+            }
+        }
+        return $this->airplane->luggageCapacity;
+    }
+
+    public function checkIfSeatAvailable($col, $linha)
+    {
+        foreach ($this->tickets as $ticket) {
+            if ($ticket->receipt->status == 'Complete') {
+                if ($ticket->seatCol == $col && $ticket->seatLinha == $linha)
+                    return false;
+            }
+        }
+        return true;
     }
 }

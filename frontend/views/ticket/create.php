@@ -26,18 +26,34 @@ use yii\widgets\ActiveForm;
                     <div class="col"><?= $form->field($ticket, 'age'); ?></div>
                 </div>
                 <div class="row mb-5">
-                    <?= $form->field($ticket, 'luggage_1')->hiddenInput(['value' => "0"]) ?>
-                    <div class="col shadow rounded btn border-primary" onclick="switchConfig(0, 1)" id="config0_luggage1" role="button" style="margin-left: 3%; margin-right: 3%;">
-                        <div class="row d-flex justify-content-center">None</div>
-                        <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-ban"></i></div>
-                        <div class="row d-flex justify-content-center h3">Free</div>
-                    </div>
-                    <?php foreach ($config as $c) { ?>
-                        <div class="col shadow rounded btn opacity-50" role="button" onclick="switchConfig(<?= $c->id ?>, 1)" id="config<?= $c->id ?>_luggage1" style="margin-left: 3%; margin-right: 3%;">
-                            <div class="row d-flex justify-content-center"><?= $c->weight . 'KG' ?></div>
-                            <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-suitcase-rolling"></i></div>
-                            <div class="row d-flex justify-content-center h3"><?= $c->price . '€' ?></div>
+                    <?php if ($tariffType != "economic") { ?>
+                        <?= $form->field($ticket, 'luggage_1')->hiddenInput(['value' => $tariffType == "normal" ? "2" : "1"]) ?>
+                        <div class="col shadow rounded btn opacity-50" style="margin-left: 3%; margin-right: 3%;">
+                            <div class="row d-flex justify-content-center">None</div>
+                            <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-ban"></i></div>
+                            <div class="row d-flex justify-content-center h3">Free</div>
                         </div>
+                        <?php foreach ($config as $c) { ?>
+                            <div class="col shadow rounded btn <?= $tariffType == "normal" && $c->weight == 10 ? "border border-primary opacity-50" : ($tariffType == "luxury" && $c->weight == 20 ? "border border-primary opacity-50" : "opacity-50") ?>" style="margin-left: 3%; margin-right: 3%;">
+                                <div class="row d-flex justify-content-center"><?= $c->weight . 'KG' ?></div>
+                                <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-suitcase-rolling"></i></div>
+                                <div class="row d-flex justify-content-center h3">Included</div>
+                            </div>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <?= $form->field($ticket, 'luggage_1')->hiddenInput(['value' => "0"]) ?>
+                        <div class="col shadow rounded btn border-primary" onclick="switchConfig(0, 1)" id="config0_luggage1" role="button" style="margin-left: 3%; margin-right: 3%;">
+                            <div class="row d-flex justify-content-center">None</div>
+                            <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-ban"></i></div>
+                            <div class="row d-flex justify-content-center h3">Free</div>
+                        </div>
+                        <?php foreach ($config as $c) { ?>
+                            <div class="col shadow rounded btn opacity-50" role="button" onclick="switchConfig(<?= $c->id ?>, 1)" id="config<?= $c->id ?>_luggage1" style="margin-left: 3%; margin-right: 3%;">
+                                <div class="row d-flex justify-content-center"><?= $c->weight . 'KG' ?></div>
+                                <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-suitcase-rolling"></i></div>
+                                <div class="row d-flex justify-content-center h3"><?= $c->price . '€' ?></div>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
                 </div>
                 <div class="row">
@@ -113,7 +129,6 @@ use yii\widgets\ActiveForm;
 
 <script>
     currentConfig = [0, 0];
-
     currentSeat = [null, null];
 
     function switchConfig(config, luggage) {

@@ -6,6 +6,8 @@ use Yii;
 use yii\base\Model;
 use common\models\Ticket;
 use common\models\Receipt;
+use common\models\Flight;
+use common\models\Config;
 
 /**
  * Signup form
@@ -46,6 +48,34 @@ class TicketBuilder extends Model
     {
         if (!$this->validate()) {
             return false;
+        }
+
+        $luggage_1 = $this->luggage_1 != "0" ? Config::findOne([$this->luggage_1])->weight : 0;
+        $luggage_2 = $this->luggage_2 != "0" ? Config::findOne([$this->luggage_2])->weight : 0;
+
+        if($flight->getAvailableLuggage() < $luggage_1 + $luggage_2) {
+            \Yii::$app->session->setFlash('error', "There's no space in the airplane for that luggage");
+            return false;
+        }
+
+        if(!$flight->checkIfSeatAvailable($this->seatCol, $this->seatLinha)) {
+            \Yii::$app->session->setFlash('error', "Seat taken!");
+            return false;
+        }
+
+        switch($tariffType) {
+            case 'economic':
+                if($flight->airplane->checkSeatClass($this->seatCol) != "economic"){
+                    \Yii::$app->session->setFlash('error', "You need to choose a economic seat!");
+                    return false;
+                }
+                break;
+            case 'normal':
+                if($flight->airplane->checkSeatClass($this->seatCol) == "luxury"){
+                    \Yii::$app->session->setFlash('error', "You need to choose a normal or economic seat!");
+                    return false;
+                }
+                break;
         }
 
         $ticket = new Ticket();

@@ -10,9 +10,8 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Receipts';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="receipt-index">
+<div class="receipt-index mt-5">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
