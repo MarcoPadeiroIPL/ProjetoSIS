@@ -11,6 +11,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 use yii\helpers\ArrayHelper;
 
@@ -18,24 +19,45 @@ class FlightController extends Controller
 {
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['view', 'index'],
+                        'allow' => true,
+                        'roles' => ['supervisor', 'ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+                    [
+                        'actions' => ['create', 'delete', 'update'],
+                        'allow' => false,
+                        'roles' => ['supervisor', 'ticketOperator'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
-    public function actionIndex($error = null)
+    public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listFlight')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listFlight'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
         $dataProvider = new ActiveDataProvider([
             'query' => Flight::find(),
@@ -48,15 +70,14 @@ class FlightController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'error' => $error,
         ]);
     }
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readFlight')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readFlight'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -65,9 +86,9 @@ class FlightController extends Controller
 
     public function actionCreate()
     {
-        if (!\Yii::$app->user->can('createFlight')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('createFlight'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
         $model = new CreateFlight();
 
         // caso nao seja post
@@ -83,24 +104,32 @@ class FlightController extends Controller
         }
 
         // caso seja post
-        if ($model->load($this->request->post()) && $model->save()) {
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save()) {
+                \Yii::$app->session->setFlash('success', "Flight created successfully.");
+            } else {
+                \Yii::$app->session->setFlash('error', "Flight not saved.");
+            }
             return $this->redirect(['index']);
         }
-        return $this->redirect(['index', 'error' => 'There was a error while attempting to create the flight!']);
     }
 
     public function actionUpdate($id)
     {
-        if (!\Yii::$app->user->can('updateFlight')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateFlight'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
         $model = $this->findModel($id);
         $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
         $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save()) {
+                \Yii::$app->session->setFlash('success', "Flight updated successfully.");
+            } else {
+                \Yii::$app->session->setFlash('error', "Flight not updated sucessfully.");
+            }
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -108,27 +137,25 @@ class FlightController extends Controller
             'airports' => $airports,
             'airplanes' => $airplanes,
         ]);
+        \Yii::$app->session->setFlash('error', 'You are a fucking nigger');
     }
 
     public function actionDelete($id)
     {
-        if (\Yii::$app->user->can('deleteFlight')) {
-            return;
+        if (!\Yii::$app->user->can('deleteFlight'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+        $model = $this->findModel($id);
+
+        $model->status = "Canceled";
+
+        if ($model->save()) {
+            \Yii::$app->session->setFlash('success', "Flight deleted successfully.");
+        } else {
+            \Yii::$app->session->setFlash('error', "Flight not deleted.");
         }
-        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    public function actionHistory($id)
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Tariff::find()
-                ->where('flight_id =' . $id),
-        ]);
-        return $this->render('history', [
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     protected function findModel($id)

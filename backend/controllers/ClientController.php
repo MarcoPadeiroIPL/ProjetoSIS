@@ -5,6 +5,7 @@ namespace backend\controllers;
 use common\models\User;
 use common\models\Client;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,29 +14,52 @@ class ClientController extends Controller
 {
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin', 'supervisor'],
+                    ],
+                    [
+                        'actions' => ['view', 'index'],
+                        'allow' => true,
+                        'roles' => ['ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+                    [
+                        'actions' => ['create', 'delete', 'update'],
+                        'allow' => false,
+                        'roles' => ['ticketOperator'],
                     ],
                 ],
-            ]
-        );
+            ],
+
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listClient')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listClient'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => User::find()->where('status=10 OR status=8')
-            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
-            ->andWhere('auth_assignment.item_name = "client"'),
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->andWhere('auth_assignment.item_name = "client"'),
         ]);
 
         return $this->render('index', [
@@ -45,47 +69,31 @@ class ClientController extends Controller
 
     public function actionView($user_id)
     {
-        if (!\Yii::$app->user->can('readClient')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readClient'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         return $this->render('view', [
             'model' => $this->findModel($user_id),
         ]);
     }
 
-    public function actionCreate()
-    {
-        if (!\Yii::$app->user->can('createClient')) {
-            return;
-        }
-
-        $model = new Client();
-
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'user_id' => $model->user_id]);
-        }
-    }
-
     public function actionUpdate($user_id)
     {
-        if (!\Yii::$app->user->can('updateClient')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateClient'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = $this->findModel($user_id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'user_id' => $model->user_id]);
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Client updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Client not updated sucessfully.");
+            return $this->redirect(['index']);
         }
+
 
         return $this->render('update', [
             'model' => $model,
@@ -94,11 +102,14 @@ class ClientController extends Controller
 
     public function actionDelete($user_id)
     {
-        if (!\Yii::$app->user->can('deleteClient')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('deleteClient'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-        $this->findModel($user_id)->delete();
+
+        if ($this->findModel($user_id)->deleteUser())
+            \Yii::$app->session->setFlash('success', "Client deleted successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Client not deleted sucessfully.");
 
         return $this->redirect(['index']);
     }

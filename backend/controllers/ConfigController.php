@@ -5,6 +5,7 @@ namespace backend\controllers;
 use common\models\Config;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -12,24 +13,46 @@ class ConfigController extends Controller
 {
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin', 'supervisor'],
+                    ],
+                    [
+                        'actions' => ['view', 'index'],
+                        'allow' => true,
+                        'roles' => ['ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+                    [
+                        'actions' => ['create', 'delete', 'update'],
+                        'allow' => false,
+                        'roles' => ['ticketOperator'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => Config::find(),
@@ -42,9 +65,9 @@ class ConfigController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -52,9 +75,9 @@ class ConfigController extends Controller
 
     public function actionCreate()
     {
-        if (!\Yii::$app->user->can('createConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('createConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = new Config();
 
@@ -66,22 +89,29 @@ class ConfigController extends Controller
             ]);
         }
 
-        // caso seja post guarda
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Config created successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Config not saved.");
+            return $this->redirect(['index']);
         }
     }
 
     public function actionUpdate($id)
     {
-        if (!\Yii::$app->user->can('updateConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Config updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Config not updated successfully.");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -91,12 +121,21 @@ class ConfigController extends Controller
 
     public function actionDelete($id)
     {
-        if (!\Yii::$app->user->can('deleteConfig')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('deleteConfig'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-        $this->findModel($id)->delete();
 
+        $model = $this->findModel($id);
+
+        // desisto, isto nao faz sentido nenhum
+        // '$model->active = !$model->active'
+        // nao funciona por algum motivo
+        $model->active = $model->active ? 0 : 1;
+
+        if ($model->save())
+            \Yii::$app->session->setFlash('success', "Config deleted successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Config not deleted successfully.");
         return $this->redirect(['index']);
     }
 

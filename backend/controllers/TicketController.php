@@ -7,29 +7,38 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 class TicketController extends Controller
 {
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index', 'update', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin', 'supervisor', 'ticketOperator'],
                     ],
+
+                    [
+                        'actions' => ['index', 'update', 'view'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listTicket')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listTicket'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => Ticket::find(),
@@ -42,63 +51,34 @@ class TicketController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readTicket')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readTicket'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
-    public function actionCreate()
-    {
-        if (!\Yii::$app->user->can('createTicket')) {
-            return;
-        }
-
-        $model = new Ticket();
-
-        // caso nao seja post
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-
-        // caso seja post
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-    }
-
     public function actionUpdate($id)
     {
-        if (!\Yii::$app->user->can('updateTicket')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateTicket'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Ticket updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Ticket not updated successfully.");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
-    }
-
-    public function actionDelete($id)
-    {
-        if (!\Yii::$app->user->can('deleteTicket')) {
-            return;
-        }
-
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     protected function findModel($id)
@@ -110,4 +90,3 @@ class TicketController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-

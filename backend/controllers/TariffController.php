@@ -9,102 +9,47 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 
 class TariffController extends Controller
 {
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin', 'supervisor', 'ticketOperator'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
                     ],
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
-    public function actionIndex()
+    public function actionIndex($flight_id)
     {
-        if (!\Yii::$app->user->can('listTariff')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listTariff'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
+
+        $flight = Flight::findOne([$flight_id]);
         $dataProvider = new ActiveDataProvider([
-            'query' => Tariff::find(),
+            'query' => Tariff::find()
+                ->where('flight_id =' . $flight_id)
+                ->orderBy(['startDate' => SORT_DESC]),
         ]);
-
         return $this->render('index', [
+            'flight' => $flight,
             'dataProvider' => $dataProvider,
         ]);
-    }
-
-    public function actionView($id)
-    {
-        if (!\Yii::$app->user->can('readTariff')) {
-            return;
-        }
-
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    public function actionCreate()
-    {
-        if (!\Yii::$app->user->can('createTariff')) {
-            return;
-        }
-
-        $model = new Tariff();
-
-        // caso nao seja post
-        if (!$this->request->isPost) {
-            $flights = ArrayHelper::map(Flight::find()->asArray()->all(), 'id', 'id');
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-                'flights' => $flights,
-            ]);
-        }
-
-        // caso seja post
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-    }
-
-    public function actionUpdate($id)
-    {
-        if (!\Yii::$app->user->can('updateTariff')) {
-            return;
-        }
-
-        $model = $this->findModel($id);
-
-        if (!$this->request->isPost || !$model->load($this->request->post()) || !$model->save()) {
-            $flights = ArrayHelper::map(Flight::find()->asArray()->all(), 'id', 'id');
-            return $this->render('update', [
-                'model' => $model,
-                'flights' => $flights,
-            ]);
-        }
-
-        return $this->redirect(['view', 'id' => $model->id]);
-    }
-
-    public function actionDelete($id)
-    {
-        if (!\Yii::$app->user->can('deleteTariff')) {
-            return;
-        }
-
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     protected function findModel($id)
@@ -116,4 +61,3 @@ class TariffController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-

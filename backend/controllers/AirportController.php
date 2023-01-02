@@ -18,10 +18,6 @@ class AirportController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
                         'actions' => ['index', 'create', 'delete', 'update', 'view'],
                         'allow' => true,
                         'roles' => ['admin'],
@@ -46,7 +42,6 @@ class AirportController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
                     'delete' => ['POST'],
                 ],
             ],
@@ -55,9 +50,9 @@ class AirportController extends Controller
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listAirport')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('listAirport'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => Airport::find(),
@@ -70,9 +65,9 @@ class AirportController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readAirport')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('readAirport'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -81,9 +76,9 @@ class AirportController extends Controller
 
     public function actionCreate()
     {
-        if (!\Yii::$app->user->can('createAirport')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('createAirport'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = new Airport();
 
@@ -95,22 +90,30 @@ class AirportController extends Controller
             ]);
         }
 
-        // caso seja post guarda a informacao
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())){
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Ariport created successfully.");
+            else
+                \Yii::$app->session->setFlash('success', "Ariport not saved.");
+            return $this->redirect(['index']);
         }
+
     }
 
     public function actionUpdate($id)
     {
-        if (!\Yii::$app->user->can('updateAirport')) {
-            return;
-        }
+        if (!\Yii::$app->user->can('updateAirport'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
 
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(\Yii::$app->request->post())) {
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Airport updated successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Airport not updated sucessfully.");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -120,10 +123,16 @@ class AirportController extends Controller
 
     public function actionDelete($id)
     {
-        if (!\Yii::$app->user->can('deleteAirport')) {
-            return;
-        }
-        $this->findModel($id)->delete();
+        if (!\Yii::$app->user->can('deleteAirport'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        $model = $this->findModel($id);
+        $model->status = $model->status == "Operational" ? "Not Operational" : "Operational";
+        if ($model->save())
+            \Yii::$app->session->setFlash('success', "Airport deleted successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Airport not deleted sucessfully.");
 
         return $this->redirect(['index']);
     }
