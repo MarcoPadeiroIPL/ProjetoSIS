@@ -126,8 +126,6 @@ use yii\widgets\ActiveForm;
 
     </div>
 </div>
-<<<<<<< HEAD
-=======
 
 <script>
     currentConfig = [0, 0];
@@ -158,4 +156,3 @@ use yii\widgets\ActiveForm;
 
     }
 </script>
->>>>>>> frontend

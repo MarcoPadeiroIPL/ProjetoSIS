@@ -547,7 +547,7 @@ CREATE TABLE `receipts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `purchaseDate` datetime NOT NULL,
   `total` double(10,2) NOT NULL,
-  `status` enum('Complete','Refunded') DEFAULT NULL,
+  `status` enum('Complete', 'Pending', 'Refunded') DEFAULT NULL,
   `client_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_clientTicket_id` (`client_id`),
