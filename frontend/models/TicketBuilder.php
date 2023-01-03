@@ -113,7 +113,6 @@ class TicketBuilder extends Model
         $ticket->tariff_id = $flight->activeTariff()->id;
         $ticket->tariffType = $tariffType;
         $ticket->receipt_id = $receipt->id;
-
         return $ticket->save() && $receipt->refreshTotal();
     }
 }

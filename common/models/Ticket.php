@@ -190,7 +190,7 @@ class Ticket extends \yii\db\ActiveRecord
         if ($this->tariffType == 'economic')
             $total += !is_null($this->luggageOne) ? $this->luggageOne->price : 0;
 
-        $total += !is_null($this->luggageTwo) ? $this->luggageOne->price : 0;
+        $total += !is_null($this->luggageTwo) ? $this->luggageTwo->price : 0;
 
         return $total;
     }
