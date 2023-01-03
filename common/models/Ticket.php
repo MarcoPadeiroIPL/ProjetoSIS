@@ -122,7 +122,7 @@ class Ticket extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLuggage1()
+    public function getLuggageOne()
     {
         return $this->hasOne(Config::class, ['id' => 'luggage_1']);
     }
@@ -132,7 +132,7 @@ class Ticket extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLuggage2()
+    public function getLuggageTwo()
     {
         return $this->hasOne(Config::class, ['id' => 'luggage_2']);
     }
