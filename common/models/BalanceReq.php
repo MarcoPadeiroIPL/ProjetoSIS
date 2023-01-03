@@ -34,7 +34,7 @@ class BalanceReq extends \yii\db\ActiveRecord
     {
         return [
             [['amount', 'requestDate', 'client_id'], 'required'],
-            [['amount'], 'number', 'min' => 10],
+            [['amount'], 'number', 'min' => 10, 'max' => 10000],
             [['status'], 'string'],
             [['requestDate', 'decisionDate'], 'safe'],
             [['client_id'], 'integer'],

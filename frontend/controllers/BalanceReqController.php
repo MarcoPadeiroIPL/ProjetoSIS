@@ -28,11 +28,25 @@ class BalanceReqController extends Controller
                         'actions' => ['index', 'create', 'history', 'delete', 'view'],
                         'allow' => true,
                         'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 10;
+                        },
                     ],
                     [
                         'actions' => ['index', 'create', 'history', 'delete'],
                         'allow' => false,
                         'roles' => ['admin', 'supervisor', '?', 'ticketOperator'],
+                    ],
+                    [
+                        'allow' => false,
+                        'actions' => ['index', 'create', 'delete', 'history', 'view'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
+                            \Yii::$app->response->redirect(['site/fill']);
+                        },
                     ],
                 ],
             ],
@@ -81,8 +95,8 @@ class BalanceReqController extends Controller
 
         $model = $this->findModel($id);
 
-        $userId=Yii::$app->user->id;
-        
+        $userId = Yii::$app->user->id;
+
         if ($model->client_id != $userId) {
             throw new ForbiddenHttpException('You are not allowed to view this balance request.');
         }
@@ -100,16 +114,16 @@ class BalanceReqController extends Controller
 
         $model = new BalanceReq();
 
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->client_id == \Yii::$app->user->identity->getId() && $model->save()) {
+                return $this->redirect(['index']);
+            }
         }
 
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
-        }
+        $model->loadDefaultValues();
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     public function actionDelete($id)
@@ -118,7 +132,12 @@ class BalanceReqController extends Controller
             return;
         }
 
-        $this->findModel($id)->deleteBalanceReq();
+        $balanceReq = $this->findModel($id);
+        if ($balanceReq->client_id == \Yii::$app->user->identity->getId())
+            $balanceReq->deleteBalanceReq();
+        else
+            \Yii::$app->session->setFlash('error', "Cannot delete another's balance requests");
+
         return $this->redirect(['index']);
     }
 
