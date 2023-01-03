@@ -68,6 +68,13 @@ class TicketBuilder extends Model
             return false;
         }
 
+        foreach ($receipt->tickets as $t) {
+            if ($t->seatCol == $this->seatCol && $t->seatLinha == $this->seatLinha) {
+                \Yii::$app->session->setFlash('error', "You already chose " . $this->seatLinha . "-" . $this->seatCol . " on another ticket!");
+                return false;
+            }
+        }
+
         switch ($tariffType) {
             case 'economic':
                 if ($flight->airplane->checkSeatClass($this->seatLinha) != "economic") {

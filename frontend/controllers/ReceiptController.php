@@ -21,7 +21,7 @@ class ReceiptController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'pay', 'update', 'delete','ask'],
+                        'actions' => ['index', 'view', 'pay', 'update', 'delete', 'ask'],
                         'allow' => true,
                         'roles' => ['client'],
                         'matchCallback' => function ($rule, $action) {
@@ -30,7 +30,7 @@ class ReceiptController extends Controller
                     ],
                     [
                         'allow' => false,
-                        'actions' => ['index', 'view', 'pay','update','delete','ask'],
+                        'actions' => ['index', 'view', 'pay', 'update', 'delete', 'ask'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 8;
                         },
@@ -99,6 +99,7 @@ class ReceiptController extends Controller
     {
         $receipt = $this->findModel($id);
         $client = Client::findOne([\Yii::$app->user->identity->getId()]);
+
         if ($this->request->isPost) {
             if ($receipt->status == "Complete") {
                 \Yii::$app->session->setFlash('error', "This receipt is already completed");
@@ -125,20 +126,17 @@ class ReceiptController extends Controller
     {
         $receipt = $this->findModel($id);
         $client = Client::findOne([$receipt->client_id]);
-        $balancereq = new BalanceReq();
-        $finalamount = $receipt->total - $client->balance;
-        $balancereq->client_id = $receipt->client_id;
-        $balancereq->amount = $finalamount;
-        $balancereq->requestDate = date('Y-m-d H:i:s');
-        if($balancereq->save())        
-            \Yii::$app->session->setFlash('success', "Balance request created successfully!");
-         else
+
+        $req = new BalanceReq();
+        $req->client_id = $receipt->client_id;
+        $req->amount = $receipt->total - $client->balance;
+        $req->requestDate = date('Y-m-d H:i:s');
+        if ($req->save())
+            \Yii::$app->session->setFlash('success', "Successfully requested " . $req->amount . "€");
+        else
             \Yii::$app->session->setFlash('error', "There was an error while completing the balance request, please try again later.");
-        
-        return $this->redirect(['pay', 'id' => $receipt->id]); 
 
-            
-
+        return $this->redirect(['pay', 'id' => $receipt->id]);
     }
     protected function findModel($id)
     {
