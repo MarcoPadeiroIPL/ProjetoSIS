@@ -48,15 +48,19 @@ class AirportController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex($filter = null)
     {
         if (!\Yii::$app->user->can('listAirport'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => Airport::find(),
-        ]);
+        if ($filter == 'active')
+            $dataProvider = new ActiveDataProvider(['query' => Airport::find()->where(['status' => 'Operational'])]);
+        elseif ($filter == 'inactive')
+            $dataProvider = new ActiveDataProvider(['query' => Airport::find()->where(['status' => 'Not Operational'])]);
+        else
+            $dataProvider = new ActiveDataProvider(['query' => Airport::find()]);
+
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -90,14 +94,13 @@ class AirportController extends Controller
             ]);
         }
 
-        if ($model->load(\Yii::$app->request->post())){
+        if ($model->load(\Yii::$app->request->post())) {
             if ($model->save())
                 \Yii::$app->session->setFlash('success', "Ariport created successfully.");
             else
                 \Yii::$app->session->setFlash('success', "Ariport not saved.");
             return $this->redirect(['index']);
         }
-
     }
 
     public function actionUpdate($id)

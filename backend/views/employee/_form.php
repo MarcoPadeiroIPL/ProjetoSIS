@@ -18,13 +18,13 @@ use yii\jui\DatePicker;
         <div class="col"><?= $form->field($model, 'email')->textInput() ?></div>
     </div>
     <div class="row">
-        <div class="col d-flex justify-content-end">
+        <div class="col">
             <?= $form->field($model, 'gender')->dropDownList([
                 'M' => 'Male',
                 'F' => 'Female'
             ]) ?>
         </div>
-        <div class="col d-flex justify-content-evenly">
+        <div class="col">
             <?=
             $form->field($model, 'birthdate')->widget(DatePicker::classname(), [
                 'language' => 'en',
@@ -37,10 +37,10 @@ use yii\jui\DatePicker;
                 ],
             ])->textInput() ?>
         </div>
-        <div class="col d-flex justify-content-end">
+        <div class="col">
             <?= $form->field($model, 'phone')->textInput(['maxlength' => 9]) ?>
         </div>
-        <div class="col d-flex justify-content-start">
+        <div class="col">
             <?= $form->field($model, 'nif')->textInput(['maxlength' => 9]) ?>
         </div>
     </div>

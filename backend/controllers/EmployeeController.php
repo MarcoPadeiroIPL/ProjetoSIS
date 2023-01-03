@@ -88,24 +88,19 @@ class EmployeeController extends Controller
 
         $model = new RegisterEmployee();
 
-        if (!$this->request->isPost) {
-            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
-
-            return $this->render('create', [
-                'model' => $model,
-                'airports' => $airports,
-                'roles' => $roles
-            ]);
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post()) && $model->register()) {
+            \Yii::$app->session->setFlash('success', "Employee created successfully.");
+            $this->redirect(['index']);
         }
 
-        if ($model->load(\Yii::$app->request->post())) {
-            if ($model->register())
-                \Yii::$app->session->setFlash('success', "Employee created successfully.");
-            else
-                \Yii::$app->session->setFlash('error', "Employee not saved.");
-            return $this->redirect(['index']);
-        }
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
+
+        return $this->render('create', [
+            'model' => $model,
+            'airports' => $airports,
+            'roles' => $roles
+        ]);
     }
 
     public function actionUpdate($user_id)
@@ -121,24 +116,20 @@ class EmployeeController extends Controller
         $model->setUser($user);
 
 
-        if (!$this->request->isPost) {
-            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
 
-            return $this->render('update', [
-                'model' => $model,
-                'airports' => $airports,
-                'roles' => $roles
-            ]);
-        }
-
-        if ($model->load(\Yii::$app->request->post())) {
-            if ($model->update($user_id))
-                \Yii::$app->session->setFlash('success', "Employee updated successfully.");
-            else
-                \Yii::$app->session->setFlash('error', "Employee not updated successfully.");
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post()) && $model->update($user_id)) {
+            \Yii::$app->session->setFlash('success', "Employee updated successfully.");
             return $this->redirect(['index']);
         }
+
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
+
+        return $this->render('update', [
+            'model' => $model,
+            'airports' => $airports,
+            'roles' => $roles
+        ]);
     }
 
     public function actionDelete($user_id)

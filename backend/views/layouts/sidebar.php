@@ -1,7 +1,10 @@
-<?php $user_id = Yii::$app->user->getId(); ?>
+<?php
+
+use yii\helpers\Html;
+?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index" class="brand-link">
+    <a href=".." class="brand-link">
         <span class="brand-text font-weight-light">Airbender</span>
     </a>
 
@@ -13,7 +16,7 @@
                 <img src="<?= $assetDir ?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?= Yii::$app->user->identity->username ?></a>
+                <?= Html::a(Yii::$app->user->identity->username, ['employee/update', 'user_id' => \Yii::$app->user->identity->getId()]) ?>
             </div>
         </div>
 
