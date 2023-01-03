@@ -16,7 +16,7 @@ use yii\helpers\Html;
                 <img src="<?= $assetDir ?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <?= Html::a(Yii::$app->user->identity->username, ['employee/update', 'user_id' => \Yii::$app->user->identity->getId()]) ?>
+                <?= Html::a(Yii::$app->user->identity->username, ['employee/view', 'user_id' => \Yii::$app->user->identity->getId()]) ?>
             </div>
         </div>
 

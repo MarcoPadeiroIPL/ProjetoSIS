@@ -35,6 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'rowOptions' => function ($model) {
+            if ($model->status != 10)
+                return ['style' => "color:gray",];
+        },
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
@@ -81,29 +85,43 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => ActionColumn::class,
-                'template' => '{view} {update} {delete}',
+                'template' => '{view} {update} {delete} {activate}',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-eye"></i>', $url, [
-                            'title' => Yii::t('app', 'View'),
-                            'class' => 'btn btn-sm btn-primary',
-                        ]);
+                        if ($model->status == 10) {
+                            return Html::a('<i class="fas fa-eye"></i>', $url, [
+                                'title' => Yii::t('app', 'View'),
+                                'class' => 'btn btn-sm btn-primary',
+                            ]);
+                        }
                     },
                     'update' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-edit"></i>', $url, [
-                            'title' => Yii::t('app', 'Update'),
-                            'class' => 'btn btn-sm btn-primary',
-                        ]);
+                        if ($model->status == 10) {
+                            return Html::a('<i class="fas fa-edit"></i>', $url, [
+                                'title' => Yii::t('app', 'Update'),
+                                'class' => 'btn btn-sm btn-primary',
+                            ]);
+                        }
                     },
                     'delete' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-trash"></i>', $url, [
-                            'title' => Yii::t('app', 'Delete'),
-                            'class' => 'btn btn-sm btn-danger',
-                            'data' => [
-                                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                                'method' => 'post',
-                            ],
-                        ]);
+                        if ($model->status == 10) {
+                            return Html::a('<i class="fas fa-trash"></i>', $url, [
+                                'title' => Yii::t('app', 'Delete'),
+                                'class' => 'btn btn-sm btn-danger',
+                                'data' => [
+                                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                                    'method' => 'post',
+                                ],
+                            ]);
+                        }
+                    },
+                    'activate' => function ($url, $model) {
+                        if ($model->status != 10) {
+                            return Html::a('<i class="fas fa-check"></i>', $url, [
+                                'title' => Yii::t('app', 'Activate'),
+                                'class' => 'btn btn-sm btn-success',
+                            ]);
+                        }
                     },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
@@ -115,6 +133,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     if ($action === 'delete') {
                         return Url::to(['delete', 'user_id' => $model->id]);
+                    }
+                    if ($action === 'activate') {
+                        return Url::to(['activate', 'user_id' => $model->id]);
                     }
                 }
             ],

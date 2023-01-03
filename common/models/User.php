@@ -225,8 +225,15 @@ class User extends ActiveRecord implements IdentityInterface
     public function deleteUser()
     {
         $this->status = self::STATUS_DELETED;
-        $this->save();
+        return $this->save();
     }
+
+    public function activate()
+    {
+        $this->status = self::STATUS_ACTIVE;
+        return $this->save();
+    }
+
     public function getUserData()
     {
         return $this->hasOne(UserData::class, ['user_id' => 'id']);

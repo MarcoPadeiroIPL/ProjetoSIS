@@ -23,7 +23,7 @@ class EmployeeController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'actions' => ['index', 'create', 'delete', 'update', 'view', 'activate'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -38,7 +38,7 @@ class EmployeeController extends Controller
                         'roles' => ['client', '?'],
                     ],
                     [
-                        'actions' => ['index', 'create', 'delete', 'update'],
+                        'actions' => ['index', 'create', 'delete', 'activate', 'update'],
                         'allow' => false,
                         'roles' => ['supervisor', 'ticketOperator'],
                     ],
@@ -60,9 +60,10 @@ class EmployeeController extends Controller
 
 
         $dataProvider = new ActiveDataProvider([
-            'query' => User::find()->where('status=10')
+            'query' => User::find()->where('auth_assignment.item_name != "client"')
                 ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
-                ->andWhere('auth_assignment.item_name != "client"'),
+                ->orderBy(['status' => SORT_DESC])
+                ->orderBy(['id' => SORT_ASC]),
         ]);
 
         return $this->render('index', [
@@ -76,8 +77,13 @@ class EmployeeController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
+        if(User::findOne([\Yii::$app->user->identity->getId()])->authAssignment->item_name == 'admin') 
+            $user = User::findOne([$user_id]);
+        else 
+            $user = User::findOne([\Yii::$app->user->identity->getId()]);
+
         return $this->render('view', [
-            'model' => User::findOne([$user_id]),
+            'model' => $user
         ]);
     }
 
@@ -138,10 +144,23 @@ class EmployeeController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
-        if (User::findOne($user_id)->deleteUser())
+        if (User::findOne([$user_id])->deleteUser())
             \Yii::$app->session->setFlash('success', "Employee deleted successfully.");
         else
             \Yii::$app->session->setFlash('error', "Employee not deleted successfully.");
+        return $this->redirect(['index']);
+    }
+
+    public function actionActivate($user_id)
+    {
+        if (!\Yii::$app->user->can('deleteEmployee'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        if (User::findOne([$user_id])->activate())
+            \Yii::$app->session->setFlash('success', "Employee activated successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Employee not activated successfully.");
         return $this->redirect(['index']);
     }
 
