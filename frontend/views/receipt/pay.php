@@ -82,7 +82,7 @@ use yii\widgets\ActiveForm;
                 </div>
             </div>
             <div class="row mt-5" style="margin-left: 6%; margin-right: 6%;">
-                <?= Html::a('Ask for balance', ['balance-req/create'], ['class' => 'btn btn-info d-flex justify-content-center']) ?>
+                <?= Html::a('Ask for balance', ['receipt/ask', 'id' => $receipt->id], ['class' => 'btn btn-info d-flex justify-content-center']) ?>
             </div>
             <div class="row mb-5" style="margin-left: 6%; margin-right: 6%;">
                 <?= Html::a('Pay', ['receipt/pay', 'id' => $receipt->id], ['data-method' => 'post', 'class' => 'btn btn-primary d-flex justify-content-center']) ?>
