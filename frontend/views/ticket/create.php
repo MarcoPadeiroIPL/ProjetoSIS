@@ -16,7 +16,10 @@ use yii\widgets\ActiveForm;
         <?php $form = ActiveForm::begin(); ?>
         <div class="row shadow mb-4">
             <div class="col-8 p-5">
-                <div class="h1 row">Ticket</div>
+                <div class="row">
+                    <div class="h1 col">Ticket</div>
+                    <div class="col"><?= $form->field($ticket, 'useAccount')->checkbox(['label' => 'Use account information']); ?></div>
+                </div>
                 <div class="row">
                     <div class="col"><?= $form->field($ticket, 'fName'); ?></div>
                     <div class="col"><?= $form->field($ticket, 'surname'); ?></div>
