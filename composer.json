@@ -45,11 +45,7 @@
     },
     "config": {
         "allow-plugins": {
-<<<<<<< HEAD
-            "yiisoft/yii2-composer" : true
-=======
             "yiisoft/yii2-composer": true
->>>>>>> frontend
         },
         "process-timeout": 1800,
         "fxp-asset": {
@@ -61,20 +57,5 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-<<<<<<< HEAD
-    ],
-    "process-timeout": 1800,
-    "fxp-asset": {
-      "enabled": false
-    }
-  },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://asset-packagist.org"
-    }
-  ]
-=======
     ]
->>>>>>> frontend
 }
