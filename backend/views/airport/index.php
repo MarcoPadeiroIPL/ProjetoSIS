@@ -30,8 +30,16 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     <?php endif; ?>
 
-    <div class="d-flex m-2 justify-content-end">
-        <?= Html::a('+ Create Airport', ['create'], ['class' => 'btn btn-dark']) ?>
+    <div class="row">
+        <div class="col-1 d-flex m-2 justify-content-start">
+            <?= Html::a('View active', ['index', 'filter' => 'active'], ['class' => 'btn btn-success']) ?>
+        </div>
+        <div class="col d-flex m-2 justify-content-start">
+            <?= Html::a('View inactive', ['index', 'filter' => 'inactive'], ['class' => 'btn btn-danger']) ?>
+        </div>
+        <div class="col d-flex m-2 justify-content-end">
+            <?= Html::a('+ Create Airport', ['create'], ['class' => 'btn btn-dark']) ?>
+        </div>
     </div>
 
     <?= GridView::widget([

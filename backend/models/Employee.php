@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use common\models\User;
 use common\models\Airport;
+use common\models\Ticket;
 
 /**
  * This is the model class for table "employees".
@@ -93,7 +94,7 @@ class Employee extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Tickets::class, ['checkedIn' => 'user_id']);
+        return $this->hasMany(Ticket::class, ['checkedIn' => 'user_id']);
     }
 
     /**

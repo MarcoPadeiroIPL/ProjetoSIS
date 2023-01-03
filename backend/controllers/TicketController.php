@@ -34,14 +34,14 @@ class TicketController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex($flight_id)
     {
         if (!\Yii::$app->user->can('listTicket'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Ticket::find(),
+            'query' => Ticket::find()->where(['flight_id' => $flight_id]),
         ]);
 
         return $this->render('index', [

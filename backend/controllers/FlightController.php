@@ -78,9 +78,11 @@ class FlightController extends Controller
         if (!\Yii::$app->user->can('readFlight'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
+        $flight = $this->findModel($id);
+
 
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $flight,
         ]);
     }
 

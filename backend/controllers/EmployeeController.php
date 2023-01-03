@@ -23,7 +23,7 @@ class EmployeeController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'actions' => ['index', 'create', 'delete', 'update', 'view', 'activate'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -38,7 +38,7 @@ class EmployeeController extends Controller
                         'roles' => ['client', '?'],
                     ],
                     [
-                        'actions' => ['index', 'create', 'delete', 'update'],
+                        'actions' => ['index', 'create', 'delete', 'activate', 'update'],
                         'allow' => false,
                         'roles' => ['supervisor', 'ticketOperator'],
                     ],
@@ -60,9 +60,10 @@ class EmployeeController extends Controller
 
 
         $dataProvider = new ActiveDataProvider([
-            'query' => User::find()->where('status=10')
+            'query' => User::find()->where('auth_assignment.item_name != "client"')
                 ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
-                ->andWhere('auth_assignment.item_name != "client"'),
+                ->orderBy(['status' => SORT_DESC])
+                ->orderBy(['id' => SORT_ASC]),
         ]);
 
         return $this->render('index', [
@@ -76,8 +77,13 @@ class EmployeeController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
+        if(User::findOne([\Yii::$app->user->identity->getId()])->authAssignment->item_name == 'admin') 
+            $user = User::findOne([$user_id]);
+        else 
+            $user = User::findOne([\Yii::$app->user->identity->getId()]);
+
         return $this->render('view', [
-            'model' => User::findOne([$user_id]),
+            'model' => $user
         ]);
     }
 
@@ -88,24 +94,19 @@ class EmployeeController extends Controller
 
         $model = new RegisterEmployee();
 
-        if (!$this->request->isPost) {
-            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
-
-            return $this->render('create', [
-                'model' => $model,
-                'airports' => $airports,
-                'roles' => $roles
-            ]);
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post()) && $model->register()) {
+            \Yii::$app->session->setFlash('success', "Employee created successfully.");
+            $this->redirect(['index']);
         }
 
-        if ($model->load(\Yii::$app->request->post())) {
-            if ($model->register())
-                \Yii::$app->session->setFlash('success', "Employee created successfully.");
-            else
-                \Yii::$app->session->setFlash('error', "Employee not saved.");
-            return $this->redirect(['index']);
-        }
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
+
+        return $this->render('create', [
+            'model' => $model,
+            'airports' => $airports,
+            'roles' => $roles
+        ]);
     }
 
     public function actionUpdate($user_id)
@@ -121,24 +122,20 @@ class EmployeeController extends Controller
         $model->setUser($user);
 
 
-        if (!$this->request->isPost) {
-            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
 
-            return $this->render('update', [
-                'model' => $model,
-                'airports' => $airports,
-                'roles' => $roles
-            ]);
-        }
-
-        if ($model->load(\Yii::$app->request->post())) {
-            if ($model->update($user_id))
-                \Yii::$app->session->setFlash('success', "Employee updated successfully.");
-            else
-                \Yii::$app->session->setFlash('error', "Employee not updated successfully.");
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post()) && $model->update($user_id)) {
+            \Yii::$app->session->setFlash('success', "Employee updated successfully.");
             return $this->redirect(['index']);
         }
+
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
+
+        return $this->render('update', [
+            'model' => $model,
+            'airports' => $airports,
+            'roles' => $roles
+        ]);
     }
 
     public function actionDelete($user_id)
@@ -147,10 +144,23 @@ class EmployeeController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
-        if (User::findOne($user_id)->deleteUser())
+        if (User::findOne([$user_id])->deleteUser())
             \Yii::$app->session->setFlash('success', "Employee deleted successfully.");
         else
             \Yii::$app->session->setFlash('error', "Employee not deleted successfully.");
+        return $this->redirect(['index']);
+    }
+
+    public function actionActivate($user_id)
+    {
+        if (!\Yii::$app->user->can('deleteEmployee'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        if (User::findOne([$user_id])->activate())
+            \Yii::$app->session->setFlash('success', "Employee activated successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Employee not activated successfully.");
         return $this->redirect(['index']);
     }
 
