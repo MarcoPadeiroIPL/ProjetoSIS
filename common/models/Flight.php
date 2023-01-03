@@ -161,13 +161,43 @@ class Flight extends \yii\db\ActiveRecord
         foreach ($this->tickets as $ticket) {
             if ($ticket->receipt->status == 'Complete') {
                 // set to false == not available
-                if (isset($ticket->luggage_1->weight) && !is_null($ticket->luggage_2->weight))
-                    $this->airplane->luggageCapacity -= $ticket->luggage_1->weight;
-                if (isset($ticket->luggage_2->weight) && !is_null($ticket->luggage_2->weight))
-                    $this->airplane->luggageCapacity -= $ticket->luggage_2->weight;
+                if (isset($ticket->luggageOne->weight) && !is_null($ticket->luggageOne->weight))
+                    $this->airplane->luggageCapacity -= $ticket->luggageOne->weight;
+                if (isset($ticket->luggageTwo->weight) && !is_null($ticket->luggageTwo->weight))
+                    $this->airplane->luggageCapacity -= $ticket->luggageOne->weight;
             }
         }
         return $this->airplane->luggageCapacity;
+    }
+
+    public function countBoughtTickets()
+    {
+        $count = 0;
+
+        foreach ($this->tickets as $ticket) {
+            if ($ticket->receipt->status == 'Complete') {
+                // set to false == not available
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public function countBoughtLuggage()
+    {
+        $count = 0;
+
+        foreach ($this->tickets as $ticket) {
+            if ($ticket->receipt->status == 'Complete') {
+                // set to false == not available
+                if (isset($ticket->luggageOne->weight) && !is_null($ticket->luggageOne->weight))
+                    $count += $ticket->luggageOne->weight;
+                if (isset($ticket->luggageTwo->weight) && !is_null($ticket->luggageTwo->weight))
+                    $count += $ticket->luggageTwo->weight;
+            }
+        }
+
+        return $count;
     }
 
     public function checkIfSeatAvailable($col, $linha)
@@ -181,3 +211,4 @@ class Flight extends \yii\db\ActiveRecord
         return true;
     }
 }
+
