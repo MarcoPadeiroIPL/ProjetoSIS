@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use common\models\Receipt;
 use common\models\Client;
 use yii\filters\AccessControl;
+use common\models\BalanceReq;
 
 class ReceiptController extends Controller
 {
@@ -20,7 +21,7 @@ class ReceiptController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'pay', 'update', 'delete'],
+                        'actions' => ['index', 'view', 'pay', 'update', 'delete','ask'],
                         'allow' => true,
                         'roles' => ['client'],
                     ],
@@ -106,7 +107,25 @@ class ReceiptController extends Controller
             'client' => $client,
         ]);
     }
+    public function actionAsk($id)
+    {
+        $receipt = $this->findModel($id);
+        $client = Client::findOne([$receipt->client_id]);
+        $balancereq = new BalanceReq();
+        $finalamount = $receipt->total - $client->balance;
+        $balancereq->client_id = $receipt->client_id;
+        $balancereq->amount = $finalamount;
+        $balancereq->requestDate = date('Y-m-d H:i:s');
+        if($balancereq->save())        
+            \Yii::$app->session->setFlash('success', "Balance request created successfully!");
+         else
+            \Yii::$app->session->setFlash('error', "There was an error while completing the balance request, please try again later.");
+        
+        return $this->redirect(['pay', 'id' => $receipt->id]); 
 
+            
+
+    }
     protected function findModel($id)
     {
         if (($model = Receipt::findOne(['id' => $id])) !== null) {
