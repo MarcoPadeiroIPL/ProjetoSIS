@@ -33,7 +33,7 @@ class TicketController extends Controller
                     ],
                     [
                         'allow' => false,
-                        'actions' => ['index', 'create', 'delete','view'],
+                        'actions' => ['index', 'create', 'delete', 'view'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 8;
                         },

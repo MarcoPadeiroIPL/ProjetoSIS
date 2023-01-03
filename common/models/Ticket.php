@@ -173,13 +173,25 @@ class Ticket extends \yii\db\ActiveRecord
     {
         $tariff = Tariff::findOne([$this->tariff_id]);
 
+        $total = 0;
+
         switch ($this->tariffType) {
             case 'economic':
-                return $tariff->economicPrice;
+                $total += $tariff->economicPrice;
+                break;
             case 'normal':
-                return $tariff->normalPrice;
+                $total += $tariff->normalPrice;
+                break;
             case 'luxury':
-                return $tariff->luxuryPrice;
+                $total += $tariff->luxuryPrice;
+                break;
         }
+
+        if ($this->tariffType == 'economic')
+            $total += !is_null($this->luggageOne) ? $this->luggageOne->price : 0;
+
+        $total += !is_null($this->luggageTwo) ? $this->luggageTwo->price : 0;
+
+        return $total;
     }
 }

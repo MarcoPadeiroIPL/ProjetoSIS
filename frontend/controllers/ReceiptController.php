@@ -99,6 +99,7 @@ class ReceiptController extends Controller
     {
         $receipt = $this->findModel($id);
         $client = Client::findOne([\Yii::$app->user->identity->getId()]);
+        $receipt->refreshTotal();
 
         if ($this->request->isPost) {
             if ($receipt->status == "Complete") {
