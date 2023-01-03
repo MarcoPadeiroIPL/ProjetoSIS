@@ -28,8 +28,22 @@ class ClientController extends Controller
                     [
                         'actions' => ['index', 'update', 'delete'],
                         'allow' => true,
-                        'roles' => ['client']
+                        'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 10;
+                        },
                     ],
+                    [
+                        'allow' => false,
+                        'actions' => ['index', 'update', 'delete'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
+                            \Yii::$app->response->redirect(['site/fill']);
+                        },
+                    ], 
                     
                 ],
             ],

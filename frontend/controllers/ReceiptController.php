@@ -24,6 +24,20 @@ class ReceiptController extends Controller
                         'actions' => ['index', 'view', 'pay', 'update', 'delete','ask'],
                         'allow' => true,
                         'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 10;
+                        }
+                    ],
+                    [
+                        'allow' => false,
+                        'actions' => ['index', 'view', 'pay','update','delete','ask'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
+                            \Yii::$app->response->redirect(['site/fill']);
+                        },
                     ],
                     [
                         'actions' => ['index', 'view', 'pay', 'update', 'delete'],
