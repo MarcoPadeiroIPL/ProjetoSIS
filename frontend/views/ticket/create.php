@@ -156,6 +156,20 @@ use yii\widgets\ActiveForm;
             currentSeat[0] = col;
             currentSeat[1] = linha;
         }
-
     }
+    const checkbox = document.getElementById('ticketbuilder-useaccount')
+
+    checkbox.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+            $('#ticketbuilder-fname').attr('disabled', 'disabled');
+            $('#ticketbuilder-surname').attr('disabled', 'disabled');
+            $('#ticketbuilder-age').attr('disabled', 'disabled');
+            $('#ticketbuilder-gender').attr('disabled', 'disabled');
+        } else {
+            $('#ticketbuilder-fname').removeAttr('disabled', 'disabled');
+            $('#ticketbuilder-surname').removeAttr('disabled', 'disabled');
+            $('#ticketbuilder-age').removeAttr('disabled', 'disabled');
+            $('#ticketbuilder-gender').removeAttr('disabled', 'disabled');
+        }
+    })
 </script>
