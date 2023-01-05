@@ -11,7 +11,6 @@ class SelectAirport extends Model
     public $airportArrival_id;
     public $departureDate = null;
     public $arrivalDate = null;
-    public $passangers;
 
     /**
      * {@inheritdoc}
@@ -21,7 +20,6 @@ class SelectAirport extends Model
         return [
             ['airportDeparture_id', 'required', 'message' => 'Cannot be empty'],
             ['airportArrival_id', 'required', 'message' => 'Cannot be empty'],
-            ['passangers', 'required', 'message' => 'Cannot be empty'],
         ];
     }
 }

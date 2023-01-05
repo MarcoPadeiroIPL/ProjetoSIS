@@ -74,14 +74,6 @@ use yii\widgets\ActiveForm;
             ?>
         </div>
     </div>
-    <div class="row">
-        <div class="col-1 d-flex justify-content-center align-items-center">
-            <i class="fa-solid fa-user"></i>
-        </div>
-        <div class="col-2">
-            <?= $form->field($model, 'passangers')->dropDownList(range(1, 9))->label('') ?>
-        </div>
-    </div>
     <div class="form-group row d-flex justify-content-center">
         <?= Html::submitButton('Search', ['class'=> 'btn btn-primary mt-5 w-75']) ?>
     </div>
@@ -108,13 +100,25 @@ use yii\widgets\ActiveForm;
     }
 
     window.onload = function(){
+        $("#selectairport-airportarrival_id").attr('disabled','disabled');
         $('#selectairport-airportdeparture_id').change(function() {
             departureid = $(this).val();
             $("#selectairport-airportarrival_id").find("option").show();
             $("#selectairport-airportarrival_id").find("optgroup").show();
             option = $("#selectairport-airportarrival_id").find("option[value^=" + departureid + "]");
             option.hide();
+            $("#selectairport-airportarrival_id").removeAttr('disabled','disabled');
             if(option.parent().children("option[value!=" + departureid + "]").size() == 0)
+                option.parent().hide();
+        })
+        $('#selectairport-airportarrival_id').change(function() {
+            arrivalid = $(this).val();
+            $("#selectairport-airportdeparture_id").find("option").show();
+            $("#selectairport-airportdeparture_id").find("optgroup").show();
+            option = $("#selectairport-airportdeparture_id").find("option[value^=" + arrivalid + "]");
+            option.hide();
+            $("#selectairport-airportdeparture_id").fadeIn();
+            if(option.parent().children("option[value!=" + arrivalid + "]").size() == 0)
                 option.parent().hide();
         })
     };
