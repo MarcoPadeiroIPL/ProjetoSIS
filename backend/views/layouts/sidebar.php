@@ -70,11 +70,6 @@ use yii\helpers\Html;
                 ],
                 ['label' => 'CUSTOMERS', 'header' => true],
                 [
-                    'label' => 'Tickets',
-                    'icon' => 'fa-solid fa-clipboard-check',
-                    'url' => ['ticket/index']
-                ],
-                [
                     'label' => 'Clients',
                     'icon' => 'fa-solid fa-user',
                     'url' => ['client/index']
@@ -94,7 +89,7 @@ use yii\helpers\Html;
                 unset($items[2], $items[6], $items[9]);
 
             if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'ticketOperator')
-                unset($items[2], $items[6], $items[9], $items[10], $items[11], $items[12]);
+                unset($items[2], $items[6], $items[9], $items[10], $items[10], $items[11]);
 
             echo \hail812\adminlte\widgets\Menu::widget(['items' => $items]);
             ?>

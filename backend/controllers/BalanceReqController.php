@@ -26,12 +26,12 @@ class BalanceReqController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'accept', 'decline', 'view'],
+                        'actions' => ['index', 'accept', 'decline', 'view', 'history'],
                         'allow' => true,
                         'roles' => ['admin', 'supervisor'],
                     ],
                     [
-                        'actions' => ['index', 'accept', 'decline', 'view'],
+                        'actions' => ['index', 'accept', 'decline', 'view', 'history'],
                         'allow' => false,
                         'roles' => ['ticketOperator', 'client', '?'],
                     ],

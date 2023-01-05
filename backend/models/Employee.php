@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use common\models\User;
 use common\models\Airport;
+use common\models\BalanceReqEmployee;
 use common\models\Ticket;
 
 /**
@@ -87,6 +88,7 @@ class Employee extends \yii\db\ActiveRecord
         return $this->hasOne(Airport::class, ['id' => 'airport_id']);
     }
 
+
     /**
      * Gets query for [[Tickets]].
      *
@@ -106,4 +108,5 @@ class Employee extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
+
 }
