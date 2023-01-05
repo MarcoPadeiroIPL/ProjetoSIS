@@ -106,4 +106,16 @@ use yii\widgets\ActiveForm;
         $("#arrivalDate").fadeIn();
         $("#arrivalIcon").fadeIn();
     }
+
+    window.onload = function(){
+        $('#selectairport-airportdeparture_id').change(function() {
+            departureid = $(this).val();
+            $("#selectairport-airportarrival_id").find("option").show();
+            $("#selectairport-airportarrival_id").find("optgroup").show();
+            option = $("#selectairport-airportarrival_id").find("option[value^=" + departureid + "]");
+            option.hide();
+            if(option.parent().children("option[value!=" + departureid + "]").size() == 0)
+                option.parent().hide();
+        })
+    };
 </script>
