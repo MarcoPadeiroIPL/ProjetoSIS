@@ -20,6 +20,8 @@ class SelectAirport extends Model
         return [
             ['airportDeparture_id', 'required', 'message' => 'Cannot be empty'],
             ['airportArrival_id', 'required', 'message' => 'Cannot be empty'],
+            ['departureDate', 'required', 'message' => 'Cannot be empty'],
+            ['airportDeparture_id', 'compare', 'compareAttribute' => 'airportArrival_id', 'operator' => '!='],
         ];
     }
 }

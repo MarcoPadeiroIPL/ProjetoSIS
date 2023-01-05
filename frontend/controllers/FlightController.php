@@ -51,7 +51,6 @@ class FlightController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -62,6 +61,15 @@ class FlightController extends Controller
         $model = new SelectAirport();
 
         // se esta action for chamada por post
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->validate()) {
+            $this->redirect([
+                'select-flight',
+                'airportDeparture_id' => $model->airportDeparture_id,
+                'airportArrival_id' => $model->airportArrival_id,
+                'departureDate' => isset($model->departureDate) ? $model->departureDate : null,
+                'receipt_id' => $receipt_id,
+            ]);
+        }
 
         // caso nao seja chamado por post, redireciona para o proximo passo
         $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
@@ -73,29 +81,35 @@ class FlightController extends Controller
         ]);
     }
 
-    public function actionSelectFlight($receipt_id = null)
+    public function actionSelectFlight($airportDeparture_id, $airportArrival_id, $departureDate = null, $receipt_id = null)
     {
         $selectFlight = new SelectFlight();
-        $selectAirport = new SelectAirport();
+
+        // sql query nao estava a funcionar ffs
+        $temp = Flight::find()->all();
+
+        foreach ($temp as $flight) {
+            $interval[] = abs(strtotime($flight->departureDate) - strtotime($departureDate));
+        }
+        asort($interval);
+
+        $closestFlight = Flight::findOne(key($interval) + 1);
 
         // se esta action nao for chamada por post
-        if ($this->request->isPost && $selectAirport->load($this->request->post()) && $selectAirport->validate()) {
-            $flights = Flight::find()
-                ->where('airportDeparture_id = ' . $selectAirport->airportDeparture_id)
-                ->andWhere('airportArrival_id = ' . $selectAirport->airportArrival_id)
-                ->orderBy('departureDate')
-                ->all();
+        $flights = Flight::find()
+            ->where('airportDeparture_id = ' . $airportDeparture_id)
+            ->andWhere('airportArrival_id = ' . $airportArrival_id)
+            ->orderBy('departureDate')
+            ->all();
 
-            return $this->render('select-flight', [
-                'model' => $selectFlight,
-                'flights' => $flights,
-                'airportArrival' => Airport::findOne($selectAirport->airportArrival_id),
-                'airportDeparture' => Airport::findOne($selectAirport->airportDeparture_id),
-                'passangers' => $selectAirport->passangers + 1,
-                'receipt_id' => $receipt_id,
-            ]);
-        }
-        return $this->redirect(['select-airport']);
+        return $this->render('select-flight', [
+            'model' => $selectFlight,
+            'flights' => $flights,
+            'airportArrival' => Airport::findOne($airportArrival_id),
+            'airportDeparture' => Airport::findOne($airportDeparture_id),
+            'closestFlight' => $closestFlight,
+            'receipt_id' => $receipt_id,
+        ]);
     }
 
     public function actionView($id)
