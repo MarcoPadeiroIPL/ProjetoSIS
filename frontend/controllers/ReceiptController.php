@@ -101,15 +101,23 @@ class ReceiptController extends Controller
         $client = Client::findOne([\Yii::$app->user->identity->getId()]);
         $receipt->refreshTotal();
 
+        // caso seja post
         if ($this->request->isPost) {
+            // verificar se a fatura ja nao foi paga
             if ($receipt->status == "Complete") {
                 \Yii::$app->session->setFlash('error', "This receipt is already completed");
                 return $this->redirect(['index']);
             }
-            if ($client->balance >= $receipt->total) {
-                $client->balance -= $receipt->total;
+            // verificar se o cliente tem saldo suficiente
+            if ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total >= $receipt->total) {
+                // descontar da conta do cliente dependendo se tem aplicacao ou nao
+                $client->balance -= $client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total;
+
+                // modificar o status da fatura
                 $receipt->status = "Complete";
                 $receipt->purchaseDate = date('Y-m-d H:i:s');
+
+                // avisar o cliente se conseguiu guardar ou nao 
                 if ($client->save() && $receipt->save()) {
                     \Yii::$app->session->setFlash('success', "Purchase completed successfully!");
                     return $this->redirect(['index']);
@@ -118,6 +126,7 @@ class ReceiptController extends Controller
             } else
                 \Yii::$app->session->setFlash('error', "You don't have enough balance");
         }
+
         return $this->render('pay', [
             'receipt' => $receipt,
             'client' => $client,
@@ -130,7 +139,7 @@ class ReceiptController extends Controller
 
         $req = new BalanceReq();
         $req->client_id = $receipt->client_id;
-        $req->amount = $receipt->total - $client->balance;
+        $req->amount = ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total) - $client->balance;
         $req->requestDate = date('Y-m-d H:i:s');
         if ($req->save())
             \Yii::$app->session->setFlash('success', "Successfully requested " . $req->amount . "€");

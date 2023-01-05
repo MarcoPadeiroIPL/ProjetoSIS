@@ -61,6 +61,16 @@ use yii\widgets\ActiveForm;
                     <div class="row fs-4"><?= $receipt->total ?>€</div>
                 </div>
             </div>
+            <?php if ($client->application) { ?>
+            <div class="row" style="margin-left: 3%; margin-right: 3%;">
+                <div class="col-9 d-flex justify-content-end" style="padding-right: 9%;">
+                    <div class="row fs-4 text-info">TOTAL after app discount (5%)</div>
+                </div>
+                <div class="col border-top d-flex justify-content-center">
+                    <div class="row fs-4 text-info"><?= $client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total ?>€</div>
+                </div>
+            </div>
+            <?php } ?>
             <div class="row" style="margin-left: 3%; margin-right: 3%;">
                 <div class="col-9 d-flex justify-content-end" style="padding-right: 9%;">
                     <div class="row fs-4">Current Balance</div>
@@ -75,9 +85,9 @@ use yii\widgets\ActiveForm;
                 </div>
                 <div class="col d-flex justify-content-center">
                     <?php if ($client->balance - $receipt->total < 0) { ?>
-                        <div class="row fs-4 text-danger"><?= $client->balance - $receipt->total ?>€</div>
+                        <div class="row fs-4 text-danger"><?= $client->balance - ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total) ?>€</div>
                     <?php } else { ?>
-                        <div class="row fs-4 text-success"><?= $client->balance - $receipt->total ?>€</div>
+                        <div class="row fs-4 text-success"><?= $client->balance - ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total) ?>€</div>
                     <?php } ?>
                 </div>
             </div>
