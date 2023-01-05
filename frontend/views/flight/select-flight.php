@@ -17,7 +17,7 @@ $this->title = 'Flights';
     <?= Html::a('<i class="fa-solid fa-arrow-left"></i> Go back', ['flight/select-airport']) ?>
     <?php if (count($flights) == 0) { ?>
         <h1>There are no flights available from <?= $airportDeparture->city ?> to <?= $airportArrival->city ?></h1>
-    <?php } else { ?>
+        <?php } else { ?>
         <h1>Select one flight!</h1>
         <div class="container">
             <div class="row" style="height: 40vh;">
@@ -28,12 +28,17 @@ $this->title = 'Flights';
                         <div class="col">Price</div>
                     </div>
                     <?php foreach ($flights as $flight) { ?>
-                        <div class="row w-100 p-3" style="cursor: pointer;" id="select<?= $flight->id ?>" onclick="changeActive(<?= $flight->id . ', ' . $flight->activeTariff()->economicPrice . ', ' . $flight->activeTariff()->normalPrice . ', ' . $flight->activeTariff()->luxuryPrice ?>)">
-                            <div class="col-8"><?= $flight->departureDate ?></div>
+                        <div class="row w-100 p-3" style="cursor: pointer;" id="select<?= $flight->id ?>"
+                            onclick="changeActive(<?= $flight->id . ', ' . $flight->activeTariff()->economicPrice . ', ' . $flight->activeTariff()->normalPrice . ', ' . $flight->activeTariff()->luxuryPrice ?>)">
+                            <div class="col-8">
+                                <?= $flight->departureDate ?>
+                            </div>
                             <div class="col"></div>
-                            <div class="col"><?= $flight->activeTariff('economic') ?>€</div>
+                            <div class="col">
+                                <?= $flight->activeTariff('economic') ?>€
+                            </div>
                         </div>
-                    <?php } ?>
+                        <?php } ?>
                 </div>
 
                 <div class="col m-3">
@@ -84,24 +89,32 @@ $this->title = 'Flights';
                     </div>
                 </div>
             </div>
-        <?php } ?>
+            <?php } ?>
 
 
-        </div>
-        <script>
-            oldSelect = null;
-            function changeActive(flight_id, economicPrice, normalPrice, luxuryPrice) {
-                $("#economicPrice").text(economicPrice + '€');
-                $("#economicPrice").attr('href', '../ticket/buy-ticket?flight_id=' + flight_id + '&tariff=economic');
-                $("#normalPrice").text(normalPrice + '€');
-                $("#normalPrice").attr('href', '../ticket/buy-ticket?flight_id=' + flight_id + '&tariff=normal');
-                $("#luxuryPrice").text(luxuryPrice + '€');
-                $("#luxuryPrice").attr('href', '../ticket/buy-ticket?flight_id=' + flight_id + '&tariff=luxury');
-                $('#select' + flight_id).addClass('bg-info text-white');
-                $('#select' + oldSelect).removeClass('bg-info text-white');
-                oldSelect = flight_id;
+    </div>
+    <script>
+        oldSelect = null;
+
+
+        function changeActive(flight_id, economicPrice, normalPrice, luxuryPrice) {
+            $("#economicPrice").text(economicPrice + '€');
+            $("#normalPrice").text(normalPrice + '€');
+            $("#luxuryPrice").text(luxuryPrice + '€');
+            if (<?=!is_null($receipt_id) ?> + 0) {
+                $("#economicPrice").attr('href', '../ticket/create?flight_id=' + flight_id + '&tariffType=economic&receipt_id=' + <?= $receipt_id ?> + '');
+                $("#normalPrice").attr('href', '../ticket/create?flight_id=' + flight_id + '&tariffType=normal&receipt_id=' + <?= $receipt_id ?> + '');
+                $("#luxuryPrice").attr('href', '../ticket/create?flight_id=' + flight_id + '&tariffType=luxury&receipt_id=' + <?= $receipt_id ?> + '');
+            } else {
+                $("#economicPrice").attr('href', '../ticket/create?flight_id=' + flight_id + '&tariffType=economic');
+                $("#normalPrice").attr('href', '../ticket/create?flight_id=' + flight_id + '&tariffType=normal');
+                $("#luxuryPrice").attr('href', '../ticket/create?flight_id=' + flight_id + '&tariffType=luxury');
             }
-            window.onload = function() {
-                changeActive(<?= $closestFlight->id . ', ' . $closestFlight->activeTariff('economic') . ', ' . $closestFlight->activeTariff('normal') . ', ' . $closestFlight->activeTariff('luxury') ?>);
-            }
-        </script>
+            $('#select' + flight_id).addClass('bg-info text-white');
+            $('#select' + oldSelect).removeClass('bg-info text-white');
+            oldSelect = flight_id;
+        }
+        window.onload = function () {
+            changeActive(<?= $closestFlight->id . ', ' . $closestFlight->activeTariff('economic') . ', ' . $closestFlight->activeTariff('normal') . ', ' . $closestFlight->activeTariff('luxury') ?>);
+        }
+    </script>

@@ -32,6 +32,11 @@ class TicketController extends Controller
                         },
                     ],
                     [
+                        'actions' => ['index', 'create', 'delete', 'view'],
+                        'allow' => false,
+                        'roles' => ['admin', 'supervisor', '?', 'ticketOperator'],
+                    ],
+                    [
                         'allow' => false,
                         'actions' => ['index', 'create', 'delete', 'view'],
                         'matchCallback' => function ($rule, $action) {
@@ -41,11 +46,6 @@ class TicketController extends Controller
                             \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
                             \Yii::$app->response->redirect(['site/fill']);
                         },
-                    ],
-                    [
-                        'actions' => ['index', 'create', 'delete', 'view'],
-                        'allow' => false,
-                        'roles' => ['admin', 'supervisor', '?', 'ticketOperator'],
                     ],
                 ],
             ],

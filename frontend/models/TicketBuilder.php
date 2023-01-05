@@ -37,9 +37,9 @@ class TicketBuilder extends Model
             [['fName', 'surname', 'age', 'gender'], 'required', 'when' => function ($model) {
                 return !$model->useAccount;
             }],
-            [['client_id', 'seatLinha', 'seatCol', 'luggage_1', 'luggage_2'], 'required'],
+            [['client_id', 'seatLinha', 'seatCol'], 'required'],
             [['fName', 'surname'], 'string', 'max' => 20],
-            [['age', 'useAccount'], 'integer', 'min' => 0, 'max' => 100],
+            [['age', 'useAccount', 'luggage_1', 'luggage_2'], 'integer', 'min' => 0, 'max' => 100],
         ];
     }
     public function attributeLabels()
@@ -55,8 +55,8 @@ class TicketBuilder extends Model
             return false;
         }
 
-        $luggage_1 = $this->luggage_1 != "0" ? Config::findOne([$this->luggage_1])->weight : 0;
-        $luggage_2 = $this->luggage_2 != "0" ? Config::findOne([$this->luggage_2])->weight : 0;
+        $luggage_1 = is_null($this->luggage_1) ? Config::findOne([$this->luggage_1])->weight : 0;
+        $luggage_2 = is_null($this->luggage_2) ? Config::findOne([$this->luggage_2])->weight : 0;
 
         if ($flight->getAvailableLuggage() < $luggage_1 + $luggage_2) {
             \Yii::$app->session->setFlash('error', "There's no space in the airplane for that luggage");
