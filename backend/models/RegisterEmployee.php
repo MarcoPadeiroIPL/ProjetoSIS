@@ -88,8 +88,10 @@ class RegisterEmployee extends Model
         $user = User::findOne($id);
         $user->username = $this->username;
         $user->email = $this->email;
+        if (!is_null($this->password))
+            $user->setPassword($this->password);
 
-        $user->save();
+        $state = $user->save();
 
         $userData = isset($user->userData) ? $user->userData : new UserData();
         $userData->user_id = isset($userData->user_id) ? $userData->user_id : $user->getId();
@@ -102,14 +104,23 @@ class RegisterEmployee extends Model
         $userData->accCreationDate = date('Y/m/d H:i:s');
         $userData->accCreationDate = isset($userData->accCreationDate) ? $userData->accCreationDate : date('Y/m/d H:i:s');
 
-        $userData->save();
+        $state = $state && $userData->save();
 
         $employee = isset($user->userData) ? $user->employee : new Employee();
         $employee->user_id = $user->getId();
         $employee->salary = $this->salary;
         $employee->airport_id = $this->airport_id;
 
-        return $employee->save();
+        // RBAC
+        $auth = Yii::$app->authManager;
+        $oldRole = $auth->getRole($user->authAssignment->item_name);
+        $newRole = $auth->getRole($this->role);
+        if ($newRole != $oldRole) {
+            $auth->revoke($oldRole, $user->id);
+            $auth->assign($newRole, $user->id);
+        }
+
+        return $state && $employee->save();
     }
     public function register()
     {

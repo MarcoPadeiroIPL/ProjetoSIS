@@ -27,6 +27,20 @@ class TicketController extends Controller
                         'actions' => ['index', 'create', 'delete', 'view'],
                         'allow' => true,
                         'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 10;
+                        },
+                    ],
+                    [
+                        'allow' => false,
+                        'actions' => ['index', 'create', 'delete', 'view'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
+                            \Yii::$app->response->redirect(['site/fill']);
+                        },
                     ],
                     [
                         'actions' => ['index', 'create', 'delete', 'view'],

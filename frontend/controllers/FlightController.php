@@ -33,6 +33,17 @@ class FlightController extends Controller
                             throw new \Exception('Access denied');
                         }
                     ],
+                    [
+                        'allow' => false,
+                        'actions' => ['select-flight', 'select-airport', 'view'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
+                            \Yii::$app->response->redirect(['site/fill']);
+                        },
+                    ],
                 ],
             ],
 

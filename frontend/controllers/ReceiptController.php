@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use common\models\Receipt;
 use common\models\Client;
 use yii\filters\AccessControl;
+use common\models\BalanceReq;
 
 class ReceiptController extends Controller
 {
@@ -20,9 +21,23 @@ class ReceiptController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'pay', 'update', 'delete'],
+                        'actions' => ['index', 'view', 'pay', 'update', 'delete', 'ask'],
                         'allow' => true,
                         'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 10;
+                        }
+                    ],
+                    [
+                        'allow' => false,
+                        'actions' => ['index', 'view', 'pay', 'update', 'delete', 'ask'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
+                            \Yii::$app->response->redirect(['site/fill']);
+                        },
                     ],
                     [
                         'actions' => ['index', 'view', 'pay', 'update', 'delete'],
@@ -84,6 +99,8 @@ class ReceiptController extends Controller
     {
         $receipt = $this->findModel($id);
         $client = Client::findOne([\Yii::$app->user->identity->getId()]);
+        $receipt->refreshTotal();
+
         if ($this->request->isPost) {
             if ($receipt->status == "Complete") {
                 \Yii::$app->session->setFlash('error', "This receipt is already completed");
@@ -106,7 +123,22 @@ class ReceiptController extends Controller
             'client' => $client,
         ]);
     }
+    public function actionAsk($id)
+    {
+        $receipt = $this->findModel($id);
+        $client = Client::findOne([$receipt->client_id]);
 
+        $req = new BalanceReq();
+        $req->client_id = $receipt->client_id;
+        $req->amount = $receipt->total - $client->balance;
+        $req->requestDate = date('Y-m-d H:i:s');
+        if ($req->save())
+            \Yii::$app->session->setFlash('success', "Successfully requested " . $req->amount . "€");
+        else
+            \Yii::$app->session->setFlash('error', "There was an error while completing the balance request, please try again later.");
+
+        return $this->redirect(['pay', 'id' => $receipt->id]);
+    }
     protected function findModel($id)
     {
         if (($model = Receipt::findOne(['id' => $id])) !== null) {
