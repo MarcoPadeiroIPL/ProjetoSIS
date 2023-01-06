@@ -77,9 +77,9 @@ class EmployeeController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
-        if(User::findOne([\Yii::$app->user->identity->getId()])->authAssignment->item_name == 'admin') 
+        if (User::findOne([\Yii::$app->user->identity->getId()])->authAssignment->item_name == 'admin')
             $user = User::findOne([$user_id]);
-        else 
+        else
             $user = User::findOne([\Yii::$app->user->identity->getId()]);
 
         return $this->render('view', [
@@ -115,7 +115,7 @@ class EmployeeController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
-        $user = User::findOne($user_id);
+        $user = User::findOne([$user_id]);
 
         $model = new RegisterEmployee();
 

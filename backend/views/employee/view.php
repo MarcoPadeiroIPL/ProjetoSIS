@@ -7,8 +7,6 @@ use yii\widgets\DetailView;
 /** @var common\models\Flight $model */
 
 $this->title = 'Employee #' . $model->id . ' - Airbender';
-$this->params['breadcrumbs'][] = ['label' => 'Employee', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="employee-view">

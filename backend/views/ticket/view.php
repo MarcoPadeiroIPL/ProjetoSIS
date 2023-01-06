@@ -6,14 +6,10 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\Ticket $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Tickets', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Ticket #' . $model->id . ' - Airbender';
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="ticket-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

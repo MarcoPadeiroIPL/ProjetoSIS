@@ -10,7 +10,6 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Configs';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="config-index">
     <?php if (Yii::$app->session->hasFlash('success')) : ?>

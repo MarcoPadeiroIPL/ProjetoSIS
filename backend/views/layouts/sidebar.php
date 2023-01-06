@@ -42,6 +42,17 @@ use yii\helpers\Html;
                     'icon' => 'tachometer-alt',
                     'url' => ['site/index']
                 ],
+                ['label' => 'SHORTCUTS', 'header' => true],
+                [
+                    'label' => 'Create a employee',
+                    'icon' => 'fa-solid fa-user-plus',
+                    'url' => ['employee/create']
+                ],
+                [
+                    'label' => 'Create a flight',
+                    'icon' => 'fa-duotone fa-plane-departure',
+                    'url' => ['flight/create']
+                ],
                 ['label' => 'AIRPORTS', 'header' => true],
                 [
                     'label' => 'Employees',
@@ -86,10 +97,10 @@ use yii\helpers\Html;
                 ],
             ];
             if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'supervisor')
-                unset($items[2], $items[6], $items[9]);
+                unset($items[1],$items[2], $items[3], $items[5], $items[6], $items[9]);
 
             if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'ticketOperator')
-                unset($items[2], $items[6], $items[9], $items[10], $items[10], $items[11]);
+                unset($items[1],$items[2], $items[3], $items[5], $items[9], $items[12], $items[13], $items[14]);
 
             echo \hail812\adminlte\widgets\Menu::widget(['items' => $items]);
             ?>

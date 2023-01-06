@@ -9,8 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Balance Reqs';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Balance Reqs - History';
 ?>
 <a href="index">View pending</a>
 <div class="balance-req-history">
