@@ -25,14 +25,6 @@ use yii\widgets\ActiveForm;
     <div class="container mt-5 d-flex justify-content-center">
         <?php $form = ActiveForm::begin(['action' => ['flight/select-airport', 'receipt_id' => $receipt_id]]); ?>
 
-        <div class="row ">
-            <div class="col col-md-5 mx-auto btn btn-primary" id="bothWays" onClick="bothWays()">
-                Both ways
-            </div>
-            <div class="col col-md-5 mx-auto btn btn-secondary" id="oneWay" onClick="oneWay()">
-                One Way
-            </div>
-        </div>
         <div class="row d-flex justify-content-center">
             <div class="col col-md-5 mx-auto">
                 <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports, ['prompt' => 'From'])->label('') ?>
@@ -63,24 +55,6 @@ use yii\widgets\ActiveForm;
                 ]);
                 ?>
             </div>
-            <div class="col-1 d-flex justify-content-center align-items-center">
-                <i class="fa-solid fa-plane-arrival" id="arrivalIcon"></i>
-            </div>
-            <div class="col col-md-5 mx-auto" id="arrivalDate">
-                <?=
-                DatePicker::widget([
-                    'model' => $model,
-                    'name' => 'arrivalDate',
-                    'attribute' => 'arrivalDate',
-                    'options' => ['placeholder' => 'Arrival date'],
-                    'type' => DatePicker::TYPE_INPUT,
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true
-                    ]
-                ]);
-                ?>
-            </div>
         </div>
         <div class="form-group row d-flex justify-content-center">
             <?= Html::submitButton('Search', ['class' => 'btn btn-primary mt-5 w-75']) ?>
@@ -93,21 +67,6 @@ use yii\widgets\ActiveForm;
 </div>
 
 <script>
-    function oneWay() {
-        $("#oneWay").addClass("btn-primary").removeClass("btn-secondary");
-        $("#bothWays").addClass("btn-secondary").removeClass("btn-primary");
-        $("#arrivalDate").fadeOut();
-        $("#arrivalIcon").fadeOut();
-        $("#selectairport-arrivaldate").val("");
-    }
-
-    function bothWays() {
-        $("#bothWays").addClass("btn-primary").removeClass("btn-secondary");
-        $("#oneWay").addClass("btn-secondary").removeClass("btn-primary");
-        $("#arrivalDate").fadeIn();
-        $("#arrivalIcon").fadeIn();
-    }
-
     window.onload = function() {
         if (!$("#selectairport-airportarrival_id").val()) {
             $("#selectairport-airportarrival_id").attr('disabled', 'disabled');

@@ -6,7 +6,6 @@ use Yii;
 use common\models\Flight;
 use common\models\Airport;
 use frontend\models\SelectAirport;
-use frontend\models\SelectFlight;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\helpers\ArrayHelper;
@@ -84,8 +83,6 @@ class FlightController extends Controller
 
     public function actionSelectFlight($flight_id = null, $airportDeparture_id = null, $airportArrival_id = null, $departureDate = null, $receipt_id = null)
     {
-        $selectFlight = new SelectFlight();
-
         if (!is_null($flight_id)) {
             $selectedFlight = Flight::findOne([$flight_id]);
             $flights = Flight::find()
@@ -113,7 +110,6 @@ class FlightController extends Controller
         }
 
         return $this->render('select-flight', [
-            'model' => $selectFlight,
             'flights' => $flights,
             'airportArrival' => Airport::findOne($airportArrival_id),
             'airportDeparture' => Airport::findOne($airportDeparture_id),
