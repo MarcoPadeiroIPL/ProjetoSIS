@@ -136,7 +136,6 @@ use yii\widgets\ActiveForm;
 
 
     window.onload = function() {
-        alert($('#ticketbuilder-luggage_2').val());
         if ($('#ticketbuilder-luggage_1').val())
             switchConfig($('#ticketbuilder-luggage_1').val(), 1);
         if ($('#ticketbuilder-luggage_2').val())

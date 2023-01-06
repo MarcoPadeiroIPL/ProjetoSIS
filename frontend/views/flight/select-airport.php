@@ -14,25 +14,33 @@ use yii\widgets\ActiveForm;
 ?>
 <div class="flight-index">
 
-    <div class="container mt-5" style="width:35%">
+<div class="container">
+
+  <div class="row">
+
+
+  </div>
+
+</div>
+    <div class="container mt-5 d-flex justify-content-center">
         <?php $form = ActiveForm::begin(['action' => ['flight/select-airport', 'receipt_id' => $receipt_id]]); ?>
 
-        <div class="row">
-            <div class="col btn btn-primary" id="bothWays" onClick="bothWays()">
+        <div class="row ">
+            <div class="col col-md-5 mx-auto btn btn-primary" id="bothWays" onClick="bothWays()">
                 Both ways
             </div>
-            <div class="col btn btn-secondary" id="oneWay" onClick="oneWay()">
+            <div class="col col-md-5 mx-auto btn btn-secondary" id="oneWay" onClick="oneWay()">
                 One Way
             </div>
         </div>
-        <div class="row">
-            <div class="col">
+        <div class="row d-flex justify-content-center">
+            <div class="col col-md-5 mx-auto">
                 <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports, ['prompt' => 'From'])->label('') ?>
             </div>
-            <div class="col-1 d-flex justify-content-center align-items-center">
+            <div class="col-1 mx-auto d-flex justify-content-center align-items-center">
                 <i class="fa-solid fa-plane"></i>
             </div>
-            <div class="col">
+            <div class="col col-md-5 mx-auto">
                 <?= $form->field($model, 'airportArrival_id')->dropDownList($airports, ['prompt' => 'To'])->label('') ?>
             </div>
         </div>
@@ -58,7 +66,7 @@ use yii\widgets\ActiveForm;
             <div class="col-1 d-flex justify-content-center align-items-center">
                 <i class="fa-solid fa-plane-arrival" id="arrivalIcon"></i>
             </div>
-            <div class="col" id="arrivalDate">
+            <div class="col col-md-5 mx-auto" id="arrivalDate">
                 <?=
                 DatePicker::widget([
                     'model' => $model,
