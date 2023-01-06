@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.9.4-MariaDB, for Linux (x86_64)sql
 --
--- Host: localhost    Database: airbender
+-- Host: localhost    Database: airbender_test
 -- ------------------------------------------------------
 -- Server version	10.9.4-MariaDB
 
@@ -18,9 +18,9 @@
 --
 -- Table structure for table `airplanes`
 --
-DROP DATABASE IF EXISTS airbender;
-CREATE DATABASE airbender;
-USE airbender;
+DROP DATABASE IF EXISTS airbender_test;
+CREATE DATABASE airbender_test;
+USE airbender_test;
 
 DROP TABLE IF EXISTS `airplanes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

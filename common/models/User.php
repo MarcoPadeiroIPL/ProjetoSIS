@@ -67,6 +67,9 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_FIRSTLOGIN],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED, self::STATUS_FIRSTLOGIN]],
+            [['username', 'password_hash', 'email'], 'required'],
+            [['username'], 'string', 'min' => 4, 'max' => 25],
+            ['email', 'email'],
         ];
     }
 
@@ -95,6 +98,26 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findByUsername($username)
     {
         return static::findOne(['username' => $username, 'status' => [self::STATUS_ACTIVE, self::STATUS_FIRSTLOGIN]]);
+    }
+
+    /**
+     * Generates username and sets it to the model
+     *
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * Generates email and sets it to the model
+     *
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
     }
 
     /**
