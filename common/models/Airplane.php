@@ -46,7 +46,7 @@ class Airplane extends \yii\db\ActiveRecord
             [['maxLinha'], 'integer', 'min' => 1, 'max' => 18, 'tooSmall' => 'The maximum line must be between 1 and 9', 'tooBig' => 'The maximum line must be between 1 and 9'],
             //Se a letra da minCol for "maior" que a letra da maxCol vai dar erro
             ['minCol', 'compare', 'compareAttribute' => 'maxCol', 'operator' => '<=', 'message' => 'The minimum column must be before the maximum column.'],
-            ['maxCol', 'compare', 'compareValue' => 'I', 'operator' => '<=', 'message' => 'Columns range from A to I.'],
+            ['maxCol', 'compare', 'compareValue' => 'L', 'operator' => '<=', 'message' => 'Columns range from A to L.'],
         ];
     }
 
@@ -113,7 +113,6 @@ class Airplane extends \yii\db\ActiveRecord
                 return 'economic';
             }
         }
-
     }
     public function getSeats()
     {
@@ -125,5 +124,4 @@ class Airplane extends \yii\db\ActiveRecord
         }
         return $seats;
     }
-
 }
