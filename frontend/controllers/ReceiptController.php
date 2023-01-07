@@ -89,8 +89,8 @@ class ReceiptController extends Controller
         }
 
         $receipt = $this->findModel($id);
-        
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }
@@ -102,7 +102,7 @@ class ReceiptController extends Controller
             ]);
         } else
             \Yii::$app->session->setFlash('error', "You need to pay first!");
-            return $this->redirect(['pay', 'id' => $id]);
+        return $this->redirect(['pay', 'id' => $id]);
     }
 
 
@@ -115,7 +115,7 @@ class ReceiptController extends Controller
 
         $receipt = $this->findModel($id);
 
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }
@@ -137,7 +137,7 @@ class ReceiptController extends Controller
         $ticket = Ticket::findOne([$id]);
         $receipt = $ticket->receipt;
 
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }
@@ -165,7 +165,7 @@ class ReceiptController extends Controller
         $client = Client::findOne([\Yii::$app->user->identity->getId()]);
         $receipt->refreshTotal();
 
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }
@@ -203,7 +203,7 @@ class ReceiptController extends Controller
     }
     public function actionAsk($id)
     {
-        if (!\Yii::$app->user->can('balanceReqCreate')) {
+        if (!\Yii::$app->user->can('createBalanceReq')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
@@ -211,15 +211,23 @@ class ReceiptController extends Controller
 
         $client = Client::findOne([$receipt->client_id]);
 
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
+        }
+
+        if ($client->balance > ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total)) {
+            \Yii::$app->session->setFlash('error', "You already have enought balance!");
+            return $this->redirect(['pay', 'id' => $receipt->id]);
         }
 
         $req = new BalanceReq();
         $req->client_id = $receipt->client_id;
         $req->amount = ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total) - $client->balance;
-        $req->requestDate = date('Y-m-d H:i:s');
+        $req->requestDate = date('Y/m/d H:i:s');
+
+        $req->validate();
+        dd($req->getErrors());
         if ($req->save())
             \Yii::$app->session->setFlash('success', "Successfully requested " . $req->amount . "€");
         else
