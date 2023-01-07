@@ -63,13 +63,14 @@ class BalanceReqController extends Controller
     public function actionIndex()
     {
         if (!\Yii::$app->user->can('listBalanceReq')) {
-            return;
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
         $client = Client::findOne([\Yii::$app->user->getId()]);
+
         $dataProvider = new ActiveDataProvider([
             'query' => BalanceReq::find()
-                ->where(['client_id' => \Yii::$app->user->getId()])
+                ->where(['client_id' => $client->user_id])
                 ->andWhere(['status' => 'Ongoing']),
             'pagination' => [
                 'pageSize' => 5
@@ -90,26 +91,26 @@ class BalanceReqController extends Controller
     public function actionView($id)
     {
         if (!\Yii::$app->user->can('readBalanceReq')) {
-            return;
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
-        $model = $this->findModel($id);
 
-        $userId = Yii::$app->user->id;
+        $balanceReq = $this->findModel($id);
 
-        if ($model->client_id != $userId) {
-            throw new ForbiddenHttpException('You are not allowed to view this balance request.');
+        if ($balanceReq->client_id != \Yii::$app->user->identity->getId()) {
+            \Yii::$app->session->setFlash('error', "Not your receipt!");
+            return $this->redirect(['index']);
         }
 
         return $this->render('view', [
-            'model' => $model,
+            'model' => $balanceReq,
         ]);
     }
 
     public function actionCreate()
     {
         if (!\Yii::$app->user->can('createBalanceReq')) {
-            return;
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
         $model = new BalanceReq();
@@ -129,14 +130,20 @@ class BalanceReqController extends Controller
     public function actionDelete($id)
     {
         if (!\Yii::$app->user->can('deleteBalanceReq')) {
-            return;
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
         $balanceReq = $this->findModel($id);
-        if ($balanceReq->client_id == \Yii::$app->user->identity->getId())
-            $balanceReq->deleteBalanceReq();
+
+        if ($balancereq->client_id != \Yii::$app->user->identity->getid()) {
+            \Yii::$app->session->setflash('error', "cannot delete another's balance requests");
+            return $this->redirect(['index']);
+        }
+
+        if ($balanceReq->deleteBalanceReq())
+            \Yii::$app->session->setFlash('success', "Balance requests succesfully deleted");
         else
-            \Yii::$app->session->setFlash('error', "Cannot delete another's balance requests");
+            \Yii::$app->session->setFlash('error', "There was an error while trying to delete the balance request");
 
         return $this->redirect(['index']);
     }
@@ -144,11 +151,11 @@ class BalanceReqController extends Controller
     public function actionHistory()
     {
         if (!\Yii::$app->user->can('listBalanceReq')) {
-            return;
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"'),
+            'query' => BalanceReq::find()->where('status="Accepted" OR status="Declined"')->andWhere(['client_id' => \Yii::$app->user->identity->getid()]),
             'pagination' => [
                 'pageSize' => 10
             ],

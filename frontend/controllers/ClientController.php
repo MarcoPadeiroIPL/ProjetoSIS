@@ -43,27 +43,25 @@ class ClientController extends Controller
                             \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
                             \Yii::$app->response->redirect(['site/fill']);
                         },
-                    ], 
-                    
+                    ],
+
                 ],
             ],
-            
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                        'logout' => ['post'],
-                    ],
+
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
-            ];
-    
-        
+            ],
+        ];
     }
 
     public function actionIndex()
     {
         if (!\Yii::$app->user->can('readClient')) {
-            return;
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
         $client = Client::findOne([\Yii::$app->user->getId()]);
@@ -72,17 +70,13 @@ class ClientController extends Controller
         ]);
     }
 
-    public function actionUpdate($user_id)
+    public function actionUpdate()
     {
         if (!\Yii::$app->user->can('updateClient')) {
-            return;
-        }
-        $userId = Yii::$app->user->id;
-        if ($user_id != $userId) {
-            throw new ForbiddenHttpException('You are not allowed to view this profile.');
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
-        $model =UserData::findOne($user_id);
+        $model = UserData::findOne([\Yii::$app->user->identity->getId()]);
 
         if (!$this->request->isPost) {
             $model->loadDefaultValues();
@@ -94,18 +88,22 @@ class ClientController extends Controller
         if ($model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
-       
     }
 
-    public function actionDelete($user_id)
+    public function actionDelete()
     {
-        if (!\Yii::$app->user->can('updateClient')) {
-            return;
+        if (!\Yii::$app->user->can('deleteClient')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
-        $this->findModel($user_id)->delete();
-
-        return $this->redirect(['index']);
+        if ($this->findModel(\Yii::$app->user->identity->getId())->deleteUser()){
+            \Yii::$app->session->setFlash('success', "Account successfully deleted");
+            return $this->redirect(['site/index']);
+        }
+        else {
+            \Yii::$app->session->setFlash('error', "Not your receipt!");
+            return $this->redirect(['index']);
+        }
     }
 
     protected function findModel($user_id)
