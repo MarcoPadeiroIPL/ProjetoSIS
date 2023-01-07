@@ -85,4 +85,14 @@ class Receipt extends \yii\db\ActiveRecord
         }
         return $this->save();
     }
+
+    public function updateTicketPrices()
+    {
+        foreach($this->tickets as $ticket)
+        {
+            if(!$ticket->flight->increasePrice(0.03))
+                return false;
+        }
+        return true;
+    }
 }

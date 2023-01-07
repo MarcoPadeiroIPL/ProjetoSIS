@@ -186,6 +186,8 @@ class ReceiptController extends Controller
                 $receipt->status = "Complete";
                 $receipt->purchaseDate = date('Y-m-d H:i:s');
 
+                $receipt->updateTicketPrices();
+
                 // avisar o cliente se conseguiu guardar ou nao 
                 if ($client->save() && $receipt->save()) {
                     \Yii::$app->session->setFlash('success', "Purchase completed successfully!");
