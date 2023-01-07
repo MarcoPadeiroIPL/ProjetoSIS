@@ -24,7 +24,7 @@ class TicketController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'delete', 'view'],
+                        'actions' => ['index', 'create', 'delete', 'view', 'checkin'],
                         'allow' => true,
                         'roles' => ['client'],
                         'matchCallback' => function ($rule, $action) {
@@ -32,13 +32,13 @@ class TicketController extends Controller
                         },
                     ],
                     [
-                        'actions' => ['index', 'create', 'delete', 'view'],
+                        'actions' => ['index', 'create', 'delete', 'view', 'checkin'],
                         'allow' => false,
                         'roles' => ['admin', 'supervisor', '?', 'ticketOperator'],
                     ],
                     [
                         'allow' => false,
-                        'actions' => ['index', 'create', 'delete', 'view'],
+                        'actions' => ['index', 'create', 'delete', 'view', 'checkin'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 8;
                         },
@@ -60,9 +60,16 @@ class TicketController extends Controller
 
     public function getReceipt($receipt_id)
     {
+
         // caso ja exista a fatura vai buscar a existente
-        if (!is_null($receipt_id))
-            return Receipt::findOne([$receipt_id]);
+        if (!is_null($receipt_id)) {
+            $receipt = Receipt::findOne([$receipt_id]);
+            if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
+                \Yii::$app->session->setFlash('error', "Not your receipt!");
+                $this->redirect(['index']);
+            }
+            return $receipt;
+        }
 
         $receipt = new Receipt();
         $receipt->purchaseDate = date('Y/m/d H:i:s');
@@ -73,6 +80,10 @@ class TicketController extends Controller
 
     public function actionIndex()
     {
+        if (!\Yii::$app->user->can('listTicket')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+        }
+
         $dataProvider = new ActiveDataProvider([
             'query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])
             /*
@@ -94,8 +105,12 @@ class TicketController extends Controller
 
     public function actionView($id)
     {
+        if (!\Yii::$app->user->can('readTicket')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+        }
+
         $ticket = Ticket::findOne([$id]);
-        if (!$ticket->client_id == \Yii::$app->user->identity->getId()) {
+        if ($ticket->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your ticket!");
         }
 
@@ -104,7 +119,12 @@ class TicketController extends Controller
 
     public function actionCreate($flight_id, $tariffType, $receipt_id = null)
     {
+        if (!\Yii::$app->user->can('createTicket')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+        }
+
         $flight = Flight::findOne([$flight_id]);
+
         $ticket = new TicketBuilder;
 
         if ($this->request->isPost) {
@@ -131,12 +151,23 @@ class TicketController extends Controller
 
     public function actionDelete($id)
     {
-        $ticket = Ticket::findOne([$id]);
-        if ($ticket->shred && $ticket->client_id == \Yii::$app->user->identity->getId()) {
-            // sucesso
-        } else {
-            // error
+        if (!\Yii::$app->user->can('deleteTicket')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
+
+        $ticket = Ticket::findOne([$id]);
+
+        if ($ticket->client_id != \Yii::$app->user->identity->getId()) {
+            \Yii::$app->session->setFlash('error', "Not your ticket!");
+            $this->redirect(['ticket/index']);
+        }
+
+        if ($ticket->shred())
+            \Yii::$app->session->setFlash('success', "Successfuly deleted ticket");
+        else
+            \Yii::$app->session->setFlash('error', "There was an error while trying to delete the ticket");
+
+        $this->redirect(['ticket/index']);
     }
 
     protected function findModel($id)

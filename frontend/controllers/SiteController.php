@@ -140,6 +140,10 @@ class SiteController extends Controller
     }
     public function actionFill()
     {
+        if (!\Yii::$app->user->can('updateClient')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+        }
+
         $model = new UserData();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {

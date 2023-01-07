@@ -54,7 +54,7 @@ class Ticket extends \yii\db\ActiveRecord
             [['fName', 'surname'], 'string', 'max' => 25],
             [['seatLinha'], 'string', 'max' => 1],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'user_id']],
-            [['checkedIn'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::class, 'targetAttribute' => ['checkedIn' => 'user_id']],
+            [['checkedIn'], 'exist', 'skipOnError' => false, 'targetClass' => Employee::class, 'targetAttribute' => ['checkedIn' => 'user_id']],
             [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flight::class, 'targetAttribute' => ['flight_id' => 'id']],
             [['luggage_1'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_1' => 'id']],
             [['luggage_2'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_2' => 'id']],
@@ -159,6 +159,13 @@ class Ticket extends \yii\db\ActiveRecord
 
         // devolve o id do employee que deu checkin
         return $this->checkedIn;
+    }
+    public function checkedIn($employee_id)
+    {
+        $this->checkedIn = $employee_id;
+
+        // devolve o id do employee que deu checkin
+        return $this->save();
     }
     public function shred()
     {

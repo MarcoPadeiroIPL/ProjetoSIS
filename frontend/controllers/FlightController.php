@@ -22,7 +22,7 @@ class FlightController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['select-flight', 'select-airport', 'view'],
+                        'actions' => ['select-flight', 'select-airport'],
                         'allow' => true,
                         'roles' => ['client', '?'],
                         'matchCallback' => function ($rule, $action) {
@@ -34,7 +34,7 @@ class FlightController extends Controller
                     ],
                     [
                         'allow' => false,
-                        'actions' => ['select-flight', 'select-airport', 'view'],
+                        'actions' => ['select-flight', 'select-airport'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 8;
                         },
@@ -88,24 +88,29 @@ class FlightController extends Controller
             $flights = Flight::find()
                 ->where('airportDeparture_id = ' . $selectedFlight->airportDeparture_id)
                 ->andWhere('airportArrival_id = ' . $selectedFlight->airportArrival_id)
+                ->andWhere(['status' => 'Available'])
                 ->orderBy('departureDate')
                 ->all();
         } else {
             // sql query nao estava a funcionar ffs
-            $flights = Flight::find()->all();
+            $flights = Flight::find()
+                ->where('airportDeparture_id = ' . $airportDeparture_id)
+                ->andWhere('airportArrival_id = ' . $airportArrival_id)
+                ->andWhere('status="Available"')
+                ->all();
 
             if (count($flights) > 0) {
                 foreach ($flights as $flight) {
-                    $interval[] = abs(strtotime($flight->departureDate) - strtotime($departureDate));
+                    $interval[$flight->id] = abs(strtotime($flight->departureDate) - strtotime($departureDate));
                 }
                 asort($interval);
-
-                $selectedFlight = Flight::findOne(key($interval) + 1);
+                $selectedFlight = Flight::findOne([key($interval)]);
 
                 // se esta action nao for chamada por post
                 $flights = Flight::find()
                     ->where('airportDeparture_id = ' . $airportDeparture_id)
                     ->andWhere('airportArrival_id = ' . $airportArrival_id)
+                    ->andWhere(['status' => 'Available'])
                     ->orderBy('departureDate')
                     ->all();
             }
@@ -119,14 +124,6 @@ class FlightController extends Controller
             'receipt_id' => $receipt_id,
         ]);
     }
-
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
 
     protected function findModel($id)
     {
