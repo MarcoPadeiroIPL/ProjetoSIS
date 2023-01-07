@@ -42,6 +42,7 @@ class Airplane extends \yii\db\ActiveRecord
             [['luggageCapacity', 'minLinha', 'minCol', 'maxLinha', 'maxCol', 'economicStart', 'economicStop', 'normalStart', 'normalStop', 'luxuryStart', 'luxuryStop'], 'required'],
             [['luggageCapacity', 'minLinha', 'maxLinha'], 'integer'],
             [['status'], 'string'],
+            ['status', 'in', 'range' => ['Active', 'Not working']],
             [['minCol', 'maxCol', 'economicStart', 'economicStop', 'normalStart', 'normalStop', 'luxuryStart', 'luxuryStop'], 'string', 'max' => 1],
             [['maxLinha'], 'integer', 'min' => 1, 'max' => 18, 'tooSmall' => 'The maximum line must be between 1 and 9', 'tooBig' => 'The maximum line must be between 1 and 9'],
             //Se a letra da minCol for "maior" que a letra da maxCol vai dar erro

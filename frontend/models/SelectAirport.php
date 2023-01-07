@@ -18,6 +18,7 @@ class SelectAirport extends Model
     public function rules()
     {
         return [
+            ['airportDeparture_id', 'compare', 'compareValue' => 'airportArrival_id', 'operator' => '!=', 'message' => 'The destiny and arrival airports must not be the same.'],
             ['airportDeparture_id', 'required', 'message' => 'Cannot be empty'],
             ['airportArrival_id', 'required', 'message' => 'Cannot be empty'],
             ['departureDate', 'required', 'message' => 'Cannot be empty'],
