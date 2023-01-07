@@ -44,12 +44,17 @@ class Flight extends \yii\db\ActiveRecord
             [['departureDate'], 'safe'],
             [['departureDate'], DateValidator::class, 'format' => 'php:Y/m/d H:i:s'],
             [['duration'], DateValidator::class, 'format' => 'php:Y/m/d H:i:s'],
+            [['departureDate', 'duration', 'airplane_id', 'airportDeparture_id', 'airportArrival_id', 'airportDeparture', 'airportArrival'], 'required'],
+            [['departureDate', 'duration'], 'safe'],
             [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
             [['status'], 'string'],
             [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplane::class, 'targetAttribute' => ['airplane_id' => 'id']],
             [['airportArrival_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportArrival_id' => 'id']],
             [['airportDeparture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportDeparture_id' => 'id']],
             ['airportDeparture_id', 'compare', 'compareValue' => 'airportArrival_id', 'operator' => '!=', 'message' => 'The destiny and arrival airports must not be the same.'],
+            [['departureDate'], 'date', 'format' => 'php:Y-m-d'],
+            [['departureDate'], 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
+            [['duration'], 'match', 'pattern' => '/^([0-1][0-9]|[2][0-3]):([0-5][0-9]):([0-5][1-9])$/'],
         ];
     }
 
@@ -67,6 +72,56 @@ class Flight extends \yii\db\ActiveRecord
             'Duration' => 'Duration',
             'status' => 'Status',
         ];
+    }
+
+    /**
+     * Generates departureDate and sets it to the model
+     *
+     * @param string $departureDate
+     */
+    public function setDepartureDate($departureDate)
+    {
+        $this->departureDate = $departureDate;
+    }
+
+    /**
+     * Generates duration and sets it to the model
+     *
+     * @param string $duration
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+    }
+
+    /**
+     * Generates airportDeparture and sets it to the model
+     *
+     * @param string $airportDeparture
+     */
+    public function setAirportDeparture($airportDeparture)
+    {
+        $this->airportDeparture = $airportDeparture;
+    }
+
+    /**
+     * Generates airportArrival and sets it to the model
+     *
+     * @param string $airportArrival
+     */
+    public function setAirportArrival($airportArrival)
+    {
+        $this->airportArrival = $airportArrival;
+    }
+
+    /**
+     * Generates airplane and sets it to the model
+     *
+     * @param string $airplane
+     */
+    public function setAirplane($airplane)
+    {
+        $this->airplane = $airplane;
     }
 
     /**
