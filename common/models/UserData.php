@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\validators\DateValidator;
 
 /**
  * This is the model class for table "userData".
@@ -37,12 +38,11 @@ class UserData extends \yii\db\ActiveRecord
             [['user_id', 'fName', 'surname', 'birthdate', 'phone', 'nif', 'gender', 'accCreationDate'], 'required'],
             [['user_id'], 'integer'],
             [['birthdate', 'accCreationDate'], 'safe'],
-            ['birthdate', 'date', 'format' => 'php:Y-m-d'],
+            [['birthdate', 'accCreationDate'], DateValidator::class, 'format' => 'php:Y/m/d'],
             [['gender'], 'string' , 'max' => 1],
-            [['gender'], 'in', 'range' => ['M', 'F']],
+            ['gender', 'in', 'range' => ['M', 'F']],
             [['fName', 'surname'], 'string','min' => 2, 'max' => 25],
-            [['phone', 'nif'], 'string', 'min' => 9, 'max' => 9],
-            [['phone', 'nif'], 'number'],
+            [['phone', 'nif'], 'string', 'max' => 9],
             [['phone'], 'unique'],
             [['nif'], 'unique'],
             [['user_id'], 'unique'],

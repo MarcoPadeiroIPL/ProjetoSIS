@@ -60,6 +60,11 @@ class Receipt extends \yii\db\ActiveRecord
         return $this->hasMany(Ticket::class, ['receipt_id' => 'id']);
     }
 
+    public function getClient()
+    {
+        return $this->hasOne(Client::class, ['user_id' => 'client_id']);
+    }
+
     public function shred()
     {
         if ($this->status != "Pending")

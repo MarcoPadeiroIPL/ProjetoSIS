@@ -49,9 +49,7 @@ CREATE TABLE `airplanes` (
 
 LOCK TABLES `airplanes` WRITE;
 /*!40000 ALTER TABLE `airplanes` DISABLE KEYS */;
-INSERT INTO `airplanes` VALUES
-(1,240,1,'A',6,'F','E','F','C','D','A','B','Active'),
-(2,310,1,'A',9,'I','H','I','F','G','A','D','Active');
+
 /*!40000 ALTER TABLE `airplanes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -79,11 +77,7 @@ CREATE TABLE `airports` (
 
 LOCK TABLES `airports` WRITE;
 /*!40000 ALTER TABLE `airports` DISABLE KEYS */;
-INSERT INTO `airports` VALUES
-(1,'Portugal','PT','Lisboa',60,'Operational'),
-(2,'France','FR','Paris',90,'Operational'),
-(3,'United Kingdom','UK','London',95,'Operational'),
-(4,'Spain','ES','Madrid',65,'Operational');
+
 /*!40000 ALTER TABLE `airports` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,10 +104,7 @@ CREATE TABLE `auth_assignment` (
 
 LOCK TABLES `auth_assignment` WRITE;
 /*!40000 ALTER TABLE `auth_assignment` DISABLE KEYS */;
-INSERT INTO `auth_assignment` VALUES
-('admin','1',1670254804),
-('client','6',1670255085),
-('client','7',1670255105);
+
 /*!40000 ALTER TABLE `auth_assignment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -409,9 +400,8 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
-INSERT INTO `clients` VALUES
-(6,0.00,0),
-(7,0.00,0);
+
+
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -728,10 +718,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES
-(1,'admin','tRmAX9Ui90tRYlGaVcbV8A51ivNxHwRw','$2y$13$/Clj2.AkHYqcihE40fa1A.XpBS8XjOvl0TX4rCaajFocG2jTknTNy',NULL,'admin@gmail.com',10,1666799925,1666799925,'PGF9gv1CFKHFwb2Xmhekqsqnkhc0zf3C_1666799925'),
-(6,'pedro','Whj18W7LxaX20P55cloIGoMufulci7f1','$2y$13$Rb7KtwBB4GNP1bLtdz9Iu.V99vgU1.iUCfiAdseV94rzHxiTU42tC',NULL,'pedro@gmail.com',10,1670255085,1670255085,'ftJiU4uv0rd8HdII-PSrfJ42TV0QrBiJ_1670255085'),
-(7,'teste','GY7V6VHq7Q-6VrgMnsqjs7ES9yd6xWKK','$2y$13$Gu1wJd4W0QJM6FbpGXRlK.wVx7wbA0NG/aSg.R64ee0LeF6TYp0XG',NULL,'teste@gmail.com',10,1670255105,1670255105,'BGjOggKeppWgy3yWMkfE1IU2PfvGeRe6_1670255105');
+
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
