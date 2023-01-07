@@ -11,6 +11,7 @@ use common\models\Receipt;
 use common\models\Client;
 use yii\filters\AccessControl;
 use common\models\BalanceReq;
+use common\models\Ticket;
 
 class ReceiptController extends Controller
 {
@@ -21,7 +22,7 @@ class ReceiptController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'pay', 'update', 'delete', 'ask'],
+                        'actions' => ['index', 'view', 'pay', 'update', 'delete', 'ask', 'delete-ticket'],
                         'allow' => true,
                         'roles' => ['client'],
                         'matchCallback' => function ($rule, $action) {
@@ -30,7 +31,7 @@ class ReceiptController extends Controller
                     ],
                     [
                         'allow' => false,
-                        'actions' => ['index', 'view', 'pay', 'update', 'delete', 'ask'],
+                        'actions' => ['index', 'view', 'pay', 'update', 'delete', 'ask', 'delete-ticket'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 8;
                         },
@@ -95,6 +96,25 @@ class ReceiptController extends Controller
 
         return $this->redirect(['index']);
     }
+
+    public function actionDeleteTicket($id)
+    {
+        $ticket = Ticket::findOne([$id]);
+        $receipt = $ticket->receipt;
+
+        if ($ticket->shred())
+            \Yii::$app->session->setFlash('success', "Ticket deleted successfully!");
+        else
+            \Yii::$app->session->setFlash('error', "The ticket couldn't be deleted.");
+
+        if(count($receipt->tickets) > 0)
+            return $this->redirect(['pay', 'id' => $receipt->id]);
+        else {
+            $receipt->shred();
+            return $this->redirect(['index']);
+        }
+    }
+
     public function actionPay($id)
     {
         $receipt = $this->findModel($id);

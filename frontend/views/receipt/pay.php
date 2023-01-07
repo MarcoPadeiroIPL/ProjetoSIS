@@ -30,8 +30,12 @@ use yii\widgets\ActiveForm;
                             <div class="col">Type: <?= $ticket->tariffType ?></div>
                         </div>
                     </div>
+
                     <div class="col d-flex align-items-center justify-content-center">
                         <div class="row"><?= $ticket->getTicketPrice() ?>€</div>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <div class="row"><a class="btn btn-sm btn-danger" href="delete-ticket?id=<?= $ticket->id ?>" title="Delete" data-confirm="Are you sure you want to delete this ticket? This might delete the current receipt" data-method="post"><i class="fas fa-trash" aria-hidden="true"></i></a></div>
                     </div>
                 </div>
             <?php } ?>
