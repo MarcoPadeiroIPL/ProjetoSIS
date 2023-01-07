@@ -8,6 +8,7 @@ use common\models\Flight;
 use common\models\Airport;
 use common\models\Airplane;
 use common\models\Tariff;
+use yii\validators\DateValidator;
 
 /**
  * Signup form
@@ -25,12 +26,16 @@ class CreateFlight extends Model
     public function rules()
     {
         return [
-            ['departureDate', 'required'],
-            ['duration', 'required'],
-            ['airportDeparture_id', 'required'],
-            ['airportArrival_id', 'required'],
-            ['airplane_id', 'required'],
-            ['status', 'required'],
+            [['departureDate', 'duration', 'airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'required'],
+            [['departureDate'], 'safe'],
+            [['departureDate'], DateValidator::class, 'format' => 'php:Y/m/d H:i:s'],
+            [['duration'], DateValidator::class, 'format' => 'php:Y/m/d H:i:s'],
+            [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
+            [['status'], 'string'],
+            [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplane::class, 'targetAttribute' => ['airplane_id' => 'id']],
+            [['airportArrival_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportArrival_id' => 'id']],
+            [['airportDeparture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportDeparture_id' => 'id']],
+            ['airportDeparture_id', 'compare', 'compareValue' => 'airportArrival_id', 'operator' => '!=', 'message' => 'The destiny and arrival airports must not be the same.'],
         ];
     }
 

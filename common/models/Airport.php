@@ -37,6 +37,7 @@ class Airport extends \yii\db\ActiveRecord
             [['country', 'code', 'city', 'search', 'status'], 'required'],
             [['search'], 'integer'],
             [['status'], 'string'],
+            ['status', 'in', 'range' => ['Operational', 'Not Operational']],
             [['country', 'city'], 'string', 'max' => 50],
             [['code'], 'string', 'max' => 2],
             ['search', 'integer', 'min' => 0, 'max' => 100],

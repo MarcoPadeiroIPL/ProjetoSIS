@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use common\models\Airport;
 use common\models\Airplane;
+use yii\validators\DateValidator;
 
 /**
  * This is the model class for table "flights".
@@ -40,12 +41,15 @@ class Flight extends \yii\db\ActiveRecord
     {
         return [
             [['departureDate', 'duration', 'airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'required'],
-            [['departureDate', 'duration'], 'safe'],
+            [['departureDate'], 'safe'],
+            [['departureDate'], DateValidator::class, 'format' => 'php:Y/m/d H:i:s'],
+            [['duration'], DateValidator::class, 'format' => 'php:Y/m/d H:i:s'],
             [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
             [['status'], 'string'],
             [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplane::class, 'targetAttribute' => ['airplane_id' => 'id']],
             [['airportArrival_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportArrival_id' => 'id']],
             [['airportDeparture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportDeparture_id' => 'id']],
+            ['airportDeparture_id', 'compare', 'compareValue' => 'airportArrival_id', 'operator' => '!=', 'message' => 'The destiny and arrival airports must not be the same.'],
         ];
     }
 

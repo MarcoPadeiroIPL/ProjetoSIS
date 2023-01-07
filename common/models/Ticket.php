@@ -50,6 +50,8 @@ class Ticket extends \yii\db\ActiveRecord
         return [
             [['fName', 'surname', 'gender', 'age', 'client_id', 'flight_id', 'seatLinha', 'seatCol', 'receipt_id', 'tariff_id', 'tariffType'], 'required'],
             [['gender', 'tariffType'], 'string'],
+            ['gender', 'in', 'range' => ['M', 'F']],
+            ['tariffType', 'in', 'range' => ['economic', 'normal', 'luxury']],
             [['age', 'checkedIn', 'client_id', 'flight_id', 'seatCol', 'luggage_1', 'luggage_2', 'receipt_id', 'tariff_id'], 'integer'],
             [['fName', 'surname'], 'string', 'max' => 25],
             [['seatLinha'], 'string', 'max' => 1],

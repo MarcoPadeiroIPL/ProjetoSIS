@@ -265,7 +265,6 @@ class RbacController extends Controller
         $auth->add($client);
 
         $auth->addChild($client, $readClient);
-        $auth->addChild($client, $createClient);
         $auth->addChild($client, $updateClient);
         $auth->addChild($client, $createTicket);
         $auth->addChild($client, $readTicket);
@@ -287,6 +286,7 @@ class RbacController extends Controller
         $auth->addChild($client, $deleteRefund);
         $auth->addChild($client, $createReceipt);
         $auth->addChild($client, $readReceipt);
+        $auth->addChild($client, $updateReceipt);
         $auth->addChild($client, $listReceipt);
         $auth->addChild($client, $deleteReceipt);
 

@@ -22,7 +22,6 @@
 DROP DATABASE airbender;
 CREATE DATABASE airbender;
 USE airbender;
-
 DROP TABLE IF EXISTS `airplanes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -404,70 +403,70 @@ CREATE TABLE `auth_item` (
 LOCK TABLES `auth_item` WRITE;
 /*!40000 ALTER TABLE `auth_item` DISABLE KEYS */;
 INSERT INTO `auth_item` VALUES
-('admin',1,NULL,NULL,NULL,1673118745,1673118745),
-('client',1,NULL,NULL,NULL,1673118745,1673118745),
-('createAdmin',2,'Create a Admin',NULL,NULL,1673118745,1673118745),
-('createAirplane',2,'Create a Airplane',NULL,NULL,1673118745,1673118745),
-('createAirport',2,'Create a Airport',NULL,NULL,1673118745,1673118745),
-('createBalanceReq',2,'Create a BalanceReq',NULL,NULL,1673118745,1673118745),
-('createClient',2,'Create a Client',NULL,NULL,1673118745,1673118745),
-('createConfig',2,'Create a Config',NULL,NULL,1673118745,1673118745),
-('createEmployee',2,'Create a Employee',NULL,NULL,1673118745,1673118745),
-('createFlight',2,'Create a Flight',NULL,NULL,1673118745,1673118745),
-('createReceipt',2,'Create a Receipt',NULL,NULL,1673118745,1673118745),
-('createRefund',2,'Create a Refund',NULL,NULL,1673118745,1673118745),
-('createTariff',2,'Create a Tariff',NULL,NULL,1673118745,1673118745),
-('createTicket',2,'Create a Ticket',NULL,NULL,1673118745,1673118745),
-('deleteAdmin',2,'Delete a Admin',NULL,NULL,1673118745,1673118745),
-('deleteAirplane',2,'Delete a Airplane',NULL,NULL,1673118745,1673118745),
-('deleteAirport',2,'Delete a Airport',NULL,NULL,1673118745,1673118745),
-('deleteBalanceReq',2,'Delete a BalanceReq',NULL,NULL,1673118745,1673118745),
-('deleteClient',2,'Delete a Client',NULL,NULL,1673118745,1673118745),
-('deleteConfig',2,'Delete a Config',NULL,NULL,1673118745,1673118745),
-('deleteEmployee',2,'Delete a Employee',NULL,NULL,1673118745,1673118745),
-('deleteFlight',2,'Delete a Flight',NULL,NULL,1673118745,1673118745),
-('deleteReceipt',2,'Delete a Receipt',NULL,NULL,1673118745,1673118745),
-('deleteRefund',2,'Delete a Refund',NULL,NULL,1673118745,1673118745),
-('deleteTariff',2,'Delete a Tariff',NULL,NULL,1673118745,1673118745),
-('deleteTicket',2,'Delete a Ticket',NULL,NULL,1673118745,1673118745),
-('listAdmin',2,'List a Admin',NULL,NULL,1673118745,1673118745),
-('listAirplane',2,'List a Airplane',NULL,NULL,1673118745,1673118745),
-('listAirport',2,'List a Airport',NULL,NULL,1673118745,1673118745),
-('listBalanceReq',2,'List a BalanceReq',NULL,NULL,1673118745,1673118745),
-('listClient',2,'List a Client',NULL,NULL,1673118745,1673118745),
-('listConfig',2,'List a Config',NULL,NULL,1673118745,1673118745),
-('listEmployee',2,'List a Employee',NULL,NULL,1673118745,1673118745),
-('listFlight',2,'List a Flight',NULL,NULL,1673118745,1673118745),
-('listReceipt',2,'List a Receipt',NULL,NULL,1673118745,1673118745),
-('listRefund',2,'List a Refund',NULL,NULL,1673118745,1673118745),
-('listTariff',2,'List a Tariff',NULL,NULL,1673118745,1673118745),
-('listTicket',2,'List a Ticket',NULL,NULL,1673118745,1673118745),
-('readAdmin',2,'Read a Admin',NULL,NULL,1673118745,1673118745),
-('readAirplane',2,'Read a Airplane',NULL,NULL,1673118745,1673118745),
-('readAirport',2,'Read a Airport',NULL,NULL,1673118745,1673118745),
-('readBalanceReq',2,'Read a BalanceReq',NULL,NULL,1673118745,1673118745),
-('readClient',2,'Read a Client',NULL,NULL,1673118745,1673118745),
-('readConfig',2,'Read a Config',NULL,NULL,1673118745,1673118745),
-('readEmployee',2,'Read a Employee',NULL,NULL,1673118745,1673118745),
-('readFlight',2,'Read a Flight',NULL,NULL,1673118745,1673118745),
-('readReceipt',2,'Read a Receipt',NULL,NULL,1673118745,1673118745),
-('readRefund',2,'Read a Refund',NULL,NULL,1673118745,1673118745),
-('readTariff',2,'Read a Tariff',NULL,NULL,1673118745,1673118745),
-('readTicket',2,'Read a Ticket',NULL,NULL,1673118745,1673118745),
-('supervisor',1,NULL,NULL,NULL,1673118745,1673118745),
-('ticketOperator',1,NULL,NULL,NULL,1673118745,1673118745),
-('updateAdmin',2,'Update a Admin',NULL,NULL,1673118745,1673118745),
-('updateAirplane',2,'Update a Airplane',NULL,NULL,1673118745,1673118745),
-('updateAirport',2,'Update a Airport',NULL,NULL,1673118745,1673118745),
-('updateBalanceReq',2,'Update a BalanceReq',NULL,NULL,1673118745,1673118745),
-('updateClient',2,'Update a Client',NULL,NULL,1673118745,1673118745),
-('updateConfig',2,'Update a Config',NULL,NULL,1673118745,1673118745),
-('updateEmployee',2,'Update a Employee',NULL,NULL,1673118745,1673118745),
-('updateFlight',2,'Update a Flight',NULL,NULL,1673118745,1673118745),
-('updateReceipt',2,'Update a Receipt',NULL,NULL,1673118745,1673118745),
-('updateRefund',2,'Update a Refund',NULL,NULL,1673118745,1673118745),
-('updateTariff',2,'Update a Tariff',NULL,NULL,1673118745,1673118745),
-('updateTicket',2,'Update a Ticket',NULL,NULL,1673118745,1673118745);
+('admin',1,NULL,NULL,NULL,1673122941,1673122941),
+('client',1,NULL,NULL,NULL,1673122941,1673122941),
+('createAdmin',2,'Create a Admin',NULL,NULL,1673122941,1673122941),
+('createAirplane',2,'Create a Airplane',NULL,NULL,1673122941,1673122941),
+('createAirport',2,'Create a Airport',NULL,NULL,1673122941,1673122941),
+('createBalanceReq',2,'Create a BalanceReq',NULL,NULL,1673122941,1673122941),
+('createClient',2,'Create a Client',NULL,NULL,1673122941,1673122941),
+('createConfig',2,'Create a Config',NULL,NULL,1673122941,1673122941),
+('createEmployee',2,'Create a Employee',NULL,NULL,1673122941,1673122941),
+('createFlight',2,'Create a Flight',NULL,NULL,1673122941,1673122941),
+('createReceipt',2,'Create a Receipt',NULL,NULL,1673122941,1673122941),
+('createRefund',2,'Create a Refund',NULL,NULL,1673122941,1673122941),
+('createTariff',2,'Create a Tariff',NULL,NULL,1673122941,1673122941),
+('createTicket',2,'Create a Ticket',NULL,NULL,1673122941,1673122941),
+('deleteAdmin',2,'Delete a Admin',NULL,NULL,1673122941,1673122941),
+('deleteAirplane',2,'Delete a Airplane',NULL,NULL,1673122941,1673122941),
+('deleteAirport',2,'Delete a Airport',NULL,NULL,1673122941,1673122941),
+('deleteBalanceReq',2,'Delete a BalanceReq',NULL,NULL,1673122941,1673122941),
+('deleteClient',2,'Delete a Client',NULL,NULL,1673122941,1673122941),
+('deleteConfig',2,'Delete a Config',NULL,NULL,1673122941,1673122941),
+('deleteEmployee',2,'Delete a Employee',NULL,NULL,1673122941,1673122941),
+('deleteFlight',2,'Delete a Flight',NULL,NULL,1673122941,1673122941),
+('deleteReceipt',2,'Delete a Receipt',NULL,NULL,1673122941,1673122941),
+('deleteRefund',2,'Delete a Refund',NULL,NULL,1673122941,1673122941),
+('deleteTariff',2,'Delete a Tariff',NULL,NULL,1673122941,1673122941),
+('deleteTicket',2,'Delete a Ticket',NULL,NULL,1673122941,1673122941),
+('listAdmin',2,'List a Admin',NULL,NULL,1673122941,1673122941),
+('listAirplane',2,'List a Airplane',NULL,NULL,1673122941,1673122941),
+('listAirport',2,'List a Airport',NULL,NULL,1673122941,1673122941),
+('listBalanceReq',2,'List a BalanceReq',NULL,NULL,1673122941,1673122941),
+('listClient',2,'List a Client',NULL,NULL,1673122941,1673122941),
+('listConfig',2,'List a Config',NULL,NULL,1673122941,1673122941),
+('listEmployee',2,'List a Employee',NULL,NULL,1673122941,1673122941),
+('listFlight',2,'List a Flight',NULL,NULL,1673122941,1673122941),
+('listReceipt',2,'List a Receipt',NULL,NULL,1673122941,1673122941),
+('listRefund',2,'List a Refund',NULL,NULL,1673122941,1673122941),
+('listTariff',2,'List a Tariff',NULL,NULL,1673122941,1673122941),
+('listTicket',2,'List a Ticket',NULL,NULL,1673122941,1673122941),
+('readAdmin',2,'Read a Admin',NULL,NULL,1673122941,1673122941),
+('readAirplane',2,'Read a Airplane',NULL,NULL,1673122941,1673122941),
+('readAirport',2,'Read a Airport',NULL,NULL,1673122941,1673122941),
+('readBalanceReq',2,'Read a BalanceReq',NULL,NULL,1673122941,1673122941),
+('readClient',2,'Read a Client',NULL,NULL,1673122941,1673122941),
+('readConfig',2,'Read a Config',NULL,NULL,1673122941,1673122941),
+('readEmployee',2,'Read a Employee',NULL,NULL,1673122941,1673122941),
+('readFlight',2,'Read a Flight',NULL,NULL,1673122941,1673122941),
+('readReceipt',2,'Read a Receipt',NULL,NULL,1673122941,1673122941),
+('readRefund',2,'Read a Refund',NULL,NULL,1673122941,1673122941),
+('readTariff',2,'Read a Tariff',NULL,NULL,1673122941,1673122941),
+('readTicket',2,'Read a Ticket',NULL,NULL,1673122941,1673122941),
+('supervisor',1,NULL,NULL,NULL,1673122941,1673122941),
+('ticketOperator',1,NULL,NULL,NULL,1673122941,1673122941),
+('updateAdmin',2,'Update a Admin',NULL,NULL,1673122941,1673122941),
+('updateAirplane',2,'Update a Airplane',NULL,NULL,1673122941,1673122941),
+('updateAirport',2,'Update a Airport',NULL,NULL,1673122941,1673122941),
+('updateBalanceReq',2,'Update a BalanceReq',NULL,NULL,1673122941,1673122941),
+('updateClient',2,'Update a Client',NULL,NULL,1673122941,1673122941),
+('updateConfig',2,'Update a Config',NULL,NULL,1673122941,1673122941),
+('updateEmployee',2,'Update a Employee',NULL,NULL,1673122941,1673122941),
+('updateFlight',2,'Update a Flight',NULL,NULL,1673122941,1673122941),
+('updateReceipt',2,'Update a Receipt',NULL,NULL,1673122941,1673122941),
+('updateRefund',2,'Update a Refund',NULL,NULL,1673122941,1673122941),
+('updateTariff',2,'Update a Tariff',NULL,NULL,1673122941,1673122941),
+('updateTicket',2,'Update a Ticket',NULL,NULL,1673122941,1673122941);
 /*!40000 ALTER TABLE `auth_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -515,7 +514,6 @@ INSERT INTO `auth_item_child` VALUES
 ('admin','updateEmployee'),
 ('admin','updateFlight'),
 ('client','createBalanceReq'),
-('client','createClient'),
 ('client','createReceipt'),
 ('client','createRefund'),
 ('client','createTicket'),
@@ -539,6 +537,7 @@ INSERT INTO `auth_item_child` VALUES
 ('client','readTariff'),
 ('client','readTicket'),
 ('client','updateClient'),
+('client','updateReceipt'),
 ('supervisor','createConfig'),
 ('supervisor','createTariff'),
 ('supervisor','deleteBalanceReq'),
@@ -901,7 +900,7 @@ CREATE TABLE `flights` (
   CONSTRAINT `fk_airplane_id` FOREIGN KEY (`airplane_id`) REFERENCES `airplanes` (`id`),
   CONSTRAINT `fk_airportArrival_id` FOREIGN KEY (`airportArrival_id`) REFERENCES `airports` (`id`),
   CONSTRAINT `fk_airportDeparture_id` FOREIGN KEY (`airportDeparture_id`) REFERENCES `airports` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -910,6 +909,8 @@ CREATE TABLE `flights` (
 
 LOCK TABLES `flights` WRITE;
 /*!40000 ALTER TABLE `flights` DISABLE KEYS */;
+INSERT INTO `flights` VALUES
+(1,'2023-01-10 00:00:00','02:00:00',3,5,19,'Available');
 /*!40000 ALTER TABLE `flights` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -960,7 +961,7 @@ CREATE TABLE `receipts` (
   PRIMARY KEY (`id`),
   KEY `fk_clientTicket_id` (`client_id`),
   CONSTRAINT `fk_clientReceipt_id` FOREIGN KEY (`client_id`) REFERENCES `clients` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -969,6 +970,8 @@ CREATE TABLE `receipts` (
 
 LOCK TABLES `receipts` WRITE;
 /*!40000 ALTER TABLE `receipts` DISABLE KEYS */;
+INSERT INTO `receipts` VALUES
+(1,'2023-01-07 20:20:17',110.27,'Pending',39);
 /*!40000 ALTER TABLE `receipts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1044,7 +1047,7 @@ CREATE TABLE `tariffs` (
   PRIMARY KEY (`id`),
   KEY `fk_flightTariff_id` (`flight_id`),
   CONSTRAINT `fk_flightTariff_id` FOREIGN KEY (`flight_id`) REFERENCES `flights` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1053,6 +1056,8 @@ CREATE TABLE `tariffs` (
 
 LOCK TABLES `tariffs` WRITE;
 /*!40000 ALTER TABLE `tariffs` DISABLE KEYS */;
+INSERT INTO `tariffs` VALUES
+(1,'2023-01-07 19:28:37',52.71,70.28,87.85,1,1);
 /*!40000 ALTER TABLE `tariffs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1094,7 +1099,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `fk_luggage_2` FOREIGN KEY (`luggage_2`) REFERENCES `configs` (`id`),
   CONSTRAINT `fk_receipt_id` FOREIGN KEY (`receipt_id`) REFERENCES `receipts` (`id`),
   CONSTRAINT `fk_tariff_id` FOREIGN KEY (`tariff_id`) REFERENCES `tariffs` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1103,6 +1108,8 @@ CREATE TABLE `tickets` (
 
 LOCK TABLES `tickets` WRITE;
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
+INSERT INTO `tickets` VALUES
+(1,'Abba','Chapellow','M',40,NULL,39,1,'B',7,2,1,1,1,'normal');
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1465,4 +1472,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-01-07 19:18:43
+-- Dump completed on 2023-01-07 20:22:50
