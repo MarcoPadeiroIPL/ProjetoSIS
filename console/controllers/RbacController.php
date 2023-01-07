@@ -269,6 +269,7 @@ class RbacController extends Controller
         $auth->addChild($client, $createTicket);
         $auth->addChild($client, $readTicket);
         $auth->addChild($client, $listTicket);
+        $auth->addChild($client, $deleteTicket);
         $auth->addChild($client, $readAirport);
         $auth->addChild($client, $listAirport);
         $auth->addChild($client, $readFlight);

@@ -189,7 +189,7 @@ class ReceiptController extends Controller
                 // avisar o cliente se conseguiu guardar ou nao 
                 if ($client->save() && $receipt->save()) {
                     \Yii::$app->session->setFlash('success', "Purchase completed successfully!");
-                    return $this->redirect(['index']);
+                    return $this->redirect(['view', 'id' => $receipt->id]);
                 } else
                     \Yii::$app->session->setFlash('error', "There was an error while completing the payment, please try again later.");
             } else
