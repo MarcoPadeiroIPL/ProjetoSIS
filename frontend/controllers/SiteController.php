@@ -142,18 +142,15 @@ class SiteController extends Controller
     {
         $model = new UserData();
 
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('fill', [
-                'model' => $model,
-            ]);
-        }
-
-        if ($model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $user = User::findOne([$model['user_id']]);
             $user->setActive();
             return $this->redirect(['index']);
         }
+            $model->loadDefaultValues();
+            return $this->render('fill', [
+                'model' => $model,
+            ]);
     }
 
     public function actionLogout()

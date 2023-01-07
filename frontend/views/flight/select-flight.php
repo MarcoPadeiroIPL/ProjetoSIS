@@ -117,6 +117,8 @@ $this->title = 'Flights';
         oldSelect = flight_id;
     }
     window.onload = function() {
-        changeActive(<?= $closestFlight->id . ', ' . $closestFlight->activeTariff('economic') . ', ' . $closestFlight->activeTariff('normal') . ', ' . $closestFlight->activeTariff('luxury') ?>);
+        if (<?= !is_null($closestFlight) ?>) {
+            changeActive(<?= (!is_null($closestFlight) ? $closestFlight->id : ' ')  . ', ' . (!is_null($closestFlight) ? $closestFlight->activeTariff('economic') : '') . ', ' . (!is_null($closestFlight) ? $closestFlight->activeTariff('normal') : '') . ', ' . (!is_null($closestFlight) ? $closestFlight->activeTariff('luxury') : '')?>);
+        }
     }
 </script>
