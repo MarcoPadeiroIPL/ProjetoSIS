@@ -140,20 +140,21 @@ class SiteController extends Controller
     }
     public function actionFill()
     {
-        $model = new UserData();
-
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('fill', [
-                'model' => $model,
-            ]);
+        if (!\Yii::$app->user->can('updateClient')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
-        if ($model->load($this->request->post()) && $model->save()) {
+        $model = new UserData();
+
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $user = User::findOne([$model['user_id']]);
             $user->setActive();
             return $this->redirect(['index']);
         }
+            $model->loadDefaultValues();
+            return $this->render('fill', [
+                'model' => $model,
+            ]);
     }
 
     public function actionLogout()

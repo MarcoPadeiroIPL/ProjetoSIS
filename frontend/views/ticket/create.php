@@ -44,7 +44,7 @@ use yii\widgets\ActiveForm;
                             </div>
                         <?php } ?>
                     <?php } else { ?>
-                        <?= $form->field($ticket, 'luggage_1')->hiddenInput(['value' => "0"]) ?>
+                        <?= $form->field($ticket, 'luggage_1')->hiddenInput() ?>
                         <div class="col shadow rounded btn border-primary" onclick="switchConfig(0, 1)" id="config0_luggage1" role="button" style="margin-left: 3%; margin-right: 3%;">
                             <div class="row d-flex justify-content-center">None</div>
                             <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-ban"></i></div>
@@ -60,7 +60,7 @@ use yii\widgets\ActiveForm;
                     <?php } ?>
                 </div>
                 <div class="row">
-                    <?= $form->field($ticket, 'luggage_2')->hiddenInput(['value' => "0"]) ?>
+                    <?= $form->field($ticket, 'luggage_2')->hiddenInput() ?>
                     <div class="col shadow rounded btn border-primary" onclick="switchConfig(0, 2)" id="config0_luggage2" role="button" style="margin-left: 3%; margin-right: 3%;">
                         <div class="row d-flex justify-content-center">None</div>
                         <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-ban"></i></div>
@@ -134,13 +134,26 @@ use yii\widgets\ActiveForm;
     currentConfig = [0, 0];
     currentSeat = [null, null];
 
+
+    window.onload = function() {
+        if ($('#ticketbuilder-luggage_1').val())
+            switchConfig($('#ticketbuilder-luggage_1').val(), 1);
+        if ($('#ticketbuilder-luggage_2').val())
+            switchConfig($('#ticketbuilder-luggage_2').val(), 2);
+    }
+
+
     function switchConfig(config, luggage) {
         if (currentConfig[luggage - 1] != config) {
             $('#config' + config + '_luggage' + luggage).addClass('border-primary');
             $('#config' + config + '_luggage' + luggage).removeClass('opacity-50');
             $('#config' + currentConfig[luggage - 1] + '_luggage' + luggage).addClass('opacity-50');
             $('#config' + currentConfig[luggage - 1] + '_luggage' + luggage).removeClass('border-primary');
-            $('#ticketbuilder-luggage_' + luggage).val("" + config);
+            if (config == 0)
+                $('#ticketbuilder-luggage_' + luggage).removeAttr("value");
+            else
+                $('#ticketbuilder-luggage_' + luggage).val("" + config);
+
 
             currentConfig[luggage - 1] = config;
         }
@@ -156,6 +169,20 @@ use yii\widgets\ActiveForm;
             currentSeat[0] = col;
             currentSeat[1] = linha;
         }
-
     }
+    const checkbox = document.getElementById('ticketbuilder-useaccount')
+
+    checkbox.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+            $('#ticketbuilder-fname').attr('disabled', 'disabled');
+            $('#ticketbuilder-surname').attr('disabled', 'disabled');
+            $('#ticketbuilder-age').attr('disabled', 'disabled');
+            $('#ticketbuilder-gender').attr('disabled', 'disabled');
+        } else {
+            $('#ticketbuilder-fname').removeAttr('disabled', 'disabled');
+            $('#ticketbuilder-surname').removeAttr('disabled', 'disabled');
+            $('#ticketbuilder-age').removeAttr('disabled', 'disabled');
+            $('#ticketbuilder-gender').removeAttr('disabled', 'disabled');
+        }
+    })
 </script>

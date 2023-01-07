@@ -11,7 +11,6 @@ class SelectAirport extends Model
     public $airportArrival_id;
     public $departureDate = null;
     public $arrivalDate = null;
-    public $passangers;
 
     /**
      * {@inheritdoc}
@@ -19,9 +18,12 @@ class SelectAirport extends Model
     public function rules()
     {
         return [
+            ['airportDeparture_id', 'compare', 'compareValue' => 'airportArrival_id', 'operator' => '!=', 'message' => 'The destiny and arrival airports must not be the same.'],
             ['airportDeparture_id', 'required', 'message' => 'Cannot be empty'],
             ['airportArrival_id', 'required', 'message' => 'Cannot be empty'],
-            ['passangers', 'required', 'message' => 'Cannot be empty'],
+            ['departureDate', 'required', 'message' => 'Cannot be empty'],
+            [['departureDate'], 'date', 'format' => 'yyyy/mm/dd'],
+            ['airportDeparture_id', 'compare', 'compareAttribute' => 'airportArrival_id', 'operator' => '!='],
         ];
     }
 }

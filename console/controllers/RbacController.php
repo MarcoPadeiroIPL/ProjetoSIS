@@ -232,6 +232,25 @@ class RbacController extends Controller
         $deleteRefund->description = 'Delete a Refund';
         $auth->add($deleteRefund);
 
+        $createReceipt = $auth->createPermission('createReceipt');
+        $createReceipt->description = 'Create a Receipt';
+        $auth->add($createReceipt);
+
+        $readReceipt = $auth->createPermission('readReceipt');
+        $readReceipt->description = 'Read a Receipt';
+        $auth->add($readReceipt);
+
+        $listReceipt = $auth->createPermission('listReceipt');
+        $listReceipt->description = 'List a Receipt';
+        $auth->add($listReceipt);
+
+        $updateReceipt = $auth->createPermission('updateReceipt');
+        $updateReceipt->description = 'Update a Receipt';
+        $auth->add($updateReceipt);
+
+        $deleteReceipt = $auth->createPermission('deleteReceipt');
+        $deleteReceipt->description = 'Delete a Receipt';
+        $auth->add($deleteReceipt);
         // roles
         $admin = $auth->createRole('admin');
         $auth->add($admin);
@@ -246,7 +265,6 @@ class RbacController extends Controller
         $auth->add($client);
 
         $auth->addChild($client, $readClient);
-        $auth->addChild($client, $createClient);
         $auth->addChild($client, $updateClient);
         $auth->addChild($client, $createTicket);
         $auth->addChild($client, $readTicket);
@@ -266,6 +284,11 @@ class RbacController extends Controller
         $auth->addChild($client, $readRefund);
         $auth->addChild($client, $listRefund);
         $auth->addChild($client, $deleteRefund);
+        $auth->addChild($client, $createReceipt);
+        $auth->addChild($client, $readReceipt);
+        $auth->addChild($client, $updateReceipt);
+        $auth->addChild($client, $listReceipt);
+        $auth->addChild($client, $deleteReceipt);
 
         $auth->addChild($ticketOperator, $readEmployee);
         $auth->addChild($ticketOperator, $readClient);
@@ -300,6 +323,8 @@ class RbacController extends Controller
         $auth->addChild($supervisor, $updateRefund);
         $auth->addChild($supervisor, $listRefund);
         $auth->addChild($supervisor, $readRefund);
+        $auth->addChild($supervisor, $listReceipt);
+        $auth->addChild($supervisor, $readReceipt);
 
         $auth->addChild($admin, $supervisor);
         $auth->addChild($admin, $createAdmin);
@@ -320,7 +345,5 @@ class RbacController extends Controller
         $auth->addChild($admin, $updateFlight);
         $auth->addChild($admin, $createFlight);
         $auth->addChild($admin, $deleteFlight);
-
-        $auth->assign($admin, 1);
     }
 }
