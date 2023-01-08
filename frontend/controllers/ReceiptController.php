@@ -202,7 +202,7 @@ class ReceiptController extends Controller
     }
     public function actionAsk($id)
     {
-        if (!\Yii::$app->user->can('balanceReqCreate')) {
+        if (!\Yii::$app->user->can('createBalanceReq')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 

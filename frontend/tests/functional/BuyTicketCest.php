@@ -176,4 +176,31 @@ class BuyTicketCest
         $I->click('Pay');
         $I->see("You");
     }
+
+    public function NotEnoughBalanceAskForBalance(FunctionalTester $I)
+    {
+        $I->amLoggedInAs(123);
+        $this->ValidInput($I);
+        $I->see('Pay');
+        $I->click('Ask for balance');
+        $I->see("Successfully requested");
+    }
+    public function EnoughBalanceAskForBalance(FunctionalTester $I)
+    {
+        $I->amLoggedInAs(120);
+        $this->ValidInput($I);
+        $I->see('Pay');
+        $I->click('Ask for balance');
+        $I->see("There was an error while completing the balance request, please try again later. ");
+
+    }
+    public function Pay(FunctionalTester $I)
+    {
+        $I->amLoggedInAs(120);
+        $this->ValidInput($I);
+        $I->see('Pay');
+        $I->click('Pay');
+        $I->see("Receipt #");
+
+    }
 }
