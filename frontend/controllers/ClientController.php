@@ -78,16 +78,15 @@ class ClientController extends Controller
 
         $model = UserData::findOne([\Yii::$app->user->identity->getId()]);
 
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-
-        if ($model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', "Account successfully updated");
             return $this->redirect(['index']);
         }
+
+        $model->loadDefaultValues();
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     public function actionDelete()
@@ -96,11 +95,10 @@ class ClientController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
-        if ($this->findModel(\Yii::$app->user->identity->getId())->deleteUser()){
+        if ($this->findModel(\Yii::$app->user->identity->getId())->deleteUser()) {
             \Yii::$app->session->setFlash('success', "Account successfully deleted");
             return $this->redirect(['site/index']);
-        }
-        else {
+        } else {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }

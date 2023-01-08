@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 
 </div>
     <div class="container mt-5 d-flex justify-content-center">
-        <?php $form = ActiveForm::begin(['action' => ['flight/select-airport', 'receipt_id' => $receipt_id]]); ?>
+        <?php $form = ActiveForm::begin(['id' => 'form-selectAirport', 'action' => ['flight/select-airport', 'receipt_id' => $receipt_id]]); ?>
 
         <div class="row d-flex justify-content-center">
             <div class="col col-md-5 mx-auto">

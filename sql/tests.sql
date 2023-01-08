@@ -900,11 +900,7 @@ CREATE TABLE `flights` (
   CONSTRAINT `fk_airplane_id` FOREIGN KEY (`airplane_id`) REFERENCES `airplanes` (`id`),
   CONSTRAINT `fk_airportArrival_id` FOREIGN KEY (`airportArrival_id`) REFERENCES `airports` (`id`),
   CONSTRAINT `fk_airportDeparture_id` FOREIGN KEY (`airportDeparture_id`) REFERENCES `airports` (`id`)
-<<<<<<< Updated upstream
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-=======
 ) ENGINE=InnoDB AUTO_INCREMENT=1301 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
->>>>>>> Stashed changes
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -913,8 +909,6 @@ CREATE TABLE `flights` (
 
 LOCK TABLES `flights` WRITE;
 /*!40000 ALTER TABLE `flights` DISABLE KEYS */;
-<<<<<<< Updated upstream
-=======
 INSERT INTO `flights` VALUES
 (1,'2023-01-23 13:20:00','00:50:00',8,25,13,'Available'),
 (2,'2023-01-22 03:50:00','08:36:00',7,17,23,'Available'),
@@ -2216,7 +2210,6 @@ INSERT INTO `flights` VALUES
 (1298,'2024-01-09 07:30:00','04:36:00',32,16,20,'Available'),
 (1299,'2024-01-18 17:40:00','01:50:00',25,8,14,'Available'),
 (1300,'2024-01-18 20:30:00','04:31:00',9,23,8,'Available');
->>>>>>> Stashed changes
 /*!40000 ALTER TABLE `flights` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2351,11 +2344,7 @@ CREATE TABLE `tariffs` (
   PRIMARY KEY (`id`),
   KEY `fk_flightTariff_id` (`flight_id`),
   CONSTRAINT `fk_flightTariff_id` FOREIGN KEY (`flight_id`) REFERENCES `flights` (`id`)
-<<<<<<< Updated upstream
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-=======
 ) ENGINE=InnoDB AUTO_INCREMENT=1302 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
->>>>>>> Stashed changes
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2364,8 +2353,6 @@ CREATE TABLE `tariffs` (
 
 LOCK TABLES `tariffs` WRITE;
 /*!40000 ALTER TABLE `tariffs` DISABLE KEYS */;
-<<<<<<< Updated upstream
-=======
 INSERT INTO `tariffs` VALUES
 (2,'2023-01-08 02:30:04',38.06,50.75,63.43,1,1),
 (3,'2023-01-08 02:30:04',53.13,70.85,88.56,2,1),
@@ -3667,7 +3654,6 @@ INSERT INTO `tariffs` VALUES
 (1299,'2023-01-08 02:38:25',41.36,55.15,68.94,1298,1),
 (1300,'2023-01-08 02:38:25',55.77,74.37,92.96,1299,1),
 (1301,'2023-01-08 02:38:25',58.25,77.67,97.08,1300,1);
->>>>>>> Stashed changes
 /*!40000 ALTER TABLE `tariffs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4080,7 +4066,3 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-<<<<<<< Updated upstream
-=======
--- Dump completed on 2023-01-08  5:31:39
->>>>>>> Stashed changes
