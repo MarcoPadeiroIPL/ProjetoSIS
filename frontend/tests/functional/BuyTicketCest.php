@@ -92,4 +92,88 @@ class BuyTicketCest
         ]);
         $I->see('Pay');
     }
+    public function UseAccountDetails(FunctionalTester $I){
+        $this->SelectNormalFlight($I);
+        $I->submitForm('#form-buyTicket', [
+            'TicketBuilder[useAccount]' => true,
+            'TicketBuilder[seatCol]' => 4,
+            'TicketBuilder[seatLinha]' => 'F',
+            'TicketBuilder[luggage_2]' => 1,
+        ]);
+        $I->see('Pay');
+    }
+
+    public function BuySameSeatTwoTicketsSameReceipt(FunctionalTester $I)
+    {
+        $this->SelectNormalFlight($I);
+        $I->submitForm('#form-buyTicket', [
+            'TicketBuilder[fName]' => 'john',
+            'TicketBuilder[surname]' => 'man',
+            'TicketBuilder[age]' => 12,
+            'TicketBuilder[gender]' => 'M',
+            'TicketBuilder[seatCol]' => 4,
+            'TicketBuilder[seatLinha]' => 'F',
+            'TicketBuilder[luggage_2]' => 1,
+        ]);
+        $I->see('Pay');
+        $I->click('Add +');
+        $I->see('Search');
+        $I->submitForm('#form-selectAirport', [
+            'SelectAirport[airportDeparture_id]' => '7',
+            'SelectAirport[airportArrival_id]' => '9',
+            'SelectAirport[departureDate]' => '2023/02/11',
+        ]);
+        $I->see('Select one flight!');
+        $this->SelectNormalFlight($I);
+        $I->submitForm('#form-buyTicket', [
+            'TicketBuilder[fName]' => 'john',
+            'TicketBuilder[surname]' => 'man',
+            'TicketBuilder[age]' => 12,
+            'TicketBuilder[gender]' => 'M',
+            'TicketBuilder[seatCol]' => 4,
+            'TicketBuilder[seatLinha]' => 'F',
+            'TicketBuilder[luggage_2]' => 1,
+        ]);
+        $I->see('You already chose F-4 on another ticket! ');
+    }
+
+    public function BuyTwoTicketsSameReceipt(FunctionalTester $I)
+    {
+        $this->SelectNormalFlight($I);
+        $I->submitForm('#form-buyTicket', [
+            'TicketBuilder[fName]' => 'john',
+            'TicketBuilder[surname]' => 'man',
+            'TicketBuilder[age]' => 12,
+            'TicketBuilder[gender]' => 'M',
+            'TicketBuilder[seatCol]' => 4,
+            'TicketBuilder[seatLinha]' => 'F',
+            'TicketBuilder[luggage_2]' => 1,
+        ]);
+        $I->see('Pay');
+        $I->click('Add +');
+        $I->see('Search');
+        $I->submitForm('#form-selectAirport', [
+            'SelectAirport[airportDeparture_id]' => '7',
+            'SelectAirport[airportArrival_id]' => '9',
+            'SelectAirport[departureDate]' => '2023/02/11',
+        ]);
+        $I->see('Select one flight!');
+        $this->SelectNormalFlight($I);
+        $I->submitForm('#form-buyTicket', [
+            'TicketBuilder[useAccount]' => true,
+            'TicketBuilder[seatCol]' => 5,
+            'TicketBuilder[seatLinha]' => 'F',
+            'TicketBuilder[luggage_2]' => 1,
+        ]);
+        $I->see('Pay');
+    }
+
+    public function NotEnoughBalanceToPay(FunctionalTester $I)
+    {
+        $I->amLoggedInAs(123);
+        $this->ValidInput($I);
+        $I->see('Pay');
+        $I->click('Pay');
+        $I->see("You");
+    }
 }

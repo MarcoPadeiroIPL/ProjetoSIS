@@ -9,6 +9,6 @@ modules:
   config:
     Db:
         dsn: 'mysql:host=localhost;dbname=airbender_test'
-        user: 'root'
+        user: 'marco'
         password: '5610'
   
