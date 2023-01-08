@@ -184,7 +184,7 @@ class ReceiptController extends Controller
 
                 // modificar o status da fatura
                 $receipt->status = "Complete";
-                $receipt->purchaseDate = date('Y-m-d H:i:s');
+                $receipt->purchaseDate = date('Y/m/d H:i:s');
 
                 // avisar o cliente se conseguiu guardar ou nao 
                 if ($client->save() && $receipt->save()) {
@@ -219,7 +219,7 @@ class ReceiptController extends Controller
         $req = new BalanceReq();
         $req->client_id = $receipt->client_id;
         $req->amount = ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total) - $client->balance;
-        $req->requestDate = date('Y-m-d H:i:s');
+        $req->requestDate = date('Y/m/d H:i:s');
         if ($req->save())
             \Yii::$app->session->setFlash('success', "Successfully requested " . $req->amount . "€");
         else

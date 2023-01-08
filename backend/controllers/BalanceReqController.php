@@ -108,12 +108,13 @@ class BalanceReqController extends Controller
         // assign responsible employee
         $balanceReqEmployee = new BalanceReqEmployee($id, $employee_id);
         $balanceReq->status = 'Accepted';
-        $balanceReq->decisionDate = date('Y-m-d H:i:s');
+        $balanceReq->decisionDate = date('Y/m/d H:i:s');
 
-        if (!$balanceReq->save() || !$balanceReqEmployee->save() || !$client->save())
-            \Yii::$app->session->setFlash('error', "Error while trying to save");
-        else 
+        if ($balanceReq->validate() && $balanceReqEmployee->validate() && $client->validate())
             \Yii::$app->session->setFlash('success', "Accepted successfuly");
+        else 
+            dd($balanceReq->getErrors(), $balanceReqEmployee->getErrors(), $client->getErrors());
+            //\Yii::$app->session->setFlash('error', "Error while trying to save");
             
 
         return $this->redirect('index');
@@ -136,7 +137,7 @@ class BalanceReqController extends Controller
         // assign responsible employee
         $balanceReqEmployee = new BalanceReqEmployee($id, $employee_id);
         $balanceReq->status = 'Declined';
-        $balanceReq->decisionDate = date('Y-m-d H:i:s');
+        $balanceReq->decisionDate = date('Y/m/d H:i:s');
 
         if (!$balanceReqEmployee->save() || !$balanceReq->save())
             \Yii::$app->session->setFlash('error', "Error while trying to save");
