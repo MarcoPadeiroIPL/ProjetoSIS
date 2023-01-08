@@ -21,7 +21,7 @@ class Tariff extends \yii\db\ActiveRecord
 {
     public function __construct()
     {
-        $this->startDate = date('Y/m/d H:i:s');
+        $this->startDate = date('Y-m-d H:i:s');
         $this->active = 1;
     }
     /**

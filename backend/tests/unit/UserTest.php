@@ -82,13 +82,13 @@ class UserTest extends \Codeception\Test\Unit
         $userData->setBirthdate('not-a-date');
         $this->assertFalse($userData->validate(['birthdate']));
 
-        $userData->setBirthdate('29-12-1999');
+        $userData->setBirthdate('29/12/1999');
         $this->assertFalse($userData->validate(['birthdate']));
 
-        $userData->setBirthdate('2024-12-31');
+        $userData->setBirthdate('2024/12/31');
         $this->assertFalse($userData->validate(['birthdate']));
 
-        $userData->setBirthdate('1999/12/31');
+        $userData->setBirthdate('1999-12-31');
         $this->assertTrue($userData->validate(['birthdate']));
 
             // test phone
@@ -167,11 +167,11 @@ class UserTest extends \Codeception\Test\Unit
         $userData->user_id = $user->getId();
         $userData->fName = 'joaquim';
         $userData->surname = 'estruturas';
-        $userData->birthdate = '1999/12/31';
+        $userData->birthdate = '1999-12-31';
         $userData->phone = '961686162';
         $userData->nif = '274324662';
         $userData->gender = 'M';
-        $userData->accCreationDate = date('Y/m/d');
+        $userData->accCreationDate = date('Y-m-d');
         $userData->save();
 
         $this->tester->seeRecord('common\models\User', ['id' => $user->id]);
@@ -180,8 +180,8 @@ class UserTest extends \Codeception\Test\Unit
         $userData = $this->tester->grabRecord('common\models\UserData', ['fName' => $userData->fName]);
 
         $userData->fName = 'marco';
-        $userData->birthdate = date('Y/m/d', strtotime($userData->birthdate));
-        $userData->accCreationDate = date('Y/m/d', strtotime($userData->accCreationDate));
+        $userData->birthdate = date('Y-m-d', strtotime($userData->birthdate));
+        $userData->accCreationDate = date('Y-m-d', strtotime($userData->accCreationDate));
         $userData->save();
 
         $this->tester->dontSeeRecord('common\models\UserData', ['fName' => 'joaquim']);

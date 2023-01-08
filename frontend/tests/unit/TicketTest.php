@@ -212,7 +212,7 @@ class TicketTest extends \Codeception\Test\Unit
     public function testCRUD() {
 
         $receipt = new Receipt();
-        $receipt->purchaseDate = date('Y/m/d H:i:s');
+        $receipt->purchaseDate = date('Y-m-d H:i:s');
         $receipt->total = 0;
         $receipt->status = 'Pending';
         $receipt->client_id = 95;

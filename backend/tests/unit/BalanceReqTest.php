@@ -58,7 +58,7 @@ class BalanceReqTest extends \Codeception\Test\Unit
         $balanceReq->requestDate = 'wrong-format';
         $this->assertFalse($balanceReq->validate(['requestDate']));
 
-        $balanceReq->requestDate = '2023/01/09 14:00:00';
+        $balanceReq->requestDate = '2023-01-09 14:00:00';
         $this->assertTrue($balanceReq->validate(['requestDate']));
 
         $balanceReq->decisionDate = null;
@@ -70,10 +70,10 @@ class BalanceReqTest extends \Codeception\Test\Unit
         $balanceReq->decisionDate = 'wrong format';
         $this->assertFalse($balanceReq->validate(['decisionDate']));
 
-        $balanceReq->decisionDate = '2023/01/09 12:00:00';
+        $balanceReq->decisionDate = '2023-01-09 12:00:00';
         $this->assertFalse($balanceReq->validate(['decisionDate']));
 
-        $balanceReq->decisionDate = '2023/01/09 18:00:00';
+        $balanceReq->decisionDate = '2023-01-09 18:00:00';
         $this->assertTrue($balanceReq->validate(['decisionDate']));
 
         $balanceReq->client_id = null;
@@ -94,7 +94,7 @@ class BalanceReqTest extends \Codeception\Test\Unit
 
         $balanceReq = new BalanceReq();
         $balanceReq->amount = 200;
-        $balanceReq->requestDate = date('Y/m/d H:i:s');
+        $balanceReq->requestDate = date('Y-m-d H:i:s');
         $balanceReq->decisionDate = null;
         $balanceReq->status = 'Ongoing';
         $balanceReq->client_id = 95;
@@ -106,7 +106,7 @@ class BalanceReqTest extends \Codeception\Test\Unit
         // update test
         $balanceReq = $this->tester->grabRecord('common\models\BalanceReq', ['id' => $balanceReq->id]);
         $balanceReq->amount = 250;
-        $balanceReq->requestDate = date('Y/m/d H:i:s');
+        $balanceReq->requestDate = date('Y-m-d H:i:s');
         $balanceReq->save();
 
         // update nao esta a funcionar

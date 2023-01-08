@@ -30,16 +30,16 @@ class FlightTest extends \Codeception\Test\Unit
         $flight->setDepartureDate(null);
         $this->assertFalse($flight->validate(['departureDate']));
 
-        $flight->setDepartureDate('07-01-2022');
+        $flight->setDepartureDate('07/01/2022');
         $this->assertFalse($flight->validate(['departureDate']));
 
-        $flight->setDepartureDate('2023-01-06');
+        $flight->setDepartureDate('2023/01/06');
         $this->assertFalse($flight->validate(['departureDate']));
 
         $flight->setDepartureDate('abc');
         $this->assertFalse($flight->validate(['departureDate']));
 
-        $flight->setDepartureDate('2022/10/10 10:30:00');
+        $flight->setDepartureDate('2022-10-10 10:30:00');
         $this->assertTrue($flight->validate(['departureDate']));
 
         // Duration
@@ -93,45 +93,9 @@ class FlightTest extends \Codeception\Test\Unit
     }
     public function testCRUD()
     {
-        //Create airport entries on database
-
-        //Entry 1
-        $airportDeparture = new Airport();
-        $airportDeparture->country = 'Portugal';
-        $airportDeparture->code = 'PT';
-        $airportDeparture->city = 'Porto';
-        $airportDeparture->search = 95;
-        $airportDeparture->status = 'Operational';
-        $airportDeparture->save();
-
-        //Entry 2    
-        $airportArrival = new Airport();
-        $airportArrival->country = 'Russia';
-        $airportArrival->code = 'RU';
-        $airportArrival->city = 'St.PetersBurg';
-        $airportArrival->search = 30;
-        $airportArrival->status = 'Operational';
-        $airportArrival->save();
-
-        //Create airplane entry on database
-        $airplane = new Airplane();
-        $airplane->luggageCapacity = 20;
-        $airplane->minLinha = 1;
-        $airplane->minCol = 'A';
-        $airplane->maxLinha = 6;
-        $airplane->maxCol = 'F';
-        $airplane->economicStart = 'A';
-        $airplane->economicStop = 'B';
-        $airplane->normalStart = 'C';
-        $airplane->normalStop = 'D';
-        $airplane->luxuryStart = 'E';
-        $airplane->luxuryStop = 'F';
-        $airplane->status = 'Active';
-        $airplane->save();
-
         //Create flight entry on database
         $flight = new Flight();
-        $flight->departureDate = '2024/01/07 15:30:00';
+        $flight->departureDate = '2024-01-07 15:30:00';
         $flight->duration = '02:00:00';
         $flight->airportDeparture_id = 14;
         $flight->airportArrival_id = 12;
@@ -147,9 +111,8 @@ class FlightTest extends \Codeception\Test\Unit
         $flight->setAttribute('status', 'Complete');
         $flight->save();
 
-        // update nao esta a funcionar
-        $this->tester->dontSeeRecord('common\models\Flight', ['status' => 'Complete']);
-        $this->tester->seeRecord('common\models\Flight', ['status' => 'Available']);
+        $this->tester->dontSeeRecord('common\models\Flight', ['status' => 'Available', 'id' => $flight->id]);
+        $this->tester->seeRecord('common\models\Flight', ['status' => 'Complete', 'id' => $flight->id]);
 
         // delete test
         $flight->delete();

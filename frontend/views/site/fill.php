@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
         'F' => 'Female'
     ]) ?>
 
-    <?= $form->field($model, 'accCreationDate')->hiddenInput(['value' => date('Y/m/d H:i:s')])->label(false) ?>
+    <?= $form->field($model, 'accCreationDate')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
 
 
     <div class="form-group">
