@@ -65,29 +65,24 @@ class ReceiptController extends Controller
         if (!\Yii::$app->user->can('createReceipt')) 
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
-
         $model = new Receipt();
 
-        // caso nao seja post
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('create', ['model' => $model]);
-        }
-
-        if ($model->load(\Yii::$app->request->post())){
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post())){
             if ($model->save())
                 \Yii::$app->session->setFlash('success', "Receipt created successfully.");
             else
                 \Yii::$app->session->setFlash('error', "Receipt not saved.");
             return $this->redirect(['index']);
         }
+
+            $model->loadDefaultValues();
+            return $this->render('create', ['model' => $model]);
     }
 
     public function actionUpdate($id)
     {
         if (!\Yii::$app->user->can('updateReceipt')) 
             throw new \yii\web\ForbiddenHttpException('Access denied');
-
 
         $model = $this->findModel($id);
 

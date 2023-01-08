@@ -135,7 +135,7 @@ class BalanceReqController extends Controller
 
         $balanceReq = $this->findModel($id);
 
-        if ($balancereq->client_id != \Yii::$app->user->identity->getid()) {
+        if ($balanceReq->client_id != \Yii::$app->user->identity->getid()) {
             \Yii::$app->session->setflash('error', "cannot delete another's balance requests");
             return $this->redirect(['index']);
         }

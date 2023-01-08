@@ -88,7 +88,7 @@ class RegisterEmployee extends Model
         $user = User::findOne($id);
         $user->username = $this->username;
         $user->email = $this->email;
-        if (!is_null($this->password))
+        if ($this->password != "")
             $user->setPassword($this->password);
 
         $state = $user->save();

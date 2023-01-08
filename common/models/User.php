@@ -256,6 +256,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasOne(Client::class, ['user_id' => 'id']);
     }
 
+    public function getBalanceReq()
+    {
+        return $this->hasMany(BalanceReqEmployee::class, ['employee_id' => 'id']);
+    }
+
     public function getAuthAssignment()
     {
         return $this->hasOne(AuthAssignment::class, ['user_id' => 'id']);

@@ -81,16 +81,9 @@ class AirplaneController extends Controller
 
         $model = new Airplane();
 
-        // caso nao seja post redireciona para o formulario
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
 
         // caso seja post
-        if ($model->load(\Yii::$app->request->post())) {
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post())) {
             if ($model->save())
                 \Yii::$app->session->setFlash('success', "Airplane created successfully.");
             else
@@ -98,6 +91,11 @@ class AirplaneController extends Controller
 
             return $this->redirect(['index']);
         }
+
+        $model->loadDefaultValues();
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     public function actionUpdate($id)

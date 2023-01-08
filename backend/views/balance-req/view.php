@@ -6,9 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\BalanceReq $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Balance Reqs', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Balance-Req #' . $model->id . ' - Airbender';
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="balance-req-view">
