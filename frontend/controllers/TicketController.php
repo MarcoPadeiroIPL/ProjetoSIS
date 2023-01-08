@@ -72,7 +72,7 @@ class TicketController extends Controller
         }
 
         $receipt = new Receipt();
-        $receipt->purchaseDate = date('Y/m/d H:i:s');
+        $receipt->purchaseDate = date('Y-m-d H:i:s');
         $receipt->total = 0;
         $receipt->status = 'Pending';
         return $receipt;

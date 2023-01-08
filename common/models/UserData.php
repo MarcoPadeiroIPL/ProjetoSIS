@@ -38,7 +38,7 @@ class UserData extends \yii\db\ActiveRecord
             [['user_id', 'fName', 'surname', 'birthdate', 'phone', 'nif', 'gender', 'accCreationDate'], 'required'],
             [['user_id'], 'integer'],
             [['birthdate', 'accCreationDate'], 'safe'],
-            [['birthdate', 'accCreationDate'], DateValidator::class, 'format' => 'php:Y/m/d'],
+            [['birthdate', 'accCreationDate'], DateValidator::class, 'format' => 'php:Y-m-d'],
             [['gender'], 'string'],
             ['gender', 'in', 'range' => ['M', 'F']],
             [['fName', 'surname'], 'string', 'max' => 25],

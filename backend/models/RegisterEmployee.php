@@ -97,12 +97,12 @@ class RegisterEmployee extends Model
         $userData->user_id = isset($userData->user_id) ? $userData->user_id : $user->getId();
         $userData->fName = $this->fName;
         $userData->surname = $this->surname;
-        $userData->birthdate = date('Y/m/d', strtotime($this->birthdate));
+        $userData->birthdate = date('Y-m-d', strtotime($this->birthdate));
         $userData->phone = $this->phone;
         $userData->nif = $this->nif;
         $userData->gender = $this->gender;
-        $userData->accCreationDate = date('Y/m/d H:i:s');
-        $userData->accCreationDate = isset($userData->accCreationDate) ? $userData->accCreationDate : date('Y/m/d H:i:s');
+        $userData->accCreationDate = date('Y-m-d H:i:s');
+        $userData->accCreationDate = isset($userData->accCreationDate) ? $userData->accCreationDate : date('Y-m-d H:i:s');
 
         $state = $state && $userData->save();
 
@@ -147,11 +147,11 @@ class RegisterEmployee extends Model
         $userData->user_id = $user->getId();
         $userData->fName = $this->fName;
         $userData->surname = $this->surname;
-        $userData->birthdate = date('Y/m/d', strtotime($this->birthdate));
+        $userData->birthdate = date('Y-m-d', strtotime($this->birthdate));
         $userData->phone = $this->phone;
         $userData->nif = $this->nif;
         $userData->gender = $this->gender;
-        $userData->accCreationDate = date('Y/m/d H:i:s');
+        $userData->accCreationDate = date('Y-m-d H:i:s');
 
         $userData->save();
 

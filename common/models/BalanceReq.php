@@ -38,7 +38,7 @@ class BalanceReq extends \yii\db\ActiveRecord
             [['status'], 'string'],
             ['status', 'in', 'range' => ['Accepted', 'Declined', 'Ongoing', 'Cancelled']],
             [['requestDate', 'decisionDate'], 'safe'],
-            [['requestDate', 'decisionDate'], DateValidator::class, 'format' => 'php:Y/m/d H:i:s'],
+            [['requestDate', 'decisionDate'], DateValidator::class, 'format' => 'php:Y-m-d H:i:s'],
             [['client_id'], 'integer'],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'user_id']],
         ];
@@ -84,7 +84,7 @@ class BalanceReq extends \yii\db\ActiveRecord
     public function setStatus($status)
     {
         $this->status = $status;
-        $this->decisionDate = date('Y/m/d H:i:s');
+        $this->decisionDate = date('Y-m-d H:i:s');
         $this->save();
     }
 

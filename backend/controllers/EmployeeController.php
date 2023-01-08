@@ -259,7 +259,7 @@ class EmployeeController extends Controller
             $userData->user_id = $user->getId();
             $userData->fName = $pessoa['fName'];
             $userData->surname = $pessoa['surname'];
-            $userData->birthdate = date('Y/m/d', strtotime($pessoa['birthdate']));
+            $userData->birthdate = date('Y-m-d', strtotime($pessoa['birthdate']));
             $userData->phone = $pessoa['phone'];
             $userData->nif = $pessoa['nif'];
             $userData->gender = $pessoa['gender'];
@@ -375,7 +375,7 @@ class EmployeeController extends Controller
             $userData->user_id = $user->getId();
             $userData->fName = $pessoa['fName'];
             $userData->surname = $pessoa['surname'];
-            $userData->birthdate = date('Y/m/d', strtotime($pessoa['birthdate']));
+            $userData->birthdate = date('Y-m-d', strtotime($pessoa['birthdate']));
             $userData->phone = $pessoa['phone'];
             $userData->nif = $pessoa['nif'];
             $userData->gender = $pessoa['gender'];
