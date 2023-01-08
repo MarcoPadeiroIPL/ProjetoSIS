@@ -42,7 +42,7 @@ class Flight extends \yii\db\ActiveRecord
         return [
             [['departureDate', 'duration', 'airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'required'],
             [['departureDate'], 'safe'],
-            [['departureDate'], DateValidator::class, 'format' => 'php:Y/m/d H:i:s'],
+            [['departureDate'], DateValidator::class, 'format' => 'php:Y-m-d H:i:s'],
             [['duration'], DateValidator::class, 'format' => 'php:H:i:s'],
             [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
             [['status'], 'string'],
