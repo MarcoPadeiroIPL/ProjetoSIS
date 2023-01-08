@@ -42,12 +42,10 @@ class UserData extends \yii\db\ActiveRecord
             [['gender'], 'string' , 'max' => 1],
             ['gender', 'in', 'range' => ['M', 'F']],
             [['fName', 'surname'], 'string','min' => 2, 'max' => 25],
-            [['phone', 'nif'], 'string', 'max' => 9],
-            [['phone'], 'unique'],
-            [['nif'], 'unique'],
-            [['user_id'], 'unique'],
+            [['phone', 'nif'], 'string', 'min' => 9, 'max' => 9],
+            [['phone', 'nif', 'user_id'], 'unique'],
+            [['phone', 'nif'], 'number'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['birthdate'], 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '<='],
         ];
     }
 

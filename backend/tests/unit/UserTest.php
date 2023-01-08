@@ -88,7 +88,7 @@ class UserTest extends \Codeception\Test\Unit
         $userData->setBirthdate('2024-12-31');
         $this->assertFalse($userData->validate(['birthdate']));
 
-        $userData->setBirthdate('1999-12-31');
+        $userData->setBirthdate('1999/12/31');
         $this->assertTrue($userData->validate(['birthdate']));
 
             // test phone
@@ -153,7 +153,7 @@ class UserTest extends \Codeception\Test\Unit
     {
         //Create user entry on database
         $user = new User();
-        $user->username = 'Joaquim';
+        $user->username = 'joaquim';
         $user->email = 'joaquim@gmail.com';
         $user->setPassword('joaquim123');
         $user->generateAuthKey();
@@ -167,26 +167,29 @@ class UserTest extends \Codeception\Test\Unit
         $userData->user_id = $user->getId();
         $userData->fName = 'joaquim';
         $userData->surname = 'estruturas';
-        $userData->birthdate = '1999-12-31';
+        $userData->birthdate = '1999/12/31';
         $userData->phone = '961686162';
         $userData->nif = '274324662';
         $userData->gender = 'M';
-        $userData->accCreationDate = date('Y-m-d H:i:s');
+        $userData->accCreationDate = date('Y/m/d');
         $userData->save();
+
         $this->tester->seeRecord('common\models\User', ['id' => $user->id]);
 
         // update test
         $userData = $this->tester->grabRecord('common\models\UserData', ['fName' => $userData->fName]);
 
-        $userData->setAttribute('fName', 'marco');
+        $userData->fName = 'marco';
+        $userData->birthdate = date('Y/m/d', strtotime($userData->birthdate));
+        $userData->accCreationDate = date('Y/m/d', strtotime($userData->accCreationDate));
         $userData->save();
 
-        $this->tester->dontseeRecord('common\models\UserData', ['fName' => 'joaquim']);
+        $this->tester->dontSeeRecord('common\models\UserData', ['fName' => 'joaquim']);
         $this->tester->seeRecord('common\models\UserData', ['fName' => 'marco']);
 
         // delete test
         $userData->delete();
-        $this->tester->dontseeRecord('common\models\UserData', ['fName' => 'marco']);
+        $this->tester->dontSeeRecord('common\models\UserData', ['fName' => 'marco']);
 
     }
 }
