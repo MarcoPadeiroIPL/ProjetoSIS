@@ -46,6 +46,7 @@ class Flight extends \yii\db\ActiveRecord
             [['duration'], DateValidator::class, 'format' => 'php:H:i:s'],
             [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
             [['status'], 'string'],
+            ['status', 'in', 'range' => ['Available', 'Unavailable', 'Complete', 'Canceled']],
             [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplane::class, 'targetAttribute' => ['airplane_id' => 'id']],
             [['airportArrival_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportArrival_id' => 'id']],
             [['airportDeparture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportDeparture_id' => 'id']],
@@ -96,7 +97,7 @@ class Flight extends \yii\db\ActiveRecord
      */
     public function setAirportDeparture($airportDeparture)
     {
-        $this->airportDeparture = $airportDeparture;
+        $this->airportDeparture_id = $airportDeparture;
     }
 
     /**
@@ -106,7 +107,7 @@ class Flight extends \yii\db\ActiveRecord
      */
     public function setAirportArrival($airportArrival)
     {
-        $this->airportArrival = $airportArrival;
+        $this->airportArrival_id = $airportArrival;
     }
 
     /**
@@ -116,7 +117,7 @@ class Flight extends \yii\db\ActiveRecord
      */
     public function setAirplane($airplane)
     {
-        $this->airplane = $airplane;
+        $this->airplane_id = $airplane;
     }
 
     /**

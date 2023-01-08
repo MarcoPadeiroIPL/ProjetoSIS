@@ -11,5 +11,5 @@ modules:
     Db:
         dsn: 'mysql:host=localhost;dbname=airbender_test'
         user: 'root'
-        password: '1234'
+        password: '5610'
   
