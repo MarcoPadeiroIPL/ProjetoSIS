@@ -84,7 +84,7 @@ class BalanceReq extends \yii\db\ActiveRecord
     public function setStatus($status)
     {
         $this->status = $status;
-        $this->decisionDate = date('Y-m-d H:i:s');
+        $this->decisionDate = date('Y/m/d H:i:s');
         $this->save();
     }
 

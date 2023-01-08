@@ -7,13 +7,9 @@ use yii\widgets\DetailView;
 /** @var common\models\Config $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Configs', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="config-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

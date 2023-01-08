@@ -10,7 +10,6 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Refunds';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="refund-index">
     <?php if (Yii::$app->session->hasFlash('success')) : ?>
@@ -29,7 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     <?php endif; ?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Create Refund', ['create'], ['class' => 'btn btn-success']) ?>

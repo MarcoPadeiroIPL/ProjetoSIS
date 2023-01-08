@@ -86,21 +86,19 @@ class AirportController extends Controller
 
         $model = new Airport();
 
-        // caso nao seja post redireciona para o formulario
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-
-        if ($model->load(\Yii::$app->request->post())) {
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post())) {
             if ($model->save())
                 \Yii::$app->session->setFlash('success', "Ariport created successfully.");
             else
                 \Yii::$app->session->setFlash('success', "Ariport not saved.");
             return $this->redirect(['index']);
         }
+
+        // caso nao seja post redireciona para o formulario
+        $model->loadDefaultValues();
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     public function actionUpdate($id)
