@@ -117,7 +117,7 @@ class EmployeeController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
-        $user = User::findOne($user_id);
+        $user = User::findOne([$user_id]);
 
         $model = new RegisterEmployee();
 

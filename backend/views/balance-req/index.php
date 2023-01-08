@@ -10,7 +10,6 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Balance Reqs';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <a href="history">View history</a>
 <div class="balance-req-index">

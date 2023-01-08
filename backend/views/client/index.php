@@ -10,7 +10,6 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Clients';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-index">
 

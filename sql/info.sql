@@ -912,8 +912,6 @@ CREATE TABLE `flights` (
 
 LOCK TABLES `flights` WRITE;
 /*!40000 ALTER TABLE `flights` DISABLE KEYS */;
-INSERT INTO `flights` VALUES
-(1,'2023-01-10 00:00:00','02:00:00',3,5,19,'Available');
 /*!40000 ALTER TABLE `flights` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -973,8 +971,6 @@ CREATE TABLE `receipts` (
 
 LOCK TABLES `receipts` WRITE;
 /*!40000 ALTER TABLE `receipts` DISABLE KEYS */;
-INSERT INTO `receipts` VALUES
-(1,'2023-01-07 20:48:49',110.27,'Complete',39);
 /*!40000 ALTER TABLE `receipts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1059,8 +1055,6 @@ CREATE TABLE `tariffs` (
 
 LOCK TABLES `tariffs` WRITE;
 /*!40000 ALTER TABLE `tariffs` DISABLE KEYS */;
-INSERT INTO `tariffs` VALUES
-(1,'2023-01-07 19:28:37',52.71,70.28,87.85,1,1);
 /*!40000 ALTER TABLE `tariffs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1111,8 +1105,6 @@ CREATE TABLE `tickets` (
 
 LOCK TABLES `tickets` WRITE;
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES
-(1,'Abba','Chapellow','M',40,NULL,39,1,'B',7,2,1,1,1,'normal');
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 UNLOCK TABLES;
 

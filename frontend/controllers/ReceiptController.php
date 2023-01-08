@@ -184,7 +184,7 @@ class ReceiptController extends Controller
 
                 // modificar o status da fatura
                 $receipt->status = "Complete";
-                $receipt->purchaseDate = date('Y-m-d H:i:s');
+                $receipt->purchaseDate = date('Y/m/d H:i:s');
 
                 $receipt->updateTicketPrices();
 
@@ -228,8 +228,6 @@ class ReceiptController extends Controller
         $req->amount = ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total) - $client->balance;
         $req->requestDate = date('Y/m/d H:i:s');
 
-        $req->validate();
-        dd($req->getErrors());
         if ($req->save())
             \Yii::$app->session->setFlash('success', "Successfully requested " . $req->amount . "€");
         else

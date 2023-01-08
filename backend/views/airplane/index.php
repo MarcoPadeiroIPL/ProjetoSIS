@@ -10,7 +10,6 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Airplanes';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="airplane-index">
 

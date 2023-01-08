@@ -81,21 +81,19 @@ class ConfigController extends Controller
 
         $model = new Config();
 
-        // caso nao seja post redireciona para o formulario
-        if (!$this->request->isPost) {
-            $model->loadDefaultValues();
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-
-        if ($model->load(\Yii::$app->request->post())) {
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post())) {
             if ($model->save())
                 \Yii::$app->session->setFlash('success', "Config created successfully.");
             else
                 \Yii::$app->session->setFlash('error', "Config not saved.");
             return $this->redirect(['index']);
         }
+
+        // caso nao seja post redireciona para o formulario
+        $model->loadDefaultValues();
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     public function actionUpdate($id)

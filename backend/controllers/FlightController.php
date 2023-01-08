@@ -93,20 +93,9 @@ class FlightController extends Controller
 
         $model = new CreateFlight();
 
-        // caso nao seja post
-        if (!$this->request->isPost) {
-            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
-
-            return $this->render('create', [
-                'model' => $model,
-                'airports' => $airports,
-                'airplanes' => $airplanes,
-            ]);
-        }
 
         // caso seja post
-        if ($model->load(\Yii::$app->request->post())) {
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post())) {
             if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Flight created successfully.");
             } else {
@@ -114,6 +103,15 @@ class FlightController extends Controller
             }
             return $this->redirect(['index']);
         }
+
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
+
+        return $this->render('create', [
+            'model' => $model,
+            'airports' => $airports,
+            'airplanes' => $airplanes,
+        ]);
     }
 
     public function actionUpdate($id)
@@ -122,8 +120,6 @@ class FlightController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
         $model = $this->findModel($id);
-        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-        $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
 
         if ($model->load(\Yii::$app->request->post())) {
             if ($model->save()) {
@@ -133,6 +129,9 @@ class FlightController extends Controller
             }
             return $this->redirect(['index']);
         }
+
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
 
         return $this->render('update', [
             'model' => $model,
