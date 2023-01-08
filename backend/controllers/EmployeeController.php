@@ -10,6 +10,7 @@ use common\models\UserData;
 use common\models\Client;
 use common\models\Airplane;
 use common\models\Flight;
+use common\models\Tariff;
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -476,7 +477,6 @@ class EmployeeController extends Controller
 
         foreach ($arr as $voo) {
             $flight = new Flight();
-
             // tabela AIRPORT
             $flight->departureDate = $voo['departureDate'];
             $flight->duration = $voo['duration'];
@@ -487,8 +487,13 @@ class EmployeeController extends Controller
                 $flight->status = "Available";
             else
                 $flight->status = "Unavailable";
-
             $flight->save();
+            $tariff = new Tariff();
+            $airportDeparureSearch = $flight->airportDeparture->search;
+            $airportArrivalSearch = $flight->airportArrival->search;
+            $airplaneSeats = $flight->airplane->countTotalSeats();
+            $tariff->generateFirstTariff($flight->id, 30, $airportDeparureSearch, $airportArrivalSearch, $airplaneSeats);
+            $tariff->save();
         }
     }
 
