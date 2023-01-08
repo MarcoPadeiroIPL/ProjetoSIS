@@ -132,11 +132,11 @@ class FlightTest extends \Codeception\Test\Unit
         //Create flight entry on database
         $flight = new Flight();
         $flight->departureDate = '2024/01/07 15:30:00';
-        $flight->duration = '00:00:00';
-        $flight->airportDeparture_id = $airportDeparture->id;
-        $flight->airportArrival_id = $airportArrival->id;
+        $flight->duration = '02:00:00';
+        $flight->airportDeparture_id = 14;
+        $flight->airportArrival_id = 12;
         $flight->status = 'Available';
-        $flight->airplane_id = $airplane->id;
+        $flight->airplane_id = 3;
         $flight->save();
 
         // read test
@@ -145,7 +145,6 @@ class FlightTest extends \Codeception\Test\Unit
         // update test
         $flight = $this->tester->grabRecord('common\models\Flight', ['id' => $flight->id]);
         $flight->setAttribute('status', 'Complete');
-
         $flight->save();
 
         // update nao esta a funcionar
