@@ -14,109 +14,188 @@ class PermissionAdminCest
     }
 
     // tests
-    public function AirplaneIndex(FunctionalTester $I)
+    public function AirplaneCRUD(FunctionalTester $I)
     {
+        // index
         $I->click('Airplanes');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
-    }
-
-    public function AirplaneCreate(FunctionalTester $I)
-    {
+        // create
         $I->amOnRoute('/airplane/create');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
-    }
-
-    public function AirplaneUpdate(FunctionalTester $I)
-    {
-        $I->amOnRoute('/airplane/update?id=3');
+        // update
+        $I->amOnRoute('/airplane/update');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // view
+        $I->amOnRoute('/airplane/view');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // delete
+        $I->amOnRoute('/airplane/delete');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
     }
-
-    public function AirplaneView(FunctionalTester $I)
+    public function AirportCRUD(FunctionalTester $I)
     {
-        $I->amOnRoute('/airplane/view?id=3');
-        $I->dontSee('Access denied');
-        $I->dontSee('Forbidden');
-    }
-
-    public function AirplaneDelete(FunctionalTester $I)
-    {
-        $I->amOnRoute('/airplane/delete?id=3');
-        $I->dontSee('Access denied');
-        $I->dontSee('Forbidden');
-    }
-
-    // tests
-    public function AirportIndex(FunctionalTester $I)
-    {
+        // index
         $I->click('Airports');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
-    }
-
-    public function AirportCreate(FunctionalTester $I)
-    {
+        // create
         $I->amOnRoute('/airport/create');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
-    }
-
-    public function AirportUpdate(FunctionalTester $I)
-    {
-        $I->amOnRoute('/airport/update?id=5');
+        // update
+        $I->amOnRoute('/airport/update');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // view
+        $I->amOnRoute('/airport/view');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // delete
+        $I->amOnRoute('/airport/delete');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
     }
 
-    public function AirportView(FunctionalTester $I)
+    public function BalanceReqCRUD(FunctionalTester $I)
     {
-        $I->amOnRoute('/airport/view?id=5');
-        $I->dontSee('Access denied');
-        $I->dontSee('Forbidden');
-    }
-
-    public function AirportDelete(FunctionalTester $I)
-    {
-        $I->amOnRoute('/airport/delete?id=5');
-        $I->dontSee('Access denied');
-        $I->dontSee('Forbidden');
-    }
-
-    // tests
-    public function BalanceReqIndex(FunctionalTester $I)
-    {
+        // index
         $I->click('Balance Requests');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
-    }
-
-    public function BalanceReqCreate(FunctionalTester $I)
-    {
+        // accept
         $I->amOnRoute('/balance-req/accept');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
-    }
-
-    public function BalanceReqUpdate(FunctionalTester $I)
-    {
+        // decline
         $I->amOnRoute('/balance-req/decline');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
+        // history
+        $I->amOnRoute('/balance-req/history');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
     }
-
-    public function BalanceReqView(FunctionalTester $I)
+    public function ClientCRUD(FunctionalTester $I)
     {
-        $I->amOnRoute('/balance-req/view');
+        // index
+        $I->click('Clients');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // create
+        $I->amOnRoute('/client/create');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // update
+        $I->amOnRoute('/client/update');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // view
+        $I->amOnRoute('/client/view');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // delete
+        $I->amOnRoute('/client/delete');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+    }
+    public function ConfigCRUD(FunctionalTester $I)
+    {
+        // index
+        $I->click('Luggage');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // create
+        $I->amOnRoute('/config/create');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // update
+        $I->amOnRoute('/config/update');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // view
+        $I->amOnRoute('/config/view');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // delete
+        $I->amOnRoute('/config/delete');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+    }
+    public function EmployeeCRUD(FunctionalTester $I)
+    {
+        // index
+        $I->click('Employees');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // create
+        $I->amOnRoute('/employee/create');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // update
+        $I->amOnRoute('/employee/update');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // view
+        $I->amOnRoute('/employee/view');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // delete
+        $I->amOnRoute('/employee/delete');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // activate
+        $I->amOnRoute('/employee/activate');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+    }
+    public function FlightCRUD(FunctionalTester $I)
+    {
+        // index
+        $I->click('Flights');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // create
+        $I->amOnRoute('/flight/create');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // update
+        $I->amOnRoute('/flight/update');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // view
+        $I->amOnRoute('/flight/view');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // delete
+        $I->amOnRoute('/flight/delete');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+    }
+    public function ReceiptCRUD(FunctionalTester $I)
+    {
+        // index
+        $I->amOnRoute('/receipt/index');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // view
+        $I->amOnRoute('/receipt/view');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
     }
 
-    public function BalanceReqHistory(FunctionalTester $I)
+    public function TicketCRUD(FunctionalTester $I)
     {
-        $I->amOnRoute('/balance-req/history');
+        // index
+        $I->amOnRoute('/ticket/index');
+        $I->dontSee('Access denied');
+        $I->dontSee('Forbidden');
+        // view
+        $I->amOnRoute('/ticket/view');
         $I->dontSee('Access denied');
         $I->dontSee('Forbidden');
     }

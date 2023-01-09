@@ -61,7 +61,7 @@ class RegisterEmployee extends Model
 
             ['salary', 'trim'],
             ['salary', 'required'],
-            ['salary', 'integer'],
+            ['salary', 'integer', 'min' => 700, 'max' => 5000],
 
             ['role', 'required'],
             ['role', 'string', 'min' => 2, 'max' => 255],

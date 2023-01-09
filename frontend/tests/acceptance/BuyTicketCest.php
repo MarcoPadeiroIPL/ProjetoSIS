@@ -38,7 +38,7 @@ class BuyTicketCest
         $I->wait(2);
         $I->appendField('SelectAirport[airportDeparture_id]', 'Novyy Karachay');
         $I->wait(2);
-        $I->appendField('SelectAirport[airportArrival_id]', 'Serdobsk');
+        $I->appendField('SelectAirport[airportArrival_id]', 'Komi');
         $I->wait(2);
         $I->fillField('SelectAirport[departureDate]', '2023/02/22');
         $I->click('#gtco-footer');
@@ -71,7 +71,7 @@ class BuyTicketCest
         $I->wait(2);
         $I->appendField('SelectAirport[airportDeparture_id]', 'Novyy Karachay');
         $I->wait(2);
-        $I->appendField('SelectAirport[airportArrival_id]', 'Serdobsk');
+        $I->appendField('SelectAirport[airportArrival_id]', 'Komi');
         $I->wait(2);
         $I->fillField('SelectAirport[departureDate]', '2023/02/22');
         $I->click('#gtco-footer');

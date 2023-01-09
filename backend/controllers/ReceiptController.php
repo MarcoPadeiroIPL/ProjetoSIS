@@ -20,15 +20,16 @@ class ReceiptController extends Controller
                     [
                         'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['admin','supervisor'],
+                        'roles' => ['admin', 'supervisor'],
                     ],
-                   
+
+
                     [
                         'actions' => ['index',  'view'],
                         'allow' => false,
-                        'roles' => ['client', '?','ticketOperator'],
+                        'roles' => ['client', '?', 'ticketOperator'],
                     ],
-                    
+
                 ],
             ],
         ];
@@ -36,7 +37,7 @@ class ReceiptController extends Controller
 
     public function actionIndex($client_id = null)
     {
-        if (!\Yii::$app->user->can('listReceipt')) 
+        if (!\Yii::$app->user->can('listReceipt'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
@@ -51,7 +52,7 @@ class ReceiptController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readReceipt')) 
+        if (!\Yii::$app->user->can('readReceipt'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
@@ -70,4 +71,3 @@ class ReceiptController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-
