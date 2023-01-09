@@ -22,7 +22,8 @@ class SelectAirport extends Model
             ['airportDeparture_id', 'required', 'message' => 'Cannot be empty'],
             ['airportArrival_id', 'required', 'message' => 'Cannot be empty'],
             ['departureDate', 'required', 'message' => 'Cannot be empty'],
-            [['departureDate'], 'date', 'format' => 'yyyy/mm/dd'],
+            [['departureDate'], 'date', 'format' => 'yyyy-mm-dd'],
+            ['departureDate', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
             ['airportDeparture_id', 'compare', 'compareAttribute' => 'airportArrival_id', 'operator' => '!='],
         ];
     }
