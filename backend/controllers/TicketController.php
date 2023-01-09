@@ -48,7 +48,7 @@ class TicketController extends Controller
             $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['checkedin' => $employee_id]),]);
 
         if ($client_id != null)
-            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['flight_id' => $flight_id])->innerJoinWith('receipt', 'tickets.receipt_id = receipts.id')->andWhere(['receipts.status' => 'Complete'])]);
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['tickets.client_id' => $client_id])->innerJoinWith('receipt', 'tickets.receipt_id = receipts.id')->andWhere(['receipts.status' => 'Complete'])]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -74,17 +74,20 @@ class TicketController extends Controller
 
         $model = $this->findModel($id);
 
-        if ($model->load(\Yii::$app->request->post())) {
-            if ($model->save())
-                \Yii::$app->session->setFlash('success', "Ticket updated successfully.");
-            else
-                \Yii::$app->session->setFlash('error', "Ticket not updated successfully.");
+
+        if ($model->receipt->status != 'Complete') {
+            \Yii::$app->session->setFlash('error', "Ticket was not paid for yet");
             return $this->redirect(['index']);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $model->checkedIn = \Yii::$app->user->identity->getId();
+
+        if ($model->save())
+            \Yii::$app->session->setFlash('success', "Ticket checked in successfully");
+        else
+            \Yii::$app->session->setFlash('error', "There was an error while trying to check in the ticket!");
+
+        return $this->redirect(['index']);
     }
 
     protected function findModel($id)

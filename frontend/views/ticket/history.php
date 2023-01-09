@@ -11,9 +11,9 @@ use yii\grid\GridView;
 
 $this->title = 'Tickets';
 ?>
-<div class="ticket-history mt-5">
+<div class="ticket-index mt-5">
 
-    <?= Html::a('View checked in', ['history']) ?>
+    <?= Html::a('View current', ['index']) ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [

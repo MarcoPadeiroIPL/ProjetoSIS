@@ -65,9 +65,29 @@ $this->title = 'Tickets - Airbender';
             ],
             'receipt_id',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Ticket $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
+                'class' => ActionColumn::class,
+                'template' => '{view} {checkin}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-eye"></i>', $url, [
+                            'title' => Yii::t('app', 'View'),
+                            'class' => 'btn btn-sm btn-primary',
+                        ]);
+                    },
+                    'checkin' => function ($url, $model) {
+                        if ($model->receipt->status == 'Complete' && $model->checkedIn == null) {
+                            return Html::a('<i class="fas fa-qrcode"></i>', $url, [
+                                'title' => Yii::t('app', 'Checkin'),
+                                'class' => 'btn btn-sm btn-success',
+                            ]);
+                        }
+                    },
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view')
+                        return Url::to(['view', 'id' => $model->id]);
+                    if ($action === 'checkin')
+                        return Url::to(['checkin', 'id' => $model->id]);
                 }
             ],
         ],

@@ -24,7 +24,7 @@ class TicketController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'delete', 'view', 'checkin'],
+                        'actions' => ['index', 'create', 'delete', 'view', 'history'],
                         'allow' => true,
                         'roles' => ['client'],
                         'matchCallback' => function ($rule, $action) {
@@ -32,13 +32,13 @@ class TicketController extends Controller
                         },
                     ],
                     [
-                        'actions' => ['index', 'create', 'delete', 'view', 'checkin'],
+                        'actions' => ['index', 'create', 'delete', 'view', 'history'],
                         'allow' => false,
                         'roles' => ['admin', 'supervisor', '?', 'ticketOperator'],
                     ],
                     [
                         'allow' => false,
-                        'actions' => ['index', 'create', 'delete', 'view', 'checkin'],
+                        'actions' => ['index', 'create', 'delete', 'view', 'history'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->identity->status == 8;
                         },
@@ -87,6 +87,19 @@ class TicketController extends Controller
 
 
         return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionHistory()
+    {
+        if (!\Yii::$app->user->can('listTicket')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+        }
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])->andWhere('checkedIn > 0')]);
+
+
+        return $this->render('history', [
             'dataProvider' => $dataProvider,
         ]);
     }
