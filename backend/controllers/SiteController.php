@@ -9,20 +9,31 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 
+use common\backend\Employee;
+use common\models\User;
+use common\models\BalanceReq;
+use common\models\Airport;
+
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
+                    [
+                        'allow' => false,
+                        'actions' => ['index'],
+                        'roles' => ['client'],
+                        'denyCallback' => function ($rule, $action) {
+                            Yii::$app->user->logout();
+                            \Yii::$app->response->redirect(['../../frontend/web/site/login']);
+                        },
+                    ],
                     [
                         'actions' => ['login', 'error'],
                         'allow' => true,
@@ -53,10 +64,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-
     public function actions()
     {
         return [
@@ -66,21 +73,31 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        return $this->render('index');
+        $airports = [
+            'count' => Airport::find()->count(),
+            'mostSearched' => Airport::find()->orderBy(['search' => SORT_DESC])->one(),
+            'leastSearched' => Airport::find()->orderBy(['search' => SORT_ASC])->one(),
+        ];
+
+        $clients = [
+            'count' => User::find()->where('status=10')
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->andWhere('auth_assignment.item_name = "client"')->count(),
+        ];
+
+        $balanceReq = [
+            'count' => BalanceReq::find()->where(['status' => 'Ongoing'])->count(),
+        ];
+
+        return $this->render('index', [
+            'airports' => $airports,
+            'balanceReq' => $balanceReq,
+            'clients' => $clients,
+        ]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return string|Response
-     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -101,11 +118,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
     public function actionLogout()
     {
         Yii::$app->user->logout();

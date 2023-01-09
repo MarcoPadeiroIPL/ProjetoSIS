@@ -37,8 +37,10 @@ class Airport extends \yii\db\ActiveRecord
             [['country', 'code', 'city', 'search', 'status'], 'required'],
             [['search'], 'integer'],
             [['status'], 'string'],
+            ['status', 'in', 'range' => ['Operational', 'Not Operational']],
             [['country', 'city'], 'string', 'max' => 50],
             [['code'], 'string', 'max' => 2],
+            ['search', 'integer', 'min' => 0, 'max' => 100],
         ];
     }
 
@@ -52,7 +54,7 @@ class Airport extends \yii\db\ActiveRecord
             'country' => 'Country',
             'code' => 'Code',
             'city' => 'City',
-            'search' => 'Search',
+            'search' => 'Search (%)',
             'status' => 'Status',
         ];
     }
@@ -64,7 +66,7 @@ class Airport extends \yii\db\ActiveRecord
      */
     public function getEmployees()
     {
-        return $this->hasMany(Employees::class, ['airport_id' => 'id']);
+        return $this->hasMany(Employee::class, ['id' => 'airport_id']);
     }
 
     /**
@@ -72,9 +74,9 @@ class Airport extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFlights()
+    public function getFlightsArrival()
     {
-        return $this->hasMany(Flights::class, ['airportArrival_id' => 'id']);
+        return $this->hasMany(Flight::class, ['airportArrival_id' => 'id']);
     }
 
     /**
@@ -82,8 +84,8 @@ class Airport extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFlights0()
+    public function getFlightsDeparture()
     {
-        return $this->hasMany(Flights::class, ['airportDeparture_id' => 'id']);
+        return $this->hasMany(Flight::class, ['airportDeparture_id' => 'id']);
     }
 }

@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\models\Client;
 
 /**
  * Signup form
@@ -14,10 +15,12 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    private $user_id;
 
     const STATUS_ACTIVE = 10;
     const STATUS_INACTIVE = 9;
     const STATUS_DELETED = 0;
+    const STATUS_FIRSTLOGIN = 8;
 
     /**
      * {@inheritdoc}
@@ -53,20 +56,27 @@ class SignupForm extends Model
         }
 
         $user = new User();
+        $client = new Client();
+
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-        $user->status = self::STATUS_ACTIVE;
-        $user->save(false);
-
+        $user->status = self::STATUS_FIRSTLOGIN;
+        $user->save();
+        $this->user_id = $user->getId();
         // the following three lines were added:
         $auth = \Yii::$app->authManager;
         $role = $auth->getRole('client');
-        $auth->assign($role, $user->getId());
+        $auth->assign($role, $this->user_id);
 
-        return $user->save();
+
+        $client->user_id = $this->user_id;
+        $client->balance = 0;
+        $client->application = 0;
+
+        return $client->save();
     }
 
     /**

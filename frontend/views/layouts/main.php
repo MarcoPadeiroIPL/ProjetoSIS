@@ -31,64 +31,38 @@ AppAsset::register($this);
     <div class="gtco-loader"></div>
     <div id="page">
         <!-- <div class="page-inner"> -->
-        <nav class="gtco-nav" role="navigation">
+        <nav class="gtco-nav bg-dark" role="navigation">
             <div class="gtco-container">
 
                 <div class="row">
                     <div class="col-sm-4 col-xs-12">
-                        <div id="gtco-logo"><?= Html::a('Airbender<em>.</em>', ['index']) ?></div>
+                        <div id="gtco-logo"><?= Html::a('Airbender<em>.</em>', ['site/index']) ?></div>
                     </div>
                     <div class="col-xs-8 text-right menu-1">
                         <ul>
-                            <li><?= Html::a('Flights', ['/flight/index']) ?></li>
+                            <li><?= Html::a('Flights', ['/flight/select-airport']) ?></li>
                             <li><?= Html::a('About', ['/site/about']) ?></li>
-                            <li><?= Html::a('Contact', ['/site/contact']) ?></li>
-                            <?php if (Yii::$app->user->isGuest) {
-                                echo '<li>' . Html::a('Login', ['/site/login', '#' => 'login-section']) . '</li>';
-                            } else {
-                                echo '<li class="has-dropdown">
-                                            <a href="#">' . Yii::$app->user->identity->username . '</a>
-                                                <ul class="dropdown">
-                                                    <li>' . Html::a('Profile', ['/client/logout']) . '</li>
-                                                    <li>' . Html::a('My flights', ['/flight/view']) . '</li>
-                                                    <li>' . Html::a('My receipts', ['/receipt/view']) . '</li>
-                                                    <li>' . Html::beginForm(['/site/logout'], 'post')
-                                    . Html::submitButton(
-                                        'Logout '
-                                    )
-                                    . Html::endForm() . '</li>
-                                                </ul>
-                                        </li>
-                                   ';
-                            } ?>
-
+                            <?php if (Yii::$app->user->isGuest) { ?>
+                                <li><?= Html::a('Login', ['/site/login'], ['id' => 'login-button']) ?> </li>
+                            <?php } else { ?>
+                                <li class="has-dropdown">
+                                    <a href="#"><?= Yii::$app->user->identity->username ?></a>
+                                    <ul class="dropdown">
+                                        <li><?= Html::a('Profile', ['/client/index']) ?></li>
+                                        <li><?= Html::a('My balance', ['/balance-req/index']) ?></li>
+                                        <li><?= Html::a('My tickets', ['/ticket/index']) ?></li>
+                                        <li><?= Html::a('My receipts', ['/receipt/index']) ?></li>
+                                        <li><?= Html::a('Logout', ['/site/logout'], ['data-method' => 'post']) ?></li>
+                                    </ul>
+                                </li>
+                            <?php } ?>
+                            </li>
                         </ul>
                     </div>
                 </div>
 
             </div>
         </nav>
-        <header id="gtco-header" class="gtco-cover gtco-cover-sm" role="banner" style="background-image: url('" . <?= Yii::getAlias('@web') . "/images/img_6.jpg" ?>')">
-            <div class="overlay"></div>
-            <div class="gtco-container">
-                <div class="row">
-                    <div class="col-md-12 col-md-offset-0 text-center">
-                        <div class="row row-mt-15em">
-
-                            <div class="col-md-12 mt-text animate-box" data-animate-effect="fadeInUp">
-                                <?php if (Yii::$app->user->isGuest) { ?>
-                                    <h1>Welcome to airbender!</h1>
-                                <?php } else { ?>
-                                    <h1>Welcome back, <?= Yii::$app->user->identity->username ?>!</h1>
-                                <?php } ?>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </header>
 
         <main role="main" class="flex-shrink-0">
             <div class="container">
@@ -107,43 +81,21 @@ AppAsset::register($this);
                     <div class="col-md-4">
                         <div class="gtco-widget">
                             <h3>About Us</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore eos molestias quod sint ipsum possimus temporibus officia iste perspiciatis consectetur in fugiat repudiandae cum. Totam cupiditate nostrum ut neque ab?</p>
+                            <p>Airbender is a university project designed to emulate a airline website where you can search and buy tickets for multiple different locations!</p>
                         </div>
                     </div>
 
                     <div class="col-md-2 col-md-push-1">
                         <div class="gtco-widget">
-                            <h3>Destination</h3>
-                            <ul class="gtco-footer-links">
-                                <li><a href="#">Europe</a></li>
-                                <li><a href="#">Australia</a></li>
-                                <li><a href="#">Asia</a></li>
-                                <li><a href="#">Canada</a></li>
-                                <li><a href="#">Dubai</a></li>
-                            </ul>
                         </div>
                     </div>
 
-                    <div class="col-md-2 col-md-push-1">
-                        <div class="gtco-widget">
-                            <h3>Hotels</h3>
-                            <ul class="gtco-footer-links">
-                                <li><a href="#">Luxe Hotel</a></li>
-                                <li><a href="#">Italy 5 Star hotel</a></li>
-                                <li><a href="#">Dubai Hotel</a></li>
-                                <li><a href="#">Deluxe Hotel</a></li>
-                                <li><a href="#">BoraBora Hotel</a></li>
-                            </ul>
-                        </div>
-                    </div>
 
                     <div class="col-md-3 col-md-push-1">
                         <div class="gtco-widget">
                             <h3>Get In Touch</h3>
                             <ul class="gtco-quick-contact">
-                                <li><a href="#"><i class="icon-phone"></i> +1 234 567 890</a></li>
-                                <li><a href="#"><i class="icon-mail2"></i> info@freehtml5.co</a></li>
-                                <li><a href="#"><i class="icon-chat"></i> Live Chat</a></li>
+                                <li><a href="https://github.com/MarcoPadeiroIPL/ProjetoPLSI"><i class="icon-github"></i>Github</a></li>
                             </ul>
                         </div>
                     </div>
@@ -153,15 +105,12 @@ AppAsset::register($this);
                 <div class="row copyright">
                     <div class="col-md-12">
                         <p class="pull-left">
-                            <small class="block">&copy; 2016 Free HTML5. All Rights Reserved.</small>
+                            <small class="block">Marco Padeiro, Tomás Moura e Marco Harbuzyuk. All Rights Reserved.</small>
                             <small class="block">Designed by <a href="https://freehtml5.co/" target="_blank">FreeHTML5.co</a> Demo Images: <a href="http://unsplash.com/" target="_blank">Unsplash</a></small>
                         </p>
                         <p class="pull-right">
                         <ul class="gtco-social-icons pull-right">
-                            <li><a href="#"><i class="icon-twitter"></i></a></li>
-                            <li><a href="#"><i class="icon-facebook"></i></a></li>
-                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                            <li><a href="#"><i class="icon-dribbble"></i></a></li>
+                            <li><a href="https://github.com/MarcoPadeiroIPL/ProjetoPLSI"><i class="icon-github"></i></a></li>
                         </ul>
                         </p>
                     </div>

@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use backend\models\Employee;
 
 /**
  * User model
@@ -28,6 +29,7 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+    const STATUS_FIRSTLOGIN = 8;
 
 
     /**
@@ -48,14 +50,32 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'User ID',
+            'username' => 'Username',
+            'email' => 'Email',
+            'status' => 'Status',
+        ];
+    }
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['username', 'password_hash', 'email', 'status'], 'required'],
+            [['username', 'email'], 'trim'],
+            ['password_hash', 'string', 'max' => 255],
+            [['username', 'password_hash', 'email'], 'string'],
+            [['username', 'email'], 'unique'],
+            ['status', 'integer'],
+            ['status', 'default', 'value' => self::STATUS_FIRSTLOGIN],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED, self::STATUS_FIRSTLOGIN]],
+            [['username', 'password_hash', 'email'], 'required'],
+            [['username'], 'string', 'min' => 4, 'max' => 25],
+            ['email', 'email'],
         ];
     }
 
@@ -64,7 +84,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['id' => $id, 'status' => [self::STATUS_ACTIVE, self::STATUS_FIRSTLOGIN]]);
     }
 
     /**
@@ -83,7 +103,27 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['username' => $username, 'status' => [self::STATUS_ACTIVE, self::STATUS_FIRSTLOGIN]]);
+    }
+
+    /**
+     * Generates username and sets it to the model
+     *
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * Generates email and sets it to the model
+     *
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
     }
 
     /**
@@ -210,5 +250,46 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+    public function deleteUser()
+    {
+        $this->status = self::STATUS_DELETED;
+        return $this->save();
+    }
+
+    public function activate()
+    {
+        $this->status = self::STATUS_ACTIVE;
+        return $this->save();
+    }
+
+    public function getUserData()
+    {
+        return $this->hasOne(UserData::class, ['user_id' => 'id']);
+    }
+
+    public function getEmployee()
+    {
+        return $this->hasOne(Employee::class, ['user_id' => 'id']);
+    }
+
+    public function getClient()
+    {
+        return $this->hasOne(Client::class, ['user_id' => 'id']);
+    }
+
+    public function getBalanceReq()
+    {
+        return $this->hasMany(BalanceReqEmployee::class, ['employee_id' => 'id']);
+    }
+
+    public function getAuthAssignment()
+    {
+        return $this->hasOne(AuthAssignment::class, ['user_id' => 'id']);
+    }
+    public function setActive()
+    {
+        $this->status = self::STATUS_ACTIVE;
+        $this->save();
     }
 }

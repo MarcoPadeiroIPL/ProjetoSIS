@@ -15,33 +15,68 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\UserData;
+use common\models\User;
+use common\models\Airport;
+use common\models\Flight;
 
-/**
- * Site controller
- */
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['index', 'signup', 'login', 'error', 'contact', 'about'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'allow' => false,
+                        'actions' => ['index', 'contact', 'about'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                        'denyCallback' => function ($rule, $action) {
+                            \Yii::$app->session->setFlash('error', 'You do not have sufficient permissions to perform this action');
+                            \Yii::$app->response->redirect(['site/fill']);
+                        },
+                    ],
+                    [
+                        'allow' => false,
+                        'actions' => ['index'],
+                        'roles' => ['admin', 'ticketOperator', 'supervisor'],
+                        'denyCallback' => function ($rule, $action) {
+                            Yii::$app->user->logout();
+                            \Yii::$app->response->redirect(['../../backend/web/site/index']);
+                        },
+                    ],
+                    [
+                        'actions' => ['index', 'contact', 'about'],
+                        'allow' => true,
+                        'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 10;
+                        },
+                    ],
+                    [
+                        'actions' => ['fill'],
+                        'allow' => true,
+                        'roles' => ['client'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->status == 8;
+                        },
+                    ],
+                    [
+                        'actions' => ['logout', 'error'],
                         'allow' => true,
                         'roles' => ['@'],
+
                     ],
                 ],
+
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -68,29 +103,32 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
-    public function actionIndex()
+    // Match callback called! This page can be accessed only each October 31st
+    public function actionNeedFill()
     {
-        return $this->render('index');
+        return $this->redirect(['fill']);
     }
 
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
+    public function actionIndex()
+    {
+        $airports = Airport::find()->orderBy('search')->limit(6)->all();
+        $flights = Flight::find()->orderBy('departureDate')->limit(6)->all();
+        return $this->render('index', ['airports' => $airports, 'flights' => $flights]);
+    }
+
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
+
         $model = new LoginForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            if (Yii::$app->user->identity->status == 8) {
+                return $this->redirect('fill');
+            }
             return $this->goBack();
         }
 
@@ -100,12 +138,25 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+    public function actionFill()
+    {
+        if (!\Yii::$app->user->can('updateClient')) {
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+        }
 
-    /**
-     * Logs out the current user.
-     *
-     * @return mixed
-     */
+        $model = new UserData();
+
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $user = User::findOne([$model['user_id']]);
+            $user->setActive();
+            return $this->redirect(['index']);
+        }
+            $model->loadDefaultValues();
+            return $this->render('fill', [
+                'model' => $model,
+            ]);
+    }
+
     public function actionLogout()
     {
         Yii::$app->user->logout();
@@ -113,11 +164,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
     public function actionContact()
     {
         $model = new ContactForm();
@@ -136,21 +182,19 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
     public function actionAbout()
     {
         return $this->render('about');
     }
 
-    /**
-     * Signs user up.
-     *
-     * @return mixed
-     */
+    public function actionError()
+    {
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception !== null) {
+            return $this->render('error', ['exception' => $exception]);
+        }
+    }
+
     public function actionSignup()
     {
         $model = new SignupForm();
@@ -163,11 +207,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Requests password reset.
-     *
-     * @return mixed
-     */
     public function actionRequestPasswordReset()
     {
         $model = new PasswordResetRequestForm();
@@ -186,13 +225,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Resets password.
-     *
-     * @param string $token
-     * @return mixed
-     * @throws BadRequestHttpException
-     */
     public function actionResetPassword($token)
     {
         try {
@@ -212,13 +244,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Verify email address
-     *
-     * @param string $token
-     * @throws BadRequestHttpException
-     * @return yii\web\Response
-     */
     public function actionVerifyEmail($token)
     {
         try {
@@ -235,11 +260,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Resend verification email
-     *
-     * @return mixed
-     */
     public function actionResendVerificationEmail()
     {
         $model = new ResendVerificationEmailForm();
