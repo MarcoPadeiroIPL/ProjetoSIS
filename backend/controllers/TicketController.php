@@ -34,23 +34,21 @@ class TicketController extends Controller
         ];
     }
 
-    public function actionIndex($flight_id = null, $employee_id = null)
+    public function actionIndex($flight_id = null, $employee_id = null, $client_id = null)
     {
         if (!\Yii::$app->user->can('listTicket'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
+        $dataProvider = new ActiveDataProvider(['query' => Ticket::find()]);
+
         if ($flight_id != null)
-            $dataProvider = new ActiveDataProvider([
-                'query' => Ticket::find()
-                    ->where(['flight_id' => $flight_id])
-                    ->innerJoinWith('receipt', 'tickets.receipt_id = receipts.id')
-                    ->andWhere(['receipts.status' => 'Complete']),
-            ]);
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['flight_id' => $flight_id])->innerJoinWith('receipt', 'tickets.receipt_id = receipts.id')->andWhere(['receipts.status' => 'Complete']),]);
 
         if ($employee_id != null)
-            $dataProvider = new ActiveDataProvider([
-                'query' => Ticket::find()->where(['checkedin' => $employee_id]),
-            ]);
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['checkedin' => $employee_id]),]);
+
+        if ($client_id != null)
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['flight_id' => $flight_id])->innerJoinWith('receipt', 'tickets.receipt_id = receipts.id')->andWhere(['receipts.status' => 'Complete'])]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

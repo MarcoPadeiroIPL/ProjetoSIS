@@ -58,7 +58,7 @@ class Client extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Tickets::class, ['client_id' => 'user_id']);
+        return $this->hasMany(Ticket::class, ['client_id' => 'user_id']);
     }
 
     /**

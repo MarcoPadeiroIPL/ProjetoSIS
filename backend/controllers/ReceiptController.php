@@ -34,14 +34,14 @@ class ReceiptController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex($client_id = null)
     {
         if (!\Yii::$app->user->can('listReceipt')) 
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Receipt::find(),
+            'query' => Receipt::find()->where(['client_id' => $client_id]),
         ]);
 
         return $this->render('index', [
