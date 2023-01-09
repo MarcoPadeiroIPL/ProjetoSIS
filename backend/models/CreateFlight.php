@@ -16,6 +16,7 @@ use yii\validators\DateValidator;
 class CreateFlight extends Model
 {
     public $departureDate;
+    public $departureTime;
     public $duration;
     public $airportDeparture_id;
     public $airportArrival_id;
@@ -28,8 +29,9 @@ class CreateFlight extends Model
         return [
             [['departureDate', 'duration', 'airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'required'],
             [['departureDate'], 'safe'],
-            [['departureDate'], DateValidator::class, 'format' => 'php:Y-m-d H:i:s'],
-            [['duration'], DateValidator::class, 'format' => 'php:Y-m-d H:i:s'],
+            [['departureDate'], DateValidator::class, 'format' => 'php:Y-m-d'],
+            [['departureTime'], DateValidator::class, 'format' => 'php:H:i:s'],
+            [['duration'], DateValidator::class, 'format' => 'php:H:i:s'],
             [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
             [['status'], 'string'],
             [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplane::class, 'targetAttribute' => ['airplane_id' => 'id']],
@@ -42,7 +44,7 @@ class CreateFlight extends Model
     public function save()
     {
         $flight = new Flight();
-        $flight->departureDate = $this->departureDate;
+        $flight->departureDate = $this->departureDate . ' ' . $this->departureTime;
         $flight->duration = $this->duration;
         $flight->airportDeparture_id = $this->airportDeparture_id;
         $flight->airportArrival_id = $this->airportArrival_id;

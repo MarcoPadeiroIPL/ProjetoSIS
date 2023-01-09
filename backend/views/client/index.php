@@ -30,6 +30,10 @@ $this->title = 'Clients';
     <?php endif; ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'rowOptions' => function ($model) {
+            if ($model->status != 10)
+                return ['style' => "color:gray",];
+        },
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',

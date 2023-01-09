@@ -31,18 +31,33 @@ use kartik\time\TimePicker;
             ]);
             ?>
         </div>
+        <div class="col">
+            <?=
+            $form->field($model,'departureTime')->widget(TimePicker::classname(), [
+                'pluginOptions' => [
+                    'showSeconds' => true,
+                    'showMeridian' => false,
+                    'defaultTime' => '12:00:00',
+                    'minuteStep' => 15,
+                    'secondStep' => 30,
+                ]
+            ]); ?>
+        </div>
     </div>
 
     <?=
-    $form->field($model,
-    'duration')->widget(TimePicker::classname(), [
-    'pluginOptions' => [
-        'showSeconds' => true,
-        'showMeridian' => false,
-        'minuteStep' => 1,
-        'secondStep' => 5,
-    ]
-    ]);?>
+    $form->field(
+        $model,
+        'duration'
+    )->widget(TimePicker::classname(), [
+        'pluginOptions' => [
+            'showSeconds' => true,
+        'defaultTime' => '00:00:00',
+            'showMeridian' => false,
+            'minuteStep' => 1,
+            'secondStep' => 5,
+        ]
+    ]); ?>
     <div class="row">
         <div class="col">
             <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports)->label('Airport Departure') ?>

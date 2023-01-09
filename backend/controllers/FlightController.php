@@ -115,8 +115,8 @@ class FlightController extends Controller
             return $this->redirect(['index']);
         }
 
-        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-        $airplanes = ArrayHelper::map(Airplane::find()->asArray()->all(), 'id', 'id');
+        $airports = ArrayHelper::map(Airport::find()->where('status = "Operational"')->asArray()->all(), 'id', 'city', 'country');
+        $airplanes = ArrayHelper::map(Airplane::find()->where('status = "Active"')->asArray()->all(), 'id', 'id');
 
         return $this->render('create', [
             'model' => $model,
