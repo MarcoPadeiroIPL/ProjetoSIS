@@ -15,7 +15,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP DATABASE airbender_test;
+DROP DATABASE IF EXISTS airbender_test;
 CREATE DATABASE airbender_test;
 USE airbender_test;
 --

@@ -18,17 +18,18 @@ class ReceiptController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'view'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['admin','supervisor'],
+                        'roles' => ['admin', 'supervisor'],
                     ],
-                   
+
+
                     [
-                        'actions' => ['index',  'update', 'view'],
+                        'actions' => ['index', 'view'],
                         'allow' => false,
-                        'roles' => ['client', '?','ticketOperator'],
+                        'roles' => ['client', '?', 'ticketOperator'],
                     ],
-                    
+
                 ],
             ],
         ];
@@ -36,7 +37,7 @@ class ReceiptController extends Controller
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->can('listReceipt')) 
+        if (!\Yii::$app->user->can('listReceipt'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
@@ -51,7 +52,7 @@ class ReceiptController extends Controller
 
     public function actionView($id)
     {
-        if (!\Yii::$app->user->can('readReceipt')) 
+        if (!\Yii::$app->user->can('readReceipt'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
@@ -62,12 +63,12 @@ class ReceiptController extends Controller
 
     public function actionCreate()
     {
-        if (!\Yii::$app->user->can('createReceipt')) 
+        if (!\Yii::$app->user->can('createReceipt'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
         $model = new Receipt();
 
-        if ($this->request->isPost && $model->load(\Yii::$app->request->post())){
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post())) {
             if ($model->save())
                 \Yii::$app->session->setFlash('success', "Receipt created successfully.");
             else
@@ -75,29 +76,10 @@ class ReceiptController extends Controller
             return $this->redirect(['index']);
         }
 
-            $model->loadDefaultValues();
-            return $this->render('create', ['model' => $model]);
+        $model->loadDefaultValues();
+        return $this->render('create', ['model' => $model]);
     }
 
-    public function actionUpdate($id)
-    {
-        if (!\Yii::$app->user->can('updateReceipt')) 
-            throw new \yii\web\ForbiddenHttpException('Access denied');
-
-        $model = $this->findModel($id);
-
-        if ($model->load(\Yii::$app->request->post())){
-            if ($model->save())
-                \Yii::$app->session->setFlash('success', "Receipt updated successfully.");
-            else
-                \Yii::$app->session->setFlash('error', "Receipt not updated successfully.");
-            return $this->redirect(['index']);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
 
     protected function findModel($id)
     {
@@ -108,4 +90,3 @@ class ReceiptController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-

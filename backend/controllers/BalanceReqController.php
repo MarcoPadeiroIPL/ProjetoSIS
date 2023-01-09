@@ -26,12 +26,12 @@ class BalanceReqController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'accept', 'decline', 'view', 'history'],
+                        'actions' => ['index', 'accept', 'decline', 'history'],
                         'allow' => true,
                         'roles' => ['admin', 'supervisor'],
                     ],
                     [
-                        'actions' => ['index', 'accept', 'decline', 'view', 'history'],
+                        'actions' => ['index', 'accept', 'decline', 'history'],
                         'allow' => false,
                         'roles' => ['ticketOperator', 'client', '?'],
                     ],
@@ -75,16 +75,6 @@ class BalanceReqController extends Controller
         ]);
     }
 
-    public function actionView($id)
-    {
-        if (!\Yii::$app->user->can('readBalanceReq'))
-            throw new \yii\web\ForbiddenHttpException('Access denied');
-
-
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
 
     public function actionAccept($id)
     {
@@ -113,10 +103,9 @@ class BalanceReqController extends Controller
         if ($balanceReq->validate() && $balanceReqEmployee->validate() && $client->validate()) {
             $balanceReq->save() && $balanceReqEmployee->save() && $client->save();
             \Yii::$app->session->setFlash('success', "Accepted successfuly");
-        }
-        else 
+        } else
             \Yii::$app->session->setFlash('error', "Error while trying to save");
-            
+
 
         return $this->redirect('index');
     }
@@ -142,7 +131,7 @@ class BalanceReqController extends Controller
 
         if (!$balanceReqEmployee->save() || !$balanceReq->save())
             \Yii::$app->session->setFlash('error', "Error while trying to save");
-        else 
+        else
             \Yii::$app->session->setFlash('success', "Declined successfuly");
 
         return $this->redirect('index');
@@ -158,4 +147,3 @@ class BalanceReqController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
-

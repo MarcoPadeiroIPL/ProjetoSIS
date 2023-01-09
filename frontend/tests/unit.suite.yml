@@ -8,7 +8,6 @@ modules:
     - Db
   config:
     Db:
-        dsn: 'mysql:host=localhost;dbname=airbender_test'
-        user: 'marco'
-        password: '5610'
-  
+      dsn: "mysql:host=localhost;dbname=airbender_test"
+      user: "boti"
+      password: "1234"

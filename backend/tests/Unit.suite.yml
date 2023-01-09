@@ -1,5 +1,0 @@
-actor: AirportTest
-suite_namespace: backend\tests\Unit
-modules:
-    # enable helpers as array
-    enabled: []

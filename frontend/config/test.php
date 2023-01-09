@@ -19,8 +19,8 @@ $testConfig = array_merge(
             ],
             'db' => [
                 'dsn' => 'mysql:host=localhost;dbname=airbender_test',
-                'username' => 'marco',
-                'password' => '5610',
+                'username' => 'boti',
+                'password' => '1234',
                 'charset' => 'utf8',
             ]
         ],
