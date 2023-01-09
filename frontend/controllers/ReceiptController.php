@@ -120,6 +120,11 @@ class ReceiptController extends Controller
             return $this->redirect(['index']);
         }
 
+        if ($receipt->status == 'Complete') {
+            \Yii::$app->session->setFlash('error', "Cannot delete a complete receipt");
+            return $this->redirect(['index']);
+        }
+
         if ($receipt->shred())
             \Yii::$app->session->setFlash('success', "Receipt deleted successfully!");
         else
@@ -130,12 +135,14 @@ class ReceiptController extends Controller
 
     public function actionDeleteTicket($id)
     {
-        if (!\Yii::$app->user->can('deleteTicket')) {
-            throw new \yii\web\ForbiddenHttpException('Access denied');
-        }
 
         $ticket = Ticket::findOne([$id]);
         $receipt = $ticket->receipt;
+
+        if ($receipt->status == 'Complete') {
+            \Yii::$app->session->setFlash('error', "Cannot delete a ticket from a complete receipt");
+            return $this->redirect(['index']);
+        }
 
         if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
@@ -170,13 +177,13 @@ class ReceiptController extends Controller
             return $this->redirect(['index']);
         }
 
+        // verificar se a fatura ja nao foi paga
+        if ($receipt->status == "Complete") {
+            \Yii::$app->session->setFlash('error', "This receipt is already completed");
+            return $this->redirect(['index']);
+        }
         // caso seja post
         if ($this->request->isPost) {
-            // verificar se a fatura ja nao foi paga
-            if ($receipt->status == "Complete") {
-                \Yii::$app->session->setFlash('error', "This receipt is already completed");
-                return $this->redirect(['index']);
-            }
             // verificar se o cliente tem saldo suficiente
             if ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total >= $receipt->total) {
                 // descontar da conta do cliente dependendo se tem aplicacao ou nao
