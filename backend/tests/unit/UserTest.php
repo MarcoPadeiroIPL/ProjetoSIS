@@ -171,7 +171,7 @@ class UserTest extends \Codeception\Test\Unit
         $userData->phone = '961686162';
         $userData->nif = '274324662';
         $userData->gender = 'M';
-        $userData->accCreationDate = date('Y-m-d');
+        $userData->accCreationDate = date('Y-m-d H:i:s');
         $userData->save();
 
         $this->tester->seeRecord('common\models\User', ['id' => $user->id]);
@@ -180,8 +180,6 @@ class UserTest extends \Codeception\Test\Unit
         $userData = $this->tester->grabRecord('common\models\UserData', ['fName' => $userData->fName]);
 
         $userData->fName = 'marco';
-        $userData->birthdate = date('Y-m-d', strtotime($userData->birthdate));
-        $userData->accCreationDate = date('Y-m-d', strtotime($userData->accCreationDate));
         $userData->save();
 
         $this->tester->dontSeeRecord('common\models\UserData', ['fName' => 'joaquim']);

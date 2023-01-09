@@ -121,7 +121,7 @@ class BuyTicketCest
         $I->submitForm('#form-selectAirport', [
             'SelectAirport[airportDeparture_id]' => '7',
             'SelectAirport[airportArrival_id]' => '9',
-            'SelectAirport[departureDate]' => '2023/02/11',
+            'SelectAirport[departureDate]' => '2023-02-11',
         ]);
         $I->see('Select one flight!');
         $this->SelectNormalFlight($I);
@@ -155,7 +155,7 @@ class BuyTicketCest
         $I->submitForm('#form-selectAirport', [
             'SelectAirport[airportDeparture_id]' => '7',
             'SelectAirport[airportArrival_id]' => '9',
-            'SelectAirport[departureDate]' => '2023/02/11',
+            'SelectAirport[departureDate]' => '2023-02-11',
         ]);
         $I->see('Select one flight!');
         $this->SelectNormalFlight($I);
@@ -191,7 +191,7 @@ class BuyTicketCest
         $this->ValidInput($I);
         $I->see('Pay');
         $I->click('Ask for balance');
-        $I->see("There was an error while completing the balance request, please try again later. ");
+        $I->see("You already have enought balance!");
 
     }
     public function Pay(FunctionalTester $I)

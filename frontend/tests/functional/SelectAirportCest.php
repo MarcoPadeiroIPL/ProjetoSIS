@@ -22,7 +22,7 @@ class SelectAirportCest
         $I->submitForm('#form-selectAirport', [
             'SelectAirport[airportDeparture_id]' => '8',
             'SelectAirport[airportArrival_id]' => '8',
-            'SelectAirport[departureDate]' => '2023/02/11',
+            'SelectAirport[departureDate]' => '2023-02-11',
         ]);
         $I->see('Airport Departure Id must not be equal to "Airport Arrival Id".');
     }
@@ -32,7 +32,7 @@ class SelectAirportCest
         $I->submitForm('#form-selectAirport', [
             'SelectAirport[airportDeparture_id]' => '8',
             'SelectAirport[airportArrival_id]' => '',
-            'SelectAirport[departureDate]' => '2023/02/11',
+            'SelectAirport[departureDate]' => '2023-02-11',
         ]);
         $I->see('Cannot be empty');
     }
@@ -42,7 +42,7 @@ class SelectAirportCest
         $I->submitForm('#form-selectAirport', [
             'SelectAirport[airportDeparture_id]' => '',
             'SelectAirport[airportArrival_id]' => '9',
-            'SelectAirport[departureDate]' => '2023/02/11',
+            'SelectAirport[departureDate]' => '2023-02-11',
         ]);
         $I->see('Cannot be empty');
     }
@@ -62,7 +62,7 @@ class SelectAirportCest
         $I->submitForm('#form-selectAirport', [
             'SelectAirport[airportDeparture_id]' => '8',
             'SelectAirport[airportArrival_id]' => '9',
-            'SelectAirport[departureDate]' => '2022/02/11',
+            'SelectAirport[departureDate]' => '2022-02-11',
         ]);
         $I->dontSee('Select one flight!');
     }
@@ -72,7 +72,7 @@ class SelectAirportCest
         $I->submitForm('#form-selectAirport', [
             'SelectAirport[airportDeparture_id]' => '5',
             'SelectAirport[airportArrival_id]' => '21',
-            'SelectAirport[departureDate]' => '2023/02/11',
+            'SelectAirport[departureDate]' => '2023-02-11',
         ]);
         $I->see('There are no flights available from Novyy Karachay to Voznesenskaya');
     }
@@ -82,7 +82,7 @@ class SelectAirportCest
         $I->submitForm('#form-selectAirport', [
             'SelectAirport[airportDeparture_id]' => '7',
             'SelectAirport[airportArrival_id]' => '9',
-            'SelectAirport[departureDate]' => '2023/02/11',
+            'SelectAirport[departureDate]' => '2023-02-11',
         ]);
         $I->see('Select one flight!');
     }

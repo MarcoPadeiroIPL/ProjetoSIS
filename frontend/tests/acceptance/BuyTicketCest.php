@@ -41,6 +41,7 @@ class BuyTicketCest
         $I->appendField('SelectAirport[airportArrival_id]', 'Serdobsk');
         $I->wait(2);
         $I->fillField('SelectAirport[departureDate]', '2023/02/22');
+        $I->click('#gtco-footer');
         $I->wait(2);
         $I->click('Search');
 
@@ -73,6 +74,7 @@ class BuyTicketCest
         $I->appendField('SelectAirport[airportArrival_id]', 'Serdobsk');
         $I->wait(2);
         $I->fillField('SelectAirport[departureDate]', '2023/02/22');
+        $I->click('#gtco-footer');
         $I->wait(2);
         $I->click('Search');
 
