@@ -83,7 +83,7 @@ class TicketController extends Controller
         if (!\Yii::$app->user->can('listTicket')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
-            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])]);
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])->andWhere('checkedIn IS NULL ')]);
 
 
         return $this->render('index', [
@@ -140,7 +140,7 @@ class TicketController extends Controller
                 $receipt->delete();
         }
 
-        $config = Config::find()->orderBy('price')->all();
+        $config = Config::find()->orderBy('price')->where('active = true')->all();
 
         return $this->render('create', [
             'ticket' => $ticket,

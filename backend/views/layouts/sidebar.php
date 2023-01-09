@@ -92,7 +92,7 @@ use yii\helpers\Html;
                 ],
             ];
             if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'supervisor')
-                unset($items[1],$items[2], $items[3], $items[5], $items[6], $items[9]);
+                unset($items[1],$items[2], $items[3], $items[5]);
 
             if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'ticketOperator')
                 unset($items[1],$items[2], $items[3], $items[5], $items[9], $items[12], $items[13], $items[14]);

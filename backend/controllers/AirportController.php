@@ -90,7 +90,7 @@ class AirportController extends Controller
             if ($model->save())
                 \Yii::$app->session->setFlash('success', "Ariport created successfully.");
             else
-                \Yii::$app->session->setFlash('success', "Ariport not saved.");
+                \Yii::$app->session->setFlash('error', "Airport not saved.");
             return $this->redirect(['index']);
         }
 

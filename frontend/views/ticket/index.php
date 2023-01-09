@@ -13,7 +13,7 @@ $this->title = 'Tickets';
 ?>
 <div class="ticket-history mt-5">
 
-    <?= Html::a('View checked in', ['history']) ?>
+    <?= Html::a('View checked in', ['history'], ['class' => 'btn btn-primary']) ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
