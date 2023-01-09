@@ -127,12 +127,16 @@ class AirplaneController extends Controller
 
 
         $model = $this->findModel($id);
-        $model->status = $model->status == "Active" ? "Not working" : "Active";
+        if (count($model->flights) > 0) {
+            \Yii::$app->session->setFlash('error', "Airplane already has flights associated with it!");
+        } else {
+            $model->status = $model->status == "Active" ? "Not working" : "Active";
 
-        if ($model->save())
-            \Yii::$app->session->setFlash('success', "Airplane deleted successfully.");
-        else
-            \Yii::$app->session->setFlash('error', "Airplane not deleted.");
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Airplane deleted successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Airplane not deleted.");
+        }
 
         return $this->redirect(['index']);
     }

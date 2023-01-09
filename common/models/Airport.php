@@ -66,7 +66,7 @@ class Airport extends \yii\db\ActiveRecord
      */
     public function getEmployees()
     {
-        return $this->hasMany(Employee::class, ['airport_id' => 'id']);
+        return $this->hasMany(Employee::class, ['id' => 'airport_id']);
     }
 
     /**

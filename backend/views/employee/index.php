@@ -61,7 +61,7 @@ $this->title = 'Employees';
             [
                 'label' => 'Gender',
                 'value' => function ($model) {
-                    return isset($model->userData->gender) ? ($model->userData->gender = 'M' ? 'Male' : 'Female') : "Not set";
+                    return isset($model->userData->gender) ? ($model->userData->gender == 'M' ? 'Male' : 'Female') : "Not set";
                 }
             ],
             [

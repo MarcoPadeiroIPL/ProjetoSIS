@@ -129,11 +129,18 @@ class AirportController extends Controller
 
 
         $model = $this->findModel($id);
-        $model->status = $model->status == "Operational" ? "Not Operational" : "Operational";
-        if ($model->save())
-            \Yii::$app->session->setFlash('success', "Airport deleted successfully.");
-        else
-            \Yii::$app->session->setFlash('error', "Airport not deleted sucessfully.");
+
+        $model = $this->findModel($id);
+        if (count($model->flightsArrival) > 0 || count($model->flightsDeparture) > 0) {
+            \Yii::$app->session->setFlash('error', "Airport already has flights associated with it!");
+        } else {
+            $model->status = $model->status == "Operational" ? "Not Operational" : "Operational";
+
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Airport deleted successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Airport not deleted sucessfully.");
+        }
 
         return $this->redirect(['index']);
     }

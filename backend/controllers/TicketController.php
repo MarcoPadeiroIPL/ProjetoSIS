@@ -18,13 +18,13 @@ class TicketController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'view'],
+                        'actions' => ['index', 'update', 'view', 'checkin'],
                         'allow' => true,
                         'roles' => ['admin', 'supervisor', 'ticketOperator'],
                     ],
 
                     [
-                        'actions' => ['index', 'update', 'view'],
+                        'actions' => ['index', 'update', 'view', 'checkin'],
                         'allow' => false,
                         'roles' => ['client', '?'],
                     ],
@@ -66,7 +66,7 @@ class TicketController extends Controller
         ]);
     }
 
-    public function actionUpdate($id)
+    public function actionCheckin($id)
     {
         if (!\Yii::$app->user->can('updateTicket'))
             throw new \yii\web\ForbiddenHttpException('Access denied');

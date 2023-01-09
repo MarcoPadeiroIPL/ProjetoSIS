@@ -159,12 +159,14 @@ class FlightController extends Controller
 
         $model = $this->findModel($id);
 
-        $model->status = "Canceled";
-
-        if ($model->save()) {
-            \Yii::$app->session->setFlash('success', "Flight deleted successfully.");
+        if ($model->countBoughtTickets() > 0) {
+            \Yii::$app->session->setFlash('error', "Flight already has tickets bought to it, to it cant be deleted.");
         } else {
-            \Yii::$app->session->setFlash('error', "Flight not deleted.");
+            $model->status = 'Canceled';
+            if ($model->save())
+                \Yii::$app->session->setFlash('success', "Flight deleted successfully.");
+            else
+                \Yii::$app->session->setFlash('error', "Flight not deleted.");
         }
 
         return $this->redirect(['index']);
