@@ -4,7 +4,7 @@ use Codeception\Attribute\Depends;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\date\DatePicker;
-use kartik\widgets\TimePicker;
+use kartik\time\TimePicker;
 
 /** @var yii\web\View $this */
 /** @var common\models\Flight $model */
@@ -33,7 +33,16 @@ use kartik\widgets\TimePicker;
         </div>
     </div>
 
-    <?= $form->field($model, 'duration')->textInput()->label('Duration') ?>
+    <?=
+    $form->field($model,
+    'duration')->widget(TimePicker::classname(), [
+    'pluginOptions' => [
+        'showSeconds' => true,
+        'showMeridian' => false,
+        'minuteStep' => 1,
+        'secondStep' => 5,
+    ]
+    ]);?>
     <div class="row">
         <div class="col">
             <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports)->label('Airport Departure') ?>
