@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "selenium": "^2.20.0"
-  },
-  "devDependencies": {
-    "selenium-standalone": "^8.2.5"
-  }
-}
