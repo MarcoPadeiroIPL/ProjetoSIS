@@ -41,7 +41,8 @@ class Tariff extends \yii\db\ActiveRecord
             [['startDate', 'economicPrice', 'normalPrice', 'luxuryPrice', 'flight_id', 'active'], 'required'],
             [['startDate'], 'safe'],
             [['economicPrice', 'normalPrice', 'luxuryPrice'], 'number'],
-            [['flight_id', 'active'], 'integer'],
+            [['flight_id'], 'integer'],
+            [['active'], 'boolean'],
             [['flight_id'], 'exist', 'skipOnError' => true, 'targetClass' => Flight::class, 'targetAttribute' => ['flight_id' => 'id']],
         ];
     }
@@ -69,7 +70,7 @@ class Tariff extends \yii\db\ActiveRecord
      */
     public function getFlight()
     {
-        return $this->hasOne(Flights::class, ['id' => 'flight_id']);
+        return $this->hasOne(Flight::class, ['id' => 'flight_id']);
     }
 
     public function generateFirstTariff($flight_id, $defaultPrice, $airportDepartureSearch, $airportArrivalSearch, $airplaneSeats)

@@ -5,8 +5,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use kartik\date\DatePicker;
 use yii\widgets\ActiveForm;
+use yii\jui\DatePicker;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -14,14 +14,14 @@ use yii\widgets\ActiveForm;
 ?>
 <div class="flight-index">
 
-<div class="container">
+    <div class="container">
 
-  <div class="row">
+          <div class="row">
 
 
-  </div>
+              </div>
 
-</div>
+    </div>
     <div class="container mt-5 d-flex justify-content-center">
         <?php $form = ActiveForm::begin(['action' => ['flight/select-airport', 'receipt_id' => $receipt_id]]); ?>
 
@@ -42,17 +42,22 @@ use yii\widgets\ActiveForm;
             </div>
             <div class="col">
                 <?=
-                DatePicker::widget([
-                    'model' => $model,
-                    'name' => 'departureDate',
-                    'attribute' => 'departureDate',
-                    'options' => ['placeholder' => 'Departure date'],
-                    'type' => DatePicker::TYPE_INPUT,
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true
+                $form->field($model, 'departureDate')->widget(
+                    DatePicker::classname(),
+                    [
+                        'dateFormat' => 'php:Y-m-d',
+                        'options' => ['class' => 'form-control'],
+                        'inline' => false,
+                        'clientOptions' => [
+                            'changeMonth' => true,
+                            'changeYear' => true,
+                            'format' => 'yyyy-mm-dd',
+                        ],
+
+
                     ]
-                ]);
+                )
+
                 ?>
             </div>
         </div>

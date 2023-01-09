@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
                             <div class="col shadow rounded btn <?= $tariffType == "normal" && $c->weight == 10 ? "border border-primary opacity-50" : ($tariffType == "luxury" && $c->weight == 20 ? "border border-primary opacity-50" : "opacity-50") ?>" style="margin-left: 3%; margin-right: 3%;">
                                 <div class="row d-flex justify-content-center"><?= $c->weight . 'KG' ?></div>
                                 <div class="row d-flex justify-content-center h1"><i class="fa-solid fa-suitcase-rolling"></i></div>
-                                <div class="row d-flex justify-content-center h3">Included</div>
+                                <div class="row d-flex justify-content-center h3">Free</div>
                             </div>
                         <?php } ?>
                     <?php } else { ?>

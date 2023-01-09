@@ -83,20 +83,8 @@ class TicketController extends Controller
         if (!\Yii::$app->user->can('listTicket')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])]);
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

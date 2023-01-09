@@ -39,8 +39,8 @@ use yii\widgets\ActiveForm;
                             <div class="col">Seat: <?= $ticket->seatLinha . '-' . $ticket->seatCol ?></div>
                             <div class="col">Type: <?= $ticket->tariffType ?></div>
                             <div class="col">Status: <?= $ticket->checkedIn == null ? 'Waiting checkin' : 'Checked in' ?></div>
-                            <div class="col">Luggage 1: <?= $ticket->luggageOne->description ?></div>
-                            <div class="col">Luggage 2: <?= $ticket->luggageTwo->description ?></div>
+                            <?php if(!is_null($ticket->luggageOne)) { ?><div class="col">Luggage 1: <?= $ticket->luggageOne->description ?></div> <?php } ?>
+                            <?php if(!is_null($ticket->luggageTwo)) { ?><div class="col">Luggage 2: <?= $ticket->luggageTwo->description ?></div> <?php } ?>
                         </div>
                     </div>
                     <div class="col d-flex align-items-center justify-content-center">

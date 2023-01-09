@@ -214,5 +214,20 @@ class Flight extends \yii\db\ActiveRecord
         }
         return true;
     }
+
+    public function increasePrice($percentage){
+        $oldActiveTariff = $this->activeTariff();
+        $oldActiveTariff->active = false;
+
+        $tariff = new Tariff();
+
+        $tariff->flight_id = $this->id;
+        $tariff->normalPrice = $oldActiveTariff->normalPrice + $oldActiveTariff->normalPrice * $percentage;
+        $tariff->economicPrice = $tariff->normalPrice - ($tariff->normalPrice * 0.25);
+        $tariff->luxuryPrice = $tariff->normalPrice + ($tariff->normalPrice * 0.25);
+
+        return $tariff->save() && $oldActiveTariff->save();
+
+    }
 }
 

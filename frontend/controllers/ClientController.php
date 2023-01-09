@@ -70,22 +70,20 @@ class ClientController extends Controller
     }
 
     public function actionUpdate()
-    {
-        if (!\Yii::$app->user->can('updateClient')) {
-            throw new \yii\web\ForbiddenHttpException('Access denied');
-        }
+    { {
+            if (!\Yii::$app->user->can('updateClient')) {
+                throw new \yii\web\ForbiddenHttpException('Access denied');
+            }
+            $model = UserData::findOne([\Yii::$app->user->identity->getId()]);
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                \Yii::$app->session->setFlash('success', "Account successfully updated");
+                return $this->redirect(['index']);
+            }
 
-        $model = UserData::findOne([\Yii::$app->user->identity->getId()]);
-
-        if (!$this->request->isPost) {
             $model->loadDefaultValues();
             return $this->render('update', [
                 'model' => $model,
             ]);
-        }
-
-        if ($model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
         }
     }
 
@@ -98,8 +96,7 @@ class ClientController extends Controller
         if ($this->findModel(\Yii::$app->user->identity->getId())->user->deleteUser()){
             \Yii::$app->session->setFlash('success', "Account successfully deleted");
             return $this->redirect(['site/index']);
-        }
-        else {
+        } else {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }

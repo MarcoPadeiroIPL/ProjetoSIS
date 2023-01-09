@@ -89,8 +89,8 @@ class ReceiptController extends Controller
         }
 
         $receipt = $this->findModel($id);
-        
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }
@@ -102,7 +102,7 @@ class ReceiptController extends Controller
             ]);
         } else
             \Yii::$app->session->setFlash('error', "You need to pay first!");
-            return $this->redirect(['pay', 'id' => $id]);
+        return $this->redirect(['pay', 'id' => $id]);
     }
 
 
@@ -115,8 +115,13 @@ class ReceiptController extends Controller
 
         $receipt = $this->findModel($id);
 
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
+            return $this->redirect(['index']);
+        }
+
+        if ($receipt->status == 'Complete') {
+            \Yii::$app->session->setFlash('error', "Cannot delete a complete receipt");
             return $this->redirect(['index']);
         }
 
@@ -130,14 +135,16 @@ class ReceiptController extends Controller
 
     public function actionDeleteTicket($id)
     {
-        if (!\Yii::$app->user->can('deleteTicket')) {
-            throw new \yii\web\ForbiddenHttpException('Access denied');
-        }
 
         $ticket = Ticket::findOne([$id]);
         $receipt = $ticket->receipt;
 
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+        if ($receipt->status == 'Complete') {
+            \Yii::$app->session->setFlash('error', "Cannot delete a ticket from a complete receipt");
+            return $this->redirect(['index']);
+        }
+
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }
@@ -165,18 +172,18 @@ class ReceiptController extends Controller
         $client = Client::findOne([\Yii::$app->user->identity->getId()]);
         $receipt->refreshTotal();
 
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
         }
 
+        // verificar se a fatura ja nao foi paga
+        if ($receipt->status == "Complete") {
+            \Yii::$app->session->setFlash('error', "This receipt is already completed");
+            return $this->redirect(['index']);
+        }
         // caso seja post
         if ($this->request->isPost) {
-            // verificar se a fatura ja nao foi paga
-            if ($receipt->status == "Complete") {
-                \Yii::$app->session->setFlash('error', "This receipt is already completed");
-                return $this->redirect(['index']);
-            }
             // verificar se o cliente tem saldo suficiente
             if ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total >= $receipt->total) {
                 // descontar da conta do cliente dependendo se tem aplicacao ou nao
@@ -186,10 +193,12 @@ class ReceiptController extends Controller
                 $receipt->status = "Complete";
                 $receipt->purchaseDate = date('Y-m-d H:i:s');
 
+                $receipt->updateTicketPrices();
+
                 // avisar o cliente se conseguiu guardar ou nao 
                 if ($client->save() && $receipt->save()) {
                     \Yii::$app->session->setFlash('success', "Purchase completed successfully!");
-                    return $this->redirect(['index']);
+                    return $this->redirect(['view', 'id' => $receipt->id]);
                 } else
                     \Yii::$app->session->setFlash('error', "There was an error while completing the payment, please try again later.");
             } else
@@ -203,7 +212,7 @@ class ReceiptController extends Controller
     }
     public function actionAsk($id)
     {
-        if (!\Yii::$app->user->can('balanceReqCreate')) {
+        if (!\Yii::$app->user->can('createBalanceReq')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
@@ -211,9 +220,14 @@ class ReceiptController extends Controller
 
         $client = Client::findOne([$receipt->client_id]);
 
-        if($receipt->client_id != \Yii::$app->user->identity->getId()){
+        if ($receipt->client_id != \Yii::$app->user->identity->getId()) {
             \Yii::$app->session->setFlash('error', "Not your receipt!");
             return $this->redirect(['index']);
+        }
+
+        if ($client->balance > ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total)) {
+            \Yii::$app->session->setFlash('error', "You already have enought balance!");
+            return $this->redirect(['pay', 'id' => $receipt->id]);
         }
 
         $req = new BalanceReq();
