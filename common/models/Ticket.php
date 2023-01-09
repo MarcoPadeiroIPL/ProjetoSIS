@@ -53,6 +53,8 @@ class Ticket extends \yii\db\ActiveRecord
             ['gender', 'in', 'range' => ['M', 'F']],
             ['tariffType', 'in', 'range' => ['economic', 'normal', 'luxury']],
             [['age', 'checkedIn', 'client_id', 'flight_id', 'seatCol', 'luggage_1', 'luggage_2', 'receipt_id', 'tariff_id'], 'integer'],
+            [['age'], 'compare', 'compareValue' => 10, 'operator' => '>', 'type' => 'number'],
+            [['age'], 'compare', 'compareValue' => 100, 'operator' => '<', 'type' => 'number'],
             [['fName', 'surname'], 'string', 'max' => 25],
             [['seatLinha'], 'string', 'max' => 1],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'user_id']],
@@ -62,6 +64,10 @@ class Ticket extends \yii\db\ActiveRecord
             [['luggage_2'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_2' => 'id']],
             [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::class, 'targetAttribute' => ['receipt_id' => 'id']],
             [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::class, 'targetAttribute' => ['receipt_id' => 'id']],
+            ['seatCol', 'compare', 'compareValue' => 12, 'operator' => '<=', 'message' => 'Columns range from 1 to 12.'],
+            ['seatCol', 'compare', 'compareValue' => 1, 'operator' => '>=', 'message' => 'Columns range from 1 to 12.'],
+            ['seatLinha', 'compare', 'compareValue' => 'L', 'operator' => '<=', 'message' => 'Columns range from A to L.'],
+            ['seatLinha', 'compare', 'compareValue' => 'A', 'operator' => '>=', 'message' => 'Columns range from A to L.'],
         ];
     }
 

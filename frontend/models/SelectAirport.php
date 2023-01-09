@@ -25,6 +25,7 @@ class SelectAirport extends Model
             [['departureDate'], 'date', 'format' => 'yyyy-mm-dd'],
             ['departureDate', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
             ['airportDeparture_id', 'compare', 'compareAttribute' => 'airportArrival_id', 'operator' => '!='],
+            ['departureDate', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
         ];
     }
 }

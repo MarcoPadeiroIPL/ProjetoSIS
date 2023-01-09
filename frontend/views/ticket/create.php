@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
 ?>
 <div class="flight-index">
     <div class="container mt-5">
-        <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(['id' => 'form-buyTicket']); ?>
         <div class="row shadow mb-4">
             <div class="col-8 p-5">
                 <div class="row">

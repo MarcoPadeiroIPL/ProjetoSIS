@@ -46,6 +46,7 @@ class Flight extends \yii\db\ActiveRecord
             [['duration'], DateValidator::class, 'format' => 'php:H:i:s'],
             [['airplane_id', 'airportDeparture_id', 'airportArrival_id'], 'integer'],
             [['status'], 'string'],
+            ['status', 'in', 'range' => ['Available', 'Unavailable', 'Complete', 'Canceled']],
             [['airplane_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airplane::class, 'targetAttribute' => ['airplane_id' => 'id']],
             [['airportArrival_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportArrival_id' => 'id']],
             [['airportDeparture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Airport::class, 'targetAttribute' => ['airportDeparture_id' => 'id']],
@@ -67,6 +68,56 @@ class Flight extends \yii\db\ActiveRecord
             'Duration' => 'Duration',
             'status' => 'Status',
         ];
+    }
+
+    /**
+     * Generates departureDate and sets it to the model
+     *
+     * @param string $departureDate
+     */
+    public function setDepartureDate($departureDate)
+    {
+        $this->departureDate = $departureDate;
+    }
+
+    /**
+     * Generates duration and sets it to the model
+     *
+     * @param string $duration
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+    }
+
+    /**
+     * Generates airportDeparture and sets it to the model
+     *
+     * @param string $airportDeparture
+     */
+    public function setAirportDeparture($airportDeparture)
+    {
+        $this->airportDeparture_id = $airportDeparture;
+    }
+
+    /**
+     * Generates airportArrival and sets it to the model
+     *
+     * @param string $airportArrival
+     */
+    public function setAirportArrival($airportArrival)
+    {
+        $this->airportArrival_id = $airportArrival;
+    }
+
+    /**
+     * Generates airplane and sets it to the model
+     *
+     * @param string $airplane
+     */
+    public function setAirplane($airplane)
+    {
+        $this->airplane_id = $airplane;
     }
 
     /**

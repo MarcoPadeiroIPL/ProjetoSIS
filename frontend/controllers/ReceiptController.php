@@ -162,8 +162,7 @@ class ReceiptController extends Controller
         }
     }
 
-    public function actionPay($id)
-    {
+    public function actionPay($id) {
         if (!\Yii::$app->user->can('updateReceipt')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
@@ -185,7 +184,7 @@ class ReceiptController extends Controller
         // caso seja post
         if ($this->request->isPost) {
             // verificar se o cliente tem saldo suficiente
-            if ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total >= $receipt->total) {
+            if (($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total) <= $client->balance) {
                 // descontar da conta do cliente dependendo se tem aplicacao ou nao
                 $client->balance -= $client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total;
 

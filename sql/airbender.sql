@@ -18,7 +18,7 @@
 --
 -- Table structure for table `airplanes`
 --
-DROP DATABASE airbender;
+DROP DATABASE IF EXISTS airbender;
 CREATE DATABASE airbender;
 USE airbender;
 

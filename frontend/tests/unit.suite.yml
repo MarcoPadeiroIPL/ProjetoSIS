@@ -1,7 +1,14 @@
 suite_namespace: frontend\tests\unit
 actor: UnitTester
 modules:
-    enabled:
-        - Yii2:
-            part: [orm, email, fixtures]
-        - Asserts
+  enabled:
+    - Yii2:
+      part: [orm, email, fixtures]
+    - Asserts
+    - Db
+  config:
+    Db:
+        dsn: 'mysql:host=localhost;dbname=airbender_test'
+        user: 'marco'
+        password: '5610'
+  

@@ -1,0 +1,15 @@
+suite_namespace: frontend\tests\acceptance
+actor: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: 'http://localhost/plsi/airbender/frontend/web/'
+            browser: firefox # 'chrome' or 'firefox'
+        - Yii2:
+            part: init
+        - Db
+    config:
+      Db:
+        dsn: 'mysql:host=localhost;dbname=airbender_test'
+        user: 'marco'
+        password: '5610'

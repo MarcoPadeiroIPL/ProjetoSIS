@@ -43,7 +43,7 @@ AppAsset::register($this);
                             <li><?= Html::a('Flights', ['/flight/select-airport']) ?></li>
                             <li><?= Html::a('About', ['/site/about']) ?></li>
                             <?php if (Yii::$app->user->isGuest) { ?>
-                                <li><?= Html::a('Login', ['/site/login', '#' => 'login-section']) ?> </li>
+                                <li><?= Html::a('Login', ['/site/login'], ['id' => 'login-button']) ?> </li>
                             <?php } else { ?>
                                 <li class="has-dropdown">
                                     <a href="#"><?= Yii::$app->user->identity->username ?></a>
