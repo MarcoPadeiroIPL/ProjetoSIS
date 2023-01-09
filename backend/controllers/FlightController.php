@@ -54,7 +54,7 @@ class FlightController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex($airport_id = null)
     {
         if (!\Yii::$app->user->can('listFlight'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
@@ -67,6 +67,17 @@ class FlightController extends Controller
                 ]
             ],
         ]);
+
+        if (!is_null($airport_id)) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => Flight::find()->where('airportDeparture_id=' . $airport_id . ' OR airportArrival_id=' . $airport_id),
+                'sort' => [
+                    'defaultOrder' => [
+                        'departureDate' => SORT_ASC,
+                    ]
+                ],
+            ]);
+        }
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

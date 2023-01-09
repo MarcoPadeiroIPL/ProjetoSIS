@@ -74,7 +74,7 @@ class ClientController extends Controller
 
 
         return $this->render('view', [
-            'model' => $this->findModel($user_id),
+            'model' => User::findOne([$user_id]),
         ]);
     }
 
@@ -106,7 +106,7 @@ class ClientController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
-        if ($this->findModel($user_id)->deleteUser())
+        if ($this->findModel($user_id)->user->deleteUser())
             \Yii::$app->session->setFlash('success', "Client deleted successfully.");
         else
             \Yii::$app->session->setFlash('error', "Client not deleted sucessfully.");

@@ -52,7 +52,6 @@ class ClientController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -96,7 +95,7 @@ class ClientController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
-        if ($this->findModel(\Yii::$app->user->identity->getId())->deleteUser()){
+        if ($this->findModel(\Yii::$app->user->identity->getId())->user->deleteUser()){
             \Yii::$app->session->setFlash('success', "Account successfully deleted");
             return $this->redirect(['site/index']);
         }

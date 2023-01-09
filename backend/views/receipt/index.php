@@ -28,11 +28,7 @@ $this->title = 'Receipts';
             <?= Yii::$app->session->getFlash('error') ?>
         </div>
     <?php endif; ?>
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Receipt', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
 
     <?= GridView::widget([
