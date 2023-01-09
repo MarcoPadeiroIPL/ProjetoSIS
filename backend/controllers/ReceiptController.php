@@ -18,13 +18,13 @@ class ReceiptController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'view'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
                         'roles' => ['admin','supervisor'],
                     ],
                    
                     [
-                        'actions' => ['index',  'update', 'view'],
+                        'actions' => ['index',  'view'],
                         'allow' => false,
                         'roles' => ['client', '?','ticketOperator'],
                     ],
@@ -55,49 +55,11 @@ class ReceiptController extends Controller
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
 
-        $this->render('view', [
-            'model' => $this->findModel($id),
+        return $this->render('view', [
+            'receipt' => $this->findModel($id),
         ]);
     }
 
-    public function actionCreate()
-    {
-        if (!\Yii::$app->user->can('createReceipt')) 
-            throw new \yii\web\ForbiddenHttpException('Access denied');
-
-        $model = new Receipt();
-
-        if ($this->request->isPost && $model->load(\Yii::$app->request->post())){
-            if ($model->save())
-                \Yii::$app->session->setFlash('success', "Receipt created successfully.");
-            else
-                \Yii::$app->session->setFlash('error', "Receipt not saved.");
-            return $this->redirect(['index']);
-        }
-
-            $model->loadDefaultValues();
-            return $this->render('create', ['model' => $model]);
-    }
-
-    public function actionUpdate($id)
-    {
-        if (!\Yii::$app->user->can('updateReceipt')) 
-            throw new \yii\web\ForbiddenHttpException('Access denied');
-
-        $model = $this->findModel($id);
-
-        if ($model->load(\Yii::$app->request->post())){
-            if ($model->save())
-                \Yii::$app->session->setFlash('success', "Receipt updated successfully.");
-            else
-                \Yii::$app->session->setFlash('error', "Receipt not updated successfully.");
-            return $this->redirect(['index']);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
 
     protected function findModel($id)
     {

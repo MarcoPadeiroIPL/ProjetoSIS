@@ -41,9 +41,19 @@ $this->title = 'Receipts';
             'total',
             'status',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Receipt $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
+                'class' => ActionColumn::class,
+                'template' => '{view}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-eye"></i>', $url, [
+                            'title' => Yii::t('app', 'View'),
+                            'class' => 'btn btn-sm btn-primary',
+                        ]);
+                    },
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view')
+                        return Url::to(['view', 'id' => $model->id]);
                 }
             ],
         ],

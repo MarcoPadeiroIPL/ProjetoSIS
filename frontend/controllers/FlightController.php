@@ -72,7 +72,7 @@ class FlightController extends Controller
         }
 
         // caso nao seja chamado por post, redireciona para o proximo passo
-        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $airports = ArrayHelper::map(Airport::find()->where('status = "Operational"')->asArray()->all(), 'id', 'city', 'country');
 
         return $this->render('select-airport', [
             'model' => $model,

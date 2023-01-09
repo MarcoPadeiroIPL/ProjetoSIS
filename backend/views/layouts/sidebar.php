@@ -90,11 +90,6 @@ use yii\helpers\Html;
                     'icon' => 'fa-solid fa-comment-dollar',
                     'url' => ['balance-req/index']
                 ],
-                [
-                    'label' => 'Refunds',
-                    'icon' => 'fa-solid fa-money-bill',
-                    'url' => ['refund/index']
-                ],
             ];
             if (key(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())) == 'supervisor')
                 unset($items[1],$items[2], $items[3], $items[5], $items[6], $items[9]);
