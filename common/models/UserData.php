@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\validators\DateValidator;
 
 /**
  * This is the model class for table "userData".
@@ -37,12 +38,14 @@ class UserData extends \yii\db\ActiveRecord
             [['user_id', 'fName', 'surname', 'birthdate', 'phone', 'nif', 'gender', 'accCreationDate'], 'required'],
             [['user_id'], 'integer'],
             [['birthdate', 'accCreationDate'], 'safe'],
+            [['birthdate'], DateValidator::class, 'format' => 'php:Y-m-d'],
+            [['accCreationDate'], DateValidator::class, 'format' => 'php:Y-m-d H:i:s'],
             [['gender'], 'string'],
-            [['fName', 'surname'], 'string', 'max' => 25],
-            [['phone', 'nif'], 'string', 'max' => 9],
-            [['phone'], 'unique'],
-            [['nif'], 'unique'],
-            [['user_id'], 'unique'],
+            ['gender', 'in', 'range' => ['M', 'F']],
+            [['fName', 'surname'], 'string','min' => 2, 'max' => 25],
+            [['phone', 'nif'], 'string', 'min' => 9, 'max' => 9],
+            [['phone', 'nif', 'user_id'], 'unique'],
+            [['phone', 'nif'], 'number'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -62,6 +65,66 @@ class UserData extends \yii\db\ActiveRecord
             'gender' => 'Gender',
             'accCreationDate' => 'Acc Creation Date',
         ];
+    }
+
+    /**
+     * Generates fName and sets it to the model
+     *
+     * @param string $fName
+     */
+    public function setFirstName($fName)
+    {
+        $this->fName = $fName;
+    }
+
+    /**
+     * Generates surname and sets it to the model
+     *
+     * @param string $Surname
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = $surname;
+    }
+
+    /**
+     * Generates birthdate and sets it to the model
+     *
+     * @param string $birthdate
+     */
+    public function setBirthdate($birthdate)
+    {
+        $this->birthdate = $birthdate;
+    }
+
+/**
+     * Generates phone and sets it to the model
+     *
+     * @param string $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * Generates nif and sets it to the model
+     *
+     * @param string $nif
+     */
+    public function setNif($nif)
+    {
+        $this->nif = $nif;
+    }
+
+    /**
+     * Generates gender and sets it to the model
+     *
+     * @param string $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
     }
 
     /**

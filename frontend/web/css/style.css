@@ -457,10 +457,7 @@ figure {
 }
 
 .gtco-cover {
-  height: 900px;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+  height: 100px;
   position: relative;
   float: left;
   width: 100%;
@@ -486,27 +483,27 @@ figure {
 }
 @media screen and (max-width: 768px) {
   .gtco-cover {
-    height: 600px;
+    height: 200px;
   }
 }
 .gtco-cover .display-t,
 .gtco-cover .display-tc {
-  height: 900px;
+  height: 200px;
   display: table;
   width: 100%;
 }
 @media screen and (max-width: 768px) {
   .gtco-cover .display-t,
   .gtco-cover .display-tc {
-    height: 600px;
+    height: 200px;
   }
 }
 .gtco-cover.gtco-cover-sm {
-  height: 600px;
+  height: 300px;
 }
 @media screen and (max-width: 768px) {
   .gtco-cover.gtco-cover-sm {
-    height: 400px;
+    height: 200px;
   }
 }
 .gtco-cover.gtco-cover-sm .display-t,

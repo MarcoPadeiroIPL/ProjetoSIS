@@ -6,7 +6,11 @@ use backend\models\RegisterEmployee;
 use backend\models\Employee;
 use common\models\User;
 use common\models\Airport;
-
+use common\models\UserData;
+use common\models\Client;
+use common\models\Airplane;
+use common\models\Flight;
+use common\models\Tariff;
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -14,14 +18,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * EmployeeController implements the CRUD actions for Employee model.
- */
 class EmployeeController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return [
@@ -29,11 +27,7 @@ class EmployeeController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['index', 'create', 'delete', 'update', 'view'],
+                        'actions' => ['index', 'create', 'delete', 'update', 'view', 'activate'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -48,7 +42,7 @@ class EmployeeController extends Controller
                         'roles' => ['client', '?'],
                     ],
                     [
-                        'actions' => ['index', 'create', 'delete', 'update'],
+                        'actions' => ['index', 'create', 'delete', 'activate', 'update'],
                         'allow' => false,
                         'roles' => ['supervisor', 'ticketOperator'],
                     ],
@@ -57,147 +51,123 @@ class EmployeeController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
                     'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
-    /**
-     * Lists all Employee models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        if (\Yii::$app->user->can('listEmployee')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => User::find()->where('status=10')->innerJoin('employees', 'user.id=employees.user_id'),
-                /*
-                'pagination' => [
-                    'pageSize' => 50
-                ],
-                'sort' => [
-                    'defaultOrder' => [
-                        'user_id' => SORT_DESC,
-                    ]
-                ],
-                */
-            ]);
+        if (!\Yii::$app->user->can('listEmployee'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-            ]);
-        }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => User::find()->where('auth_assignment.item_name != "client"')
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->orderBy(['status' => SORT_DESC])
+                ->orderBy(['id' => SORT_ASC]),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
-    /**
-     * Displays a single Employee model.
-     * @param int $user_id User ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($user_id)
     {
-        if (\Yii::$app->user->can('readEmployee')) {
-            return $this->render('view', [
-                'model' => $this->findModel($user_id),
-            ]);
-        }
+        if (!\Yii::$app->user->can('readEmployee'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        if (User::findOne([\Yii::$app->user->identity->getId()])->authAssignment->item_name == 'admin')
+            $user = User::findOne([$user_id]);
+        else
+            $user = User::findOne([\Yii::$app->user->identity->getId()]);
+
+        return $this->render('view', [
+            'model' => $user
+        ]);
     }
 
-    /**
-     * Creates a new Employee model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
-        if (\Yii::$app->user->can('createEmployee')) {
-            $model = new RegisterEmployee();
-            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $temp = \Yii::$app->authManager->getRoles();
-            $roles = [];
+        if (!\Yii::$app->user->can('createEmployee'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            foreach ($temp as $role) {
-                if ($role->name != 'client')
-                    $roles[$role->name] = $role->name;
-            }
+        $model = new RegisterEmployee();
 
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->register()) {
-                    return $this->redirect(['view', 'user_id' => $model->user_id]);
-                }
-            }
-            return $this->render('create', [
-                'model' => $model,
-                'airports' => $airports,
-                'roles' => $roles
-            ]);
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post()) && $model->register()) {
+            \Yii::$app->session->setFlash('success', "Employee created successfully.");
+            $this->redirect(['index']);
         }
+
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
+
+        return $this->render('create', [
+            'model' => $model,
+            'airports' => $airports,
+            'roles' => $roles
+        ]);
     }
 
-    /**
-     * Updates an existing Employee model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $user_id User ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($user_id)
     {
-        if (\Yii::$app->user->can('updateEmployee')) {
-            $model = $this->findModel($user_id);
-            $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
-            $roles = (new \yii\db\Query())
-                ->select(['name'])
-                ->from('auth_item')
-                ->where('type = 1 and name != "client"')
-                ->all();
-            $temp = [];
+        if (!\Yii::$app->user->can('updateEmployee'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            foreach ($roles as $role) {
-                $temp[$role['name']] = $role['name'];
-            }
 
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['update', 'user_id' => $model->user_id]);
-                }
-            }
-            dd($model);
+        $user = User::findOne([$user_id]);
 
-            return $this->render('update', [
-                'model' => $model,
-                'airports' => $airports,
-                'roles' => $temp,
-            ]);
-        }
-    }
+        $model = new RegisterEmployee();
 
-    /**
-     * Deletes an existing Employee model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $user_id User ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($user_id)
-    {
-        if (\Yii::$app->user->can('deleteEmployee')) {
-            User::findOne($user_id)->deleteUser();
+        $model->setUser($user);
+
+
+
+        if ($this->request->isPost && $model->load(\Yii::$app->request->post()) && $model->update($user_id)) {
+            \Yii::$app->session->setFlash('success', "Employee updated successfully.");
             return $this->redirect(['index']);
         }
+
+        $airports = ArrayHelper::map(Airport::find()->asArray()->all(), 'id', 'city', 'country');
+        $roles = $this->filtrarRoles(\Yii::$app->authManager->getRoles());
+
+        return $this->render('update', [
+            'model' => $model,
+            'airports' => $airports,
+            'roles' => $roles
+        ]);
     }
 
-    /**
-     * Finds the Employee model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $user_id User ID
-     * @return Employee the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    public function actionDelete($user_id)
+    {
+        if (!\Yii::$app->user->can('deleteEmployee'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        if (User::findOne([$user_id])->deleteUser())
+            \Yii::$app->session->setFlash('success', "Employee deleted successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Employee not deleted successfully.");
+        return $this->redirect(['index']);
+    }
+
+    public function actionActivate($user_id)
+    {
+        if (!\Yii::$app->user->can('deleteEmployee'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
+
+
+        if (User::findOne([$user_id])->activate())
+            \Yii::$app->session->setFlash('success', "Employee activated successfully.");
+        else
+            \Yii::$app->session->setFlash('error', "Employee not activated successfully.");
+        return $this->redirect(['index']);
+    }
+
     protected function findModel($user_id)
     {
         if (($model = Employee::findOne(['user_id' => $user_id])) !== null) {
@@ -205,5 +175,18 @@ class EmployeeController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function filtrarRoles($temp)
+    {
+        $roles = [];
+
+        // filtrar as roles
+        foreach ($temp as $role) {
+            if ($role->name != 'client') {
+                $roles[$role->name] = $role->name;
+            }
+        }
+        return $roles;
     }
 }

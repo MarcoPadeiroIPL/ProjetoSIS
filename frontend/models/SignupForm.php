@@ -20,6 +20,7 @@ class SignupForm extends Model
     const STATUS_ACTIVE = 10;
     const STATUS_INACTIVE = 9;
     const STATUS_DELETED = 0;
+    const STATUS_FIRSTLOGIN = 8;
 
     /**
      * {@inheritdoc}
@@ -62,22 +63,20 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-        $user->status = self::STATUS_ACTIVE;
+        $user->status = self::STATUS_FIRSTLOGIN;
         $user->save();
-
         $this->user_id = $user->getId();
         // the following three lines were added:
         $auth = \Yii::$app->authManager;
         $role = $auth->getRole('client');
-        $auth->assign($role, $user->getId());
+        $auth->assign($role, $this->user_id);
 
-        
+
         $client->user_id = $this->user_id;
         $client->balance = 0;
         $client->application = 0;
-        
-        return $client->save();
 
+        return $client->save();
     }
 
     /**

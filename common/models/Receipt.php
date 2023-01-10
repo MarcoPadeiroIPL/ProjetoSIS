@@ -57,6 +57,42 @@ class Receipt extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Tickets::class, ['receipt_id' => 'id']);
+        return $this->hasMany(Ticket::class, ['receipt_id' => 'id']);
+    }
+
+    public function getClient()
+    {
+        return $this->hasOne(Client::class, ['user_id' => 'client_id']);
+    }
+
+    public function shred()
+    {
+        if ($this->status != "Pending")
+            return false;
+
+        foreach ($this->tickets as $ticket) {
+            $ticket->delete();
+        }
+
+        return $this->delete();
+    }
+
+    public function refreshTotal()
+    {
+        $this->total = 0;
+        foreach ($this->tickets as $ticket) {
+            $this->total += $ticket->getTicketPrice();
+        }
+        return $this->save();
+    }
+
+    public function updateTicketPrices()
+    {
+        foreach($this->tickets as $ticket)
+        {
+            if(!$ticket->flight->increasePrice(0.03))
+                return false;
+        }
+        return true;
     }
 }

@@ -8,6 +8,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
+
+use common\backend\Employee;
+use common\models\User;
 use common\models\BalanceReq;
 use common\models\Airport;
 
@@ -16,15 +19,21 @@ use common\models\Airport;
  */
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
+                    [
+                        'allow' => false,
+                        'actions' => ['index'],
+                        'roles' => ['client'],
+                        'denyCallback' => function ($rule, $action) {
+                            Yii::$app->user->logout();
+                            \Yii::$app->response->redirect(['../../frontend/web/site/login']);
+                        },
+                    ],
                     [
                         'actions' => ['login', 'error'],
                         'allow' => true,
@@ -55,10 +64,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-
     public function actions()
     {
         return [
@@ -68,44 +73,31 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        $airportCount = Airport::find()->count();
+        $airports = [
+            'count' => Airport::find()->count(),
+            'mostSearched' => Airport::find()->orderBy(['search' => SORT_DESC])->one(),
+            'leastSearched' => Airport::find()->orderBy(['search' => SORT_ASC])->one(),
+        ];
 
-        $mostSearchedAirport = Airport::find()->orderBy(['search' => SORT_DESC])->one();
-        if(!is_null($mostSearchedAirport)) 
-            $mostSearchedAirportPercentage = $mostSearchedAirport->search;
-        else 
-            $mostSearchedAirportPercentage = 0;
+        $clients = [
+            'count' => User::find()->where('status=10')
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->andWhere('auth_assignment.item_name = "client"')->count(),
+        ];
 
-        $leastSearchedAirport = Airport::find()->orderBy(['search' => SORT_ASC])->one();
-        if(!is_null($leastSearchedAirport)) 
-            $leastSearchedAirportPercentage = $leastSearchedAirport->search;
-        else 
-        $leastSearchedAirportPercentage = 0;
-
-        $balanceReqCount = BalanceReq::find()->where(['status' => 'Ongoing'])->count();
+        $balanceReq = [
+            'count' => BalanceReq::find()->where(['status' => 'Ongoing'])->count(),
+        ];
 
         return $this->render('index', [
-            'balanceReqCount' => $balanceReqCount,
-            'mostSearchedAirport' => $mostSearchedAirport,
-            'mostSearchedAirportPercentage' => $mostSearchedAirportPercentage,
-            'leastSearchedAirport' => $leastSearchedAirport,
-            'leastSearchedAirportPercentage' => $leastSearchedAirportPercentage,
-            'airportCount' => $airportCount,
+            'airports' => $airports,
+            'balanceReq' => $balanceReq,
+            'clients' => $clients,
         ]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return string|Response
-     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -126,11 +118,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
     public function actionLogout()
     {
         Yii::$app->user->logout();

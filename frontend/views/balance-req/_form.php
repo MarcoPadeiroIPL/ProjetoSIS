@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'amount')->textInput() ?>
 
-    <?= $form->field($model, 'requestDate')->hiddenInput(['value'=> date('Y/m/d h:i:s')])->label(false); ?>
+    <?= $form->field($model, 'requestDate')->hiddenInput(['value'=> date('Y-m-d H:i:s')])->label(false); ?>
 
     <?= $form->field($model, 'client_id')->hiddenInput(['value'=> Yii::$app->user->identity->getId()])->label(false); ?>
 

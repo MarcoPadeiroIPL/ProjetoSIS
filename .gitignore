@@ -29,6 +29,7 @@ composer.lock
 # Mac DS_Store Files
 .DS_Store
 
+.php-cs-fixer.cache
 # phpunit itself is not needed
 phpunit.phar
 # local phpunit config

@@ -35,6 +35,8 @@ class Refund extends \yii\db\ActiveRecord
             [['requestDate', 'receipt_id'], 'required'],
             [['requestDate', 'decisionDate'], 'safe'],
             [['receipt_id'], 'integer'],
+            [['receipt_id'], 'unique'],
+            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::class, 'targetAttribute' => ['receipt_id' => 'id']],
         ];
     }
 

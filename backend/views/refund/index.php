@@ -10,11 +10,24 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Refunds';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="refund-index">
+    <?php if (Yii::$app->session->hasFlash('success')) : ?>
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <h4><i class="icon fa fa-check"></i>Sucess!</h4>
+            <?= Yii::$app->session->getFlash('success') ?>
+        </div>
+    <?php endif; ?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?php if (Yii::$app->session->hasFlash('error')) : ?>
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <h4><i class="icon fa fa-minus"></i>Error!</h4>
+            <?= Yii::$app->session->getFlash('error') ?>
+        </div>
+    <?php endif; ?>
+
 
     <p>
         <?= Html::a('Create Refund', ['create'], ['class' => 'btn btn-success']) ?>
@@ -35,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Refund $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
         ],
     ]); ?>

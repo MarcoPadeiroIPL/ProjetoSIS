@@ -10,9 +10,23 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Configs';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="config-index">
+    <?php if (Yii::$app->session->hasFlash('success')) : ?>
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <h4><i class="icon fa fa-check"></i>Sucess!</h4>
+            <?= Yii::$app->session->getFlash('success') ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (Yii::$app->session->hasFlash('error')) : ?>
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <h4><i class="icon fa fa-minus"></i>Error!</h4>
+            <?= Yii::$app->session->getFlash('error') ?>
+        </div>
+    <?php endif; ?>
 
     <div class="d-flex m-2 justify-content-end">
         <?= Html::a('+ Create Config', ['create'], ['class' => 'btn btn-dark']) ?>
@@ -39,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Active',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return $model->active ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>';
+                    return $model->active ? '<h3><span class="badge badge-success">Yes</span></h3>' : '<h3><span class="badge badge-danger">No</span></h3>';
                 }
             ],
             [
@@ -59,14 +73,23 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'delete' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-trash"></i>', $url, [
-                            'title' => Yii::t('app', 'Delete'),
-                            'class' => 'btn btn-sm btn-danger',
-                            'data' => [
-                                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                                'method' => 'post',
-                            ],
-                        ]);
+                        if ($model->active) {
+                            return Html::a('<i class="fas fa-minus"></i>', $url, [
+                                'title' => Yii::t('app', 'Deactivate'),
+                                'class' => 'btn btn-sm btn-danger',
+                                'data' => [
+                                    'method' => 'post',
+                                ],
+                            ]);
+                        } else {
+                            return Html::a('<i class="fas fa-check"></i>', $url, [
+                                'title' => Yii::t('app', 'Activate'),
+                                'class' => 'btn btn-sm btn-success',
+                                'data' => [
+                                    'method' => 'post',
+                                ],
+                            ]);
+                        }
                     },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {

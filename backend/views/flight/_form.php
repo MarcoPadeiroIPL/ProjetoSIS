@@ -3,67 +3,66 @@
 use Codeception\Attribute\Depends;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\jui\DatePicker;
+use kartik\date\DatePicker;
+use kartik\time\TimePicker;
 
 /** @var yii\web\View $this */
 /** @var common\models\Flight $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<?= ''
-/*todo: quando seleciono a data de partida, a data de chegada deve ser maior que a data de partida
-                // e não deverá deixar selecionar uma data anterior a data de partida no calendário da data de chegada
-
-                 'options' => [
-                    'onchange' => '
-                        var departureDate = $("#flight-departuredate").val();
-                        var arrivalDate = $("#flight-arrivaldate").val();
-                        if (departureDate > arrivalDate) {
-                            alert("Arrival date must be after departure date");
-                            $("#flight-arrivaldate").val("");
-                        }
-                    ',
-                ], */ ?>
-
 <div class="flight-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col d-flex justify-content-center">
+        <div class="col">
             <?=
-            $form->field($model, 'departureDate')->widget(DatePicker::classname(), [
-                'language' => 'en',
-                'dateFormat' => 'yyyy-MM-dd',
-                'inline' => true,
-                'clientOptions' => [
-                    'changeMonth' => true,
-                    'changeYear' => true,
-                    'minDate' => date('Y-m-d'),
-                    'maxDate' => '+1Y',
-                ],
-            ]) ?>
+            DatePicker::widget([
+                'model' => $model,
+                'name' => 'departureDate',
+                'attribute' => 'departureDate',
+                'options' => ['placeholder' => 'Select departure date ...'],
+                'type' => DatePicker::TYPE_INPUT,
+                'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',
+                    'todayHighlight' => true
+                ]
+            ]);
+            ?>
         </div>
-        <div class="col d-flex justify-content-center">
+        <div class="col">
             <?=
-            $form->field($model, 'arrivalDate')->widget(DatePicker::classname(), [
-                'language' => 'en',
-                'dateFormat' => 'yyyy-MM-dd',
-                'inline' => true,
-                'clientOptions' => [
-                    'changeMonth' => true,
-                    'changeYear' => true,
-                    'minDate' => date('Y-m-d'),
-                    'maxDate' => '+1Y',
-                ],
-            ]) ?>
+            $form->field($model,'departureTime')->widget(TimePicker::classname(), [
+                'pluginOptions' => [
+                    'showSeconds' => true,
+                    'showMeridian' => false,
+                    'defaultTime' => '12:00:00',
+                    'minuteStep' => 15,
+                    'secondStep' => 30,
+                ]
+            ]); ?>
         </div>
     </div>
+
+    <?=
+    $form->field(
+        $model,
+        'duration'
+    )->widget(TimePicker::classname(), [
+        'pluginOptions' => [
+            'showSeconds' => true,
+        'defaultTime' => '00:00:00',
+            'showMeridian' => false,
+            'minuteStep' => 1,
+            'secondStep' => 5,
+        ]
+    ]); ?>
     <div class="row">
-        <div class="col d-flex justify-content-center">
+        <div class="col">
             <?= $form->field($model, 'airportDeparture_id')->dropDownList($airports)->label('Airport Departure') ?>
         </div>
-        <div class="col d-flex justify-content-center">
+        <div class="col">
             <?= $form->field($model, 'airportArrival_id')->dropDownList($airports, ['prompt' => ''])->label('Airport Arrival') ?>
         </div>
     </div>

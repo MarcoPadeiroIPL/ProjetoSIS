@@ -4,38 +4,46 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var common\models\Airport $model */
+/** @var common\models\Flight $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Airports', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Airport #' . $model->id . ' - Airbender';
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="airport-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'country',
-            'code',
-            'city',
-            'search',
-            'status',
-        ],
-    ]) ?>
-
+    <div class="row m-4">
+        <div class="col">
+            <div class="row h1">Airport info</div>
+            <div class="row">
+                <?= DetailView::widget([
+                    'model' => $model,
+                    'attributes' => [
+                        'id',
+                        'country',
+                        'code',
+                        'city',
+                        'search',
+                        'status',
+                    ],
+                ]) ?>
+            </div>
+        </div>
+    </div>
+    <div class="row m-4">
+        <div class="col">
+            <div class="row h1">Airport Statistics</div>
+            <div class="row">
+                <?= DetailView::widget([
+                    'model' => $model,
+                    'attributes' => [
+                        [
+                            'label' => Html::a('Number of flights', ['flight/index', 'airport_id' => $model->id]),
+                            'value' => function ($model) {
+                                return count($model->flightsDeparture) + count($model->flightsArrival);
+                            }
+                        ],
+                    ],
+                ]) ?>
+            </div>
+        </div>
+    </div>
 </div>

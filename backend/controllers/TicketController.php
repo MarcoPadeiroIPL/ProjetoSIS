@@ -7,141 +7,89 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
-/**
- * TicketController implements the CRUD actions for Ticket model.
- */
 class TicketController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index', 'update', 'view', 'checkin'],
+                        'allow' => true,
+                        'roles' => ['admin', 'supervisor', 'ticketOperator'],
                     ],
+
+                    [
+                        'actions' => ['index', 'update', 'view', 'checkin'],
+                        'allow' => false,
+                        'roles' => ['client', '?'],
+                    ],
+
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
-    /**
-     * Lists all Ticket models.
-     *
-     * @return string
-     */
-    public function actionIndex()
+    public function actionIndex($flight_id = null, $employee_id = null, $client_id = null)
     {
-        if (\Yii::$app->user->can('listTicket')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Ticket::find(),
-                /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-            ]);
+        if (!\Yii::$app->user->can('listTicket'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-            ]);
-        }
+        $dataProvider = new ActiveDataProvider(['query' => Ticket::find()]);
+
+        if ($flight_id != null)
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['flight_id' => $flight_id])->innerJoinWith('receipt', 'tickets.receipt_id = receipts.id')->andWhere(['receipts.status' => 'Complete']),]);
+
+        if ($employee_id != null)
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['checkedin' => $employee_id]),]);
+
+        if ($client_id != null)
+            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['tickets.client_id' => $client_id])->innerJoinWith('receipt', 'tickets.receipt_id = receipts.id')->andWhere(['receipts.status' => 'Complete'])]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
-    /**
-     * Displays a single Ticket model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
-        if (\Yii::$app->user->can('readTicket')) {
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        }
-    }
-    /**
-     * Creates a new Ticket model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        if (\Yii::$app->user->can('createTicket')) {
-            $model = new Ticket();
+        if (!\Yii::$app->user->can('readTicket'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-            } else {
-                $model->loadDefaultValues();
-            }
 
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
-    /**
-     * Updates an existing Ticket model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
+    public function actionCheckin($id)
     {
-        if (\Yii::$app->user->can('updateTicket')) {
-            $model = $this->findModel($id);
+        if (!\Yii::$app->user->can('updateTicket'))
+            throw new \yii\web\ForbiddenHttpException('Access denied');
 
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
 
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
+        $model = $this->findModel($id);
 
-    /**
-     * Deletes an existing Ticket model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        if (\Yii::$app->user->can('deleteTicket')) {
-            $this->findModel($id)->delete();
 
+        if ($model->receipt->status != 'Complete') {
+            \Yii::$app->session->setFlash('error', "Ticket was not paid for yet");
             return $this->redirect(['index']);
         }
+
+        $model->checkedIn = \Yii::$app->user->identity->getId();
+
+        if ($model->save())
+            \Yii::$app->session->setFlash('success', "Ticket checked in successfully");
+        else
+            \Yii::$app->session->setFlash('error', "There was an error while trying to check in the ticket!");
+
+        return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Ticket model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Ticket the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Ticket::findOne(['id' => $id])) !== null) {

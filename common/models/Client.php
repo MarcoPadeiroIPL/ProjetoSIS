@@ -31,7 +31,8 @@ class Client extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'balance', 'application'], 'required'],
-            [['user_id', 'application'], 'integer'],
+            [['user_id'], 'integer'],
+            [['application'], 'boolean'],
             [['balance'], 'number'],
             [['user_id'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
@@ -57,7 +58,7 @@ class Client extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Tickets::class, ['client_id' => 'user_id']);
+        return $this->hasMany(Ticket::class, ['client_id' => 'user_id']);
     }
 
     /**
@@ -74,7 +75,6 @@ class Client extends \yii\db\ActiveRecord
     {
         if ($amount > 0) {
             $this->balance += $amount;
-            $this->save();
         }
     }
 }

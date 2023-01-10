@@ -3,7 +3,7 @@
 namespace common\models;
 
 use Yii;
-
+use yii\validators\DateValidator;
 /**
  * This is the model class for table "balanceReq".
  *
@@ -34,11 +34,14 @@ class BalanceReq extends \yii\db\ActiveRecord
     {
         return [
             [['amount', 'requestDate', 'client_id'], 'required'],
-            [['amount'], 'number'],
+            [['amount'], 'number', 'min' => 10, 'max' => 10000],
             [['status'], 'string'],
+            ['status', 'in', 'range' => ['Accepted', 'Declined', 'Ongoing', 'Cancelled']],
             [['requestDate', 'decisionDate'], 'safe'],
+            [['requestDate', 'decisionDate'], DateValidator::class, 'format' => 'php:Y-m-d H:i:s'],
             [['client_id'], 'integer'],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'user_id']],
+            ['decisionDate', 'compare', 'compareAttribute' => 'requestDate', 'operator' => '>'],
         ];
     }
 
@@ -77,10 +80,18 @@ class BalanceReq extends \yii\db\ActiveRecord
         return $this->hasOne(Client::class, ['user_id' => 'client_id']);
     }
 
+
+
     public function setStatus($status)
     {
         $this->status = $status;
         $this->decisionDate = date('Y-m-d H:i:s');
         $this->save();
+    }
+
+    public function deleteBalanceReq()
+    {
+        if ($this->status = 'Ongoing')
+            return $this->delete();
     }
 }

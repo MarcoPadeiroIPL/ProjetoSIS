@@ -6,9 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\Refund $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Refunds', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Refund #' . $model->id . ' - Airbender';
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="refund-view">

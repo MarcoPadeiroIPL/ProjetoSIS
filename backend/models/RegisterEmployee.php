@@ -61,7 +61,7 @@ class RegisterEmployee extends Model
 
             ['salary', 'trim'],
             ['salary', 'required'],
-            ['salary', 'integer'],
+            ['salary', 'integer', 'min' => 700, 'max' => 5000],
 
             ['role', 'required'],
             ['role', 'string', 'min' => 2, 'max' => 255],
@@ -79,11 +79,49 @@ class RegisterEmployee extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
-            ['password', 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
         ];
     }
 
+    public function update($id)
+    {
+        $user = User::findOne($id);
+        $user->username = $this->username;
+        $user->email = $this->email;
+        if ($this->password != "")
+            $user->setPassword($this->password);
+
+        $state = $user->save();
+
+        $userData = isset($user->userData) ? $user->userData : new UserData();
+        $userData->user_id = isset($userData->user_id) ? $userData->user_id : $user->getId();
+        $userData->fName = $this->fName;
+        $userData->surname = $this->surname;
+        $userData->birthdate = date('Y-m-d', strtotime($this->birthdate));
+        $userData->phone = $this->phone;
+        $userData->nif = $this->nif;
+        $userData->gender = $this->gender;
+        $userData->accCreationDate = date('Y-m-d H:i:s');
+        $userData->accCreationDate = isset($userData->accCreationDate) ? $userData->accCreationDate : date('Y-m-d H:i:s');
+
+        $state = $state && $userData->save();
+
+        $employee = isset($user->userData) ? $user->employee : new Employee();
+        $employee->user_id = $user->getId();
+        $employee->salary = $this->salary;
+        $employee->airport_id = $this->airport_id;
+
+        // RBAC
+        $auth = Yii::$app->authManager;
+        $oldRole = $auth->getRole($user->authAssignment->item_name);
+        $newRole = $auth->getRole($this->role);
+        if ($newRole != $oldRole) {
+            $auth->revoke($oldRole, $user->id);
+            $auth->assign($newRole, $user->id);
+        }
+
+        return $state && $employee->save();
+    }
     public function register()
     {
         if (!$this->validate()) {
@@ -109,11 +147,11 @@ class RegisterEmployee extends Model
         $userData->user_id = $user->getId();
         $userData->fName = $this->fName;
         $userData->surname = $this->surname;
-        $userData->birthdate = date('Y/m/d', strtotime($this->birthdate));
+        $userData->birthdate = date('Y-m-d', strtotime($this->birthdate));
         $userData->phone = $this->phone;
         $userData->nif = $this->nif;
         $userData->gender = $this->gender;
-        $userData->accCreationDate = date('Y/m/d H:i:s');
+        $userData->accCreationDate = date('Y-m-d H:i:s');
 
         $userData->save();
 
@@ -131,5 +169,22 @@ class RegisterEmployee extends Model
 
 
         return $employee->save();
+    }
+    public function setUser($user)
+    {
+        $this->username = isset($user->username) ? $user->username : null;
+        $this->email = isset($user->email) ? $user->email : null;
+
+        $this->role = $user->authAssignment->item_name;
+        $this->fName = isset($user->userData->fName) ? $user->userData->fName : null;
+        $this->surname = isset($user->userData->surname) ? $user->userData->surname : null;
+        $this->gender = isset($user->userData->gender) ? $user->userData->gender : null;
+        $this->phone = isset($user->userData->phone) ? $user->userData->phone : null;
+        $this->nif = isset($user->userData->nif) ? $user->userData->nif : null;
+        $this->birthdate = isset($user->userData->birthdate) ? $user->userData->birthdate : null;
+
+        $this->salary = isset($user->employee->salary) ? $user->employee->salary : null;
+        $this->user_id = isset($user->employee->user_id) ? $user->employee->user_id : null;
+        $this->airport_id = isset($user->employee->airport_id) ? $user->employee->airport_id : null;
     }
 }
