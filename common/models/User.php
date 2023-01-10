@@ -31,7 +31,6 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE = 10;
     const STATUS_FIRSTLOGIN = 8;
 
-
     /**
      * {@inheritdoc}
      */
@@ -50,6 +49,24 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function fields()
+    {
+        return [
+            'id',
+            'username',
+            'email',
+            'role' => function ($model) {
+                return $model->authAssignment->item_name;
+            },
+            'status',
+            'userData' => function ($model) {
+                return $model->userData;
+            },
+            'client' => function ($model) {
+                return $model->client;
+            },
+        ];
+    }
     public function attributeLabels()
     {
         return [
@@ -92,7 +109,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**

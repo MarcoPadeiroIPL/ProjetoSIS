@@ -38,6 +38,7 @@ phpunit.phar
 # vagrant runtime
 /.vagrant
 
+.php-cs-fixer.cache
 # ignore generated files
 /frontend/web/index.php
 /frontend/web/index-test.php
