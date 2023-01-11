@@ -18,6 +18,14 @@ class FlightController extends ActiveController
         ];
         return $behaviors;
     }
+
+    public function actionFind($airportDeparture, $airportArrival) {
+        return Flight::find()
+            ->where('airportDeparture_id = ' . $airportDeparture)
+            ->andWhere('airportArrival_id = ' . $airportArrival)
+            ->all();
+    }
+
     public function actions()
     {
         $actions = parent::actions();

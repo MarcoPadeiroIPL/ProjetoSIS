@@ -48,7 +48,7 @@ return [
                     'except' => ['create'],
                     'extraPatterns' => ['GET me' => 'me'],
                 ],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/flight', 'only' => ['index', 'view']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/flight', 'only' => ['index', 'view', 'find'], 'extraPatterns' => ['GET find/<airportDeparture>/<airportArrival>' => 'find']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/airport'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/balance-req', 'pluralize' => false, 'except' => ['update'], 'extraPatterns' => ['GET me' => 'me']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/receipt'],

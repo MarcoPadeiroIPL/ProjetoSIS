@@ -25,6 +25,14 @@ class TicketController extends ActiveController
             ->all();
     }
 
+
+    public function actionCheckin($ticket_id)
+    {
+        $ticket = Ticket::findOne([$_POST['ticket_id']]);
+        $ticket->checkedIn = \Yii::$app->user->id;
+        return $ticket->save();
+    }
+
     public function checkAccess($action, $model = null, $params = [])
     {
         if ('admin' !== \Yii::$app->user->identity->authAssignment->item_name) {
