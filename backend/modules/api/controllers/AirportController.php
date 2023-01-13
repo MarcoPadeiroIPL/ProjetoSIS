@@ -3,6 +3,8 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
+use common\models\Airport;
+use backend\modules\api\components\CustomAuth;
 
 class AirportController extends ActiveController
 {
@@ -10,10 +12,29 @@ class AirportController extends ActiveController
 
     public function behaviors()
     {
+        \Yii::$app->params['id'] = 0;
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => \yii\filters\auth\QueryParamAuth::class,
+            'class' => CustomAuth::class,
+            'auth' => [$this, 'authCustom'],
         ];
         return $behaviors;
+    }
+
+    public function actions()
+    {
+        $actions = parent::actions();
+
+        // dar disable de todas as actions desnecessarias
+        unset($actions['delete'], $actions['create'], $actions['update'], $actions['options']);
+
+        // customize the data provider preparation with the "prepareDataProvider()" method
+        $actions['index']['prepareDataProvider'] = [$this, 'operational'];
+        return $actions;
+    }
+
+    public function operational()
+    {
+        return Airport::find()->where(['status' => 'Operational'])->all();
     }
 }

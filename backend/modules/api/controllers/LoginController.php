@@ -38,15 +38,25 @@ class LoginController extends \yii\web\Controller
         }
         throw new \yii\web\ForbiddenHttpException('No authentication'); //403
     }
+
     public function actionIndex()
     {
-        $response['status'] = 200;
+        if(!$this->user->client->application){
+            $this->user->client->application = true;
+            $this->user->client->save();
+        }
+
         $response['id'] = $this->user->id;
+        $response['fName'] = $this->user->userData->fName;
+        $response['surname'] = $this->user->userData->surname;
+        $response['birthdate'] = $this->user->userData->birthdate;
+        $response['gender'] = $this->user->userData->gender;
+        $response['nif'] = $this->user->userData->nif;
+        $response['phone'] = $this->user->userData->phone;
+        $response['balance'] = $this->user->client->balance;
         $response['role'] = $this->user->authAssignment->item_name;
         $response['token'] = $this->user->auth_key;
 
-        $json = json_encode($response);
-
-        return $json;
+        return json_encode($response);
     }
 }

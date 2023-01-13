@@ -29,7 +29,8 @@
         "kartik-v/yii2-widget-activeform": "dev-master",
         "kartik-v/yii2-widget-datepicker": "dev-master",
         "kartik-v/yii2-field-range": "*",
-        "kartik-v/yii2-widget-timepicker": "*"
+        "kartik-v/yii2-widget-timepicker": "*",
+        "php-mqtt/client": "^1.7"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

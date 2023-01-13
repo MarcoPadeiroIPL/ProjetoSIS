@@ -4,6 +4,7 @@ namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
 use common\models\User;
+use backend\modules\api\components\CustomAuth;
 
 class UserController extends ActiveController
 {
@@ -12,36 +13,36 @@ class UserController extends ActiveController
 
     public function behaviors()
     {
+        \Yii::$app->params['id'] = 0;
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => \yii\filters\auth\QueryParamAuth::class,
+            'class' => CustomAuth::class,
+            'auth' => [$this, 'authCustom'],
         ];
         return $behaviors;
-    }
-
-    // custom action para facilitar obter os proprios dados
-    public function actionMe(){
-        return User::findOne([\Yii::$app->user->getId()]);
     }
 
     public function actions()
     {
         $actions = parent::actions();
 
-        unset($actions['create']);
+        // dar disable de todas as actions desnecessarias
+        unset($actions['create'], $actions['view'], $actions['delete']);
+
+        // customize the data provider preparation with the "prepareDataProvider()" method
+        $actions['index']['prepareDataProvider'] = [$this, 'userInfo'];
 
         return $actions;
     }
 
+    public function userInfo()
+    {
+        return $this->modelClass::findOne([\Yii::$app->params['id']]);
+    }
 
     public function checkAccess($action, $model = null, $params = [])
     {
-        if ('admin' !== \Yii::$app->user->identity->authAssignment->item_name) {
-            if ($action === 'index') {
-                throw new \yii\web\ForbiddenHttpException(sprintf('You cannot list other accounts'));
-            }
-            if ($model->id !== \Yii::$app->user->id)
-                throw new \yii\web\ForbiddenHttpException(sprintf('You cannot manage other accounts'));
-        }
+        if ($action == 'update' && $model->client_id !== \Yii::$app->params['id'])
+            throw new \yii\web\ForbiddenHttpException(sprintf('You only can manage your balance requests!'));
     }
 }

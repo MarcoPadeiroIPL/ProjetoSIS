@@ -48,7 +48,7 @@ class Ticket extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fName', 'surname', 'gender', 'age', 'client_id', 'flight_id', 'seatLinha', 'seatCol', 'receipt_id', 'tariff_id', 'tariffType'], 'required'],
+            [['fName', 'surname', 'gender', 'age', 'flight_id', 'seatLinha', 'seatCol', 'tariffType'], 'required'],
             [['gender', 'tariffType'], 'string'],
             ['gender', 'in', 'range' => ['M', 'F']],
             ['tariffType', 'in', 'range' => ['economic', 'normal', 'luxury']],
@@ -63,7 +63,7 @@ class Ticket extends \yii\db\ActiveRecord
             [['luggage_1'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_1' => 'id']],
             [['luggage_2'], 'exist', 'skipOnError' => true, 'targetClass' => Config::class, 'targetAttribute' => ['luggage_2' => 'id']],
             [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::class, 'targetAttribute' => ['receipt_id' => 'id']],
-            [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::class, 'targetAttribute' => ['receipt_id' => 'id']],
+            [['tariff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tariff::class, 'targetAttribute' => ['tariff_id' => 'id']],
             ['seatCol', 'compare', 'compareValue' => 12, 'operator' => '<=', 'message' => 'Columns range from 1 to 12.'],
             ['seatCol', 'compare', 'compareValue' => 1, 'operator' => '>=', 'message' => 'Columns range from 1 to 12.'],
             ['seatLinha', 'compare', 'compareValue' => 'L', 'operator' => '<=', 'message' => 'Columns range from A to L.'],

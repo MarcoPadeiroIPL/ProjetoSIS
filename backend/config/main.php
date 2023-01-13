@@ -48,15 +48,53 @@ return [
                     'except' => ['create'],
                     'extraPatterns' => ['GET me' => 'me'],
                 ],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/flight', 'only' => ['index', 'view', 'find'], 'extraPatterns' => ['GET find/<airportDeparture>/<airportArrival>' => 'find']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/airport'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/balance-req', 'pluralize' => false, 'except' => ['update'], 'extraPatterns' => ['GET me' => 'me']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/receipt'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/config'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/tariff'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/ticket', 'extraPatterns' => ['GET me' => 'me']],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/airplane'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/login', 'only' => ['index']],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/flight',
+                    'except' => ['create', 'delete'],
+                    'extraPatterns' => [
+                        'GET <airportDeparture>/<airportArrival>' => 'find',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/airport'
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/balance-req',
+                    'pluralize' => false,
+                    'except' => ['update'],
+                    'extraPatterns' => ['GET decided' => 'decided']
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['api/luggages' => 'api/config'],
+                    'only' => ['index'],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/tariff'
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/user',
+                    'except' => ['create', 'view', 'delete'],
+                    'pluralize' => false,
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/ticket',
+                    'extraPatterns' => [
+                        'POST pay' => 'pay',
+                        'POST checkin' => 'checkin'
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/login',
+                    'only' => ['index']
+                ],
             ],
         ],
     ],

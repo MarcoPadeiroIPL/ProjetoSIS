@@ -61,6 +61,11 @@ class Client extends \yii\db\ActiveRecord
         return $this->hasMany(Ticket::class, ['client_id' => 'user_id']);
     }
 
+    public function getRequests()
+    {
+        return $this->hasMany(BalanceReq::class, ['client_id' => 'user_id']);
+    }
+
     /**
      * Gets query for [[User]].
      *

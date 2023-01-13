@@ -103,8 +103,9 @@ class BalanceReqController extends Controller
         if ($balanceReq->validate() && $balanceReqEmployee->validate() && $client->validate()) {
             $balanceReq->save() && $balanceReqEmployee->save() && $client->save();
             \Yii::$app->session->setFlash('success', "Accepted successfuly");
-        } else
+        } else {
             \Yii::$app->session->setFlash('error', "Error while trying to save");
+        }
 
 
         return $this->redirect('index');
@@ -133,6 +134,15 @@ class BalanceReqController extends Controller
             \Yii::$app->session->setFlash('error', "Error while trying to save");
         else
             \Yii::$app->session->setFlash('success', "Declined successfuly");
+
+        $server   = 'balanceReqUpdate';
+        $port     = 1883;
+        $clientId = $balanceReq->client_id;
+
+        $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);
+        $mqtt->connect();
+        $mqtt->publish('php-mqtt/client/test', 'Updated balance requests', 0);
+        $mqtt->disconnect();
 
         return $this->redirect('index');
     }
