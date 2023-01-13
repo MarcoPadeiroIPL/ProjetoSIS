@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Exception;
 use common\models\BalanceReq;
 use common\models\BalanceReqEmployee;
 use common\models\Client;
@@ -10,6 +11,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+
+use PhpMqtt\Client\MqttClient;
+
 
 /**
  * BalanceReqController implements the CRUD actions for BalanceReq model.
@@ -26,12 +30,12 @@ class BalanceReqController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'accept', 'decline', 'history'],
+                        'actions' => ['index', 'accept', 'decline', 'history', 'mosquitto'],
                         'allow' => true,
                         'roles' => ['admin', 'supervisor'],
                     ],
                     [
-                        'actions' => ['index', 'accept', 'decline', 'history'],
+                        'actions' => ['index', 'accept', 'decline', 'history', 'mosquitto'],
                         'allow' => false,
                         'roles' => ['ticketOperator', 'client', '?'],
                     ],
@@ -78,6 +82,7 @@ class BalanceReqController extends Controller
 
     public function actionAccept($id)
     {
+
         if (!\Yii::$app->user->can('updateBalanceReq'))
             throw new \yii\web\ForbiddenHttpException('Access denied');
 
@@ -103,13 +108,22 @@ class BalanceReqController extends Controller
         if ($balanceReq->validate() && $balanceReqEmployee->validate() && $client->validate()) {
             $balanceReq->save() && $balanceReqEmployee->save() && $client->save();
             \Yii::$app->session->setFlash('success', "Accepted successfuly");
+
+            try {
+                $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+                $client->connect();
+                $client->publish($balanceReq->client_id, 'request', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
         } else {
             \Yii::$app->session->setFlash('error', "Error while trying to save");
         }
 
-
         return $this->redirect('index');
     }
+
     public function actionDecline($id)
     {
         if (!\Yii::$app->user->can('updateBalanceReq'))
@@ -130,19 +144,18 @@ class BalanceReqController extends Controller
         $balanceReq->status = 'Declined';
         $balanceReq->decisionDate = date('Y-m-d H:i:s');
 
-        if (!$balanceReqEmployee->save() || !$balanceReq->save())
+        if (!$balanceReqEmployee->save() || !$balanceReq->save()){
             \Yii::$app->session->setFlash('error', "Error while trying to save");
-        else
+            try {
+                $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+                $client->connect();
+                $client->publish($balanceReq->client_id, 'request', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
+        } else
             \Yii::$app->session->setFlash('success', "Declined successfuly");
-
-        $server   = 'balanceReqUpdate';
-        $port     = 1883;
-        $clientId = $balanceReq->client_id;
-
-        $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);
-        $mqtt->connect();
-        $mqtt->publish('php-mqtt/client/test', 'Updated balance requests', 0);
-        $mqtt->disconnect();
 
         return $this->redirect('index');
     }

@@ -59,6 +59,8 @@ class Flight extends \yii\db\ActiveRecord
         $fields= parent::fields();
         $fields[]='tariff';
         $fields[]='airplane';
+        $fields[]='airportDeparture';
+        $fields[]='airportArrival';
         return $fields;
     }
     /**

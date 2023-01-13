@@ -12,7 +12,6 @@ class AirportController extends ActiveController
 
     public function behaviors()
     {
-        \Yii::$app->params['id'] = 0;
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => CustomAuth::class,

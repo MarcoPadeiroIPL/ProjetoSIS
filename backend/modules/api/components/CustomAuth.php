@@ -17,6 +17,7 @@ class CustomAuth extends AuthMethod
                 throw new \yii\web\ForbiddenHttpException('No authentication'); //403
             }
             \Yii::$app->params['id'] = $user->id;
+            \Yii::$app->params['role'] = $user->authAssignment->item_name;
             return $user;
         }
     }

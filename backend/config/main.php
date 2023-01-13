@@ -52,6 +52,7 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/flight',
                     'except' => ['create', 'delete'],
+                    'pluralize' => false,
                     'extraPatterns' => [
                         'GET <airportDeparture>/<airportArrival>' => 'find',
                     ],
@@ -87,7 +88,7 @@ return [
                     'controller' => 'api/ticket',
                     'extraPatterns' => [
                         'POST pay' => 'pay',
-                        'POST checkin' => 'checkin'
+                        'POST checkin' => 'checkin',
                     ]
                 ],
                 [

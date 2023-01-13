@@ -12,7 +12,6 @@ class FlightController extends ActiveController
 
     public function behaviors()
     {
-        \Yii::$app->params['id'] = 0;
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => CustomAuth::class,
@@ -34,10 +33,13 @@ class FlightController extends ActiveController
 
     public function actionView($id)
     {
-        $flight =  Flight::find()->with('tariff')->with('airplane')->where(['id' => $id])->one();
-        return $flight ? $flight : throw new \yii\web\NotFoundHttpException(sprintf('No flights were found'));
-            
+        $flight =  Flight::find()
+            ->with('tariff')
+            ->with('airplane')
+            ->where(['id' => $id])
+            ->one();
 
+        return $flight ? $flight : throw new \yii\web\NotFoundHttpException(sprintf('No flights were found'));
     }
 
     public function actionFind($airportDeparture, $airportArrival)

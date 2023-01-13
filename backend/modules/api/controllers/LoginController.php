@@ -34,7 +34,7 @@ class LoginController extends \yii\web\Controller
         $user = User::findByUsername($username);
         if ($user && $user->validatePassword($password)) {
             $this->user = $user;
-            return $this->user;
+            return $user;
         }
         throw new \yii\web\ForbiddenHttpException('No authentication'); //403
     }

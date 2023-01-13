@@ -95,6 +95,15 @@ class Ticket extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields= parent::fields();
+        $fields[]='receipt';
+        $fields[]='tariff';
+        $fields[]='flight';
+        return $fields;
+    }
+
     /**
      * Gets query for [[CheckedIn0]].
      *

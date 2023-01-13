@@ -4,9 +4,10 @@ namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
 use backend\modules\api\components\CustomAuth;
+use common\models\Ticket;
+use common\models\Flight;
 use common\models\Receipt;
 use common\models\Client;
-use common\models\Flight;
 use Exception;
 
 class TicketController extends ActiveController
@@ -15,6 +16,8 @@ class TicketController extends ActiveController
 
     public function behaviors()
     {
+        \Yii::$app->params['id'] = 0;
+        \Yii::$app->params['role'] = null;
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => CustomAuth::class,
@@ -29,7 +32,7 @@ class TicketController extends ActiveController
 
         $actions['index']['prepareDataProvider'] = [$this, 'sendTickets'];
 
-        unset($actions['create']);
+        unset($actions['view'], $actions['create']);
 
         return $actions;
     }
@@ -37,14 +40,29 @@ class TicketController extends ActiveController
 
     public function sendTickets()
     {
-        $tickets = Client::findOne([\Yii::$app->user->id])->tickets;
+        $tickets = Ticket::find()->where(['client_id' => \Yii::$app->params['id']])
+            ->with('tariff')
+            ->with('flight')
+            ->with('flight.airplane')
+            ->with('flight.airportDeparture')
+            ->with('flight.airportArrival')
+            ->with('receipt')
+            ->all();
 
-        foreach($tickets as $ticket) {
-            $ticket = $ticket['attributes'];
-            $ticket = $ticket->flight;
-        }
+        return $tickets ? $tickets : throw new \yii\web\NotFoundHttpException(sprintf('No tickets were found'));
+    }
+    public function actionView($id)
+    {
+        $ticket = Ticket::find()->where(['id' => $id])
+            ->with('tariff')
+            ->with('flight')
+            ->with('receipt')
+            ->one();
 
-        return $tickets;
+        if($ticket)
+            $this->checkAccess('view', $ticket);
+
+        return $ticket ? $ticket : throw new \yii\web\NotFoundHttpException(sprintf('No tickets were found'));
     }
 
     public function actionCreate()
@@ -55,29 +73,37 @@ class TicketController extends ActiveController
         $receipt->purchaseDate = date('Y-m-d H:i:s');
         $receipt->total = 0;
         $receipt->status = 'Pending';
-        $receipt->client_id = \Yii::$app->user->id;
+        $receipt->client_id = \Yii::$app->params['id'];
 
         if (!$receipt->save())
             throw new \yii\web\ServerErrorHttpException(sprintf('There was an unexpected error while saving'));
 
         if ($this->request->isPost) {
+            // $model->load nao funciona por algum motivo
             $model->fName = $_POST['fName'];
             $model->surname = $_POST['surname'];
             $model->age = $_POST['age'];
             $model->gender = $_POST['gender'];
             $model->seatLinha = $_POST['seatLinha'];
             $model->seatCol = $_POST['seatCol'];
-            $model->flight_id = $_POST['flight_id'];
+            $flight = Flight::findOne([$_POST['flight_id']]);
             $model->tariffType = $_POST['tariffType'];
-            $model->tariff_id = Flight::findOne([$model->flight_id])->activeTariff()->id;
+
+            $model->flight_id = $flight->id;
+            $model->tariff_id = $flight->activeTariff()->id;
             $model->receipt_id = $receipt->id;
-            $model->client_id = \Yii::$app->user->id;
+            $model->client_id = $receipt->client_id;
+
+            if($flight->status != 'Available')
+                throw new \yii\web\BadRequestHttpException(sprintf('Flight is not available'));
+
+            if(!$flight->checkIfSeatAvailable($model->seatCol, $model->seatLinha))
+                throw new \yii\web\BadRequestHttpException(sprintf('Seats are already taken!'));
+
+
+
             if ($model->save()) {
-                $data = ['name' => 'Success', 'message' => 'Ticket created successfully', 'code' => 200, 'status' => 200];
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                \Yii::$app->response->statusCode = $data['status'];
-                \Yii::$app->response->data = ['success' => true, 'data' => $data];
-                return;
+                return $this->asJson(['name' => 'Success', 'message' => 'Ticket created successfully', 'code' => 200, 'status' => 200]);
             } else {
                 throw new \yii\web\BadRequestHttpException(sprintf('Bad request'));
             }
@@ -92,13 +118,14 @@ class TicketController extends ActiveController
 
         try {
             $model = $this->modelClass::findOne([$_POST['ticket_id']]);
-            $this->checkAccess('pay', $model);
         } catch (Exception $ex) {
             throw new \yii\web\NotFoundHttpException(sprintf('Ticket not found'));
         }
 
+        $this->checkAccess('pay', $model);
+
         $receipt = Receipt::findOne([$model->receipt_id]);
-        $client = Client::findOne([\Yii::$app->user->id]);
+        $client = Client::findOne([\Yii::$app->params['id']]);
         $receipt->refreshTotal();
 
         // verificar se a fatura ja nao foi paga
@@ -135,29 +162,28 @@ class TicketController extends ActiveController
             throw new \yii\web\NotFoundHttpException(sprintf('Ticket not found'));
         }
 
-        if (\Yii::$app->user->identity->authAssignment->item_name == 'client')
-            throw new \yii\web\ForbiddenHttpException(sprintf('You cannot checkin tickets'));
-
+        $this->checkAccess('checkin', $model);
 
         if ($model->receipt->status != 'Complete')
             throw new \yii\web\ForbiddenHttpException(sprintf('Ticket not payed for yet!'));
 
-        $model->checkedIn = \Yii::$app->user->identity->getId();
+        if ($model->checkedIn != NULL)
+            throw new \yii\web\ForbiddenHttpException(sprintf('Ticket already checked in!'));
 
+        $model->checkedIn = \Yii::$app->params['id'];
 
         if (!$model->save())
             throw new \yii\web\ServerErrorHttpException(sprintf('There was an error while trying to checkin!'));
 
-        $data = ['name' => 'Success', 'message' => 'Ticket checkedin successfully', 'code' => 200, 'status' => 200];
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        \Yii::$app->response->statusCode = $data['status'];
-        \Yii::$app->response->data = ['success' => true, 'data' => $data];
-        return;
+        return $this->asJson(['name' => 'Success', 'message' => 'Ticket checkedin successfully', 'code' => 200, 'status' => 200]);
     }
 
     public function checkAccess($action, $model = null, $params = [])
     {
-        if ($action !== 'create' && $action !== 'index' && $model->client_id !== \Yii::$app->user->id)
-            throw new \yii\web\ForbiddenHttpException(sprintf('You only can view your tickets'));
+        return \Yii::$app->params['role'];
+        if($action == 'checkin' && \Yii::$app->params['role'] !== 'client')
+            return true;
+        if ($action !== 'create' && $action !== 'index' && $model->client_id != \Yii::$app->params['id'])
+            throw new \yii\web\ForbiddenHttpException(sprintf('You only can manage your tickets'));
     }
 }

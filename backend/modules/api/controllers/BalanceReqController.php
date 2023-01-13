@@ -48,22 +48,6 @@ class BalanceReqController extends ActiveController
             throw new \yii\web\BadRequestHttpException(sprintf('Bad request'));
     }
 
-    public function actionDecided()
-    {
-        $requests = \common\models\Client::findOne(['user_id' => \Yii::$app->params['id']])->requests;
-
-        $decidedRequests = [];
-
-        foreach ($requests as $request) {
-            if ($request->status != 'Ongoing'){
-                $decidedRequests += $request['attributes'];
-            }
-        }
-        var_dump($decidedRequests);
-
-        return json_encode($decidedRequests);
-    }
-
     public function actionDelete($id)
     {
         try {
