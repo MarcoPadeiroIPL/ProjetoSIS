@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use PhpMqtt\Client\MqttClient;
+use Exception;
 use common\models\User;
 use common\models\Client;
 use yii\data\ActiveDataProvider;
@@ -89,9 +91,17 @@ class ClientController extends Controller
         $model = $this->findModel($user_id);
 
         if ($model->load(\Yii::$app->request->post())) {
-            if ($model->save())
+            if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Client updated successfully.");
-            else
+                try {
+                    $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+                    $client->connect();
+                    $client->publish($model->user_id, 'user', 1);
+                    $client->disconnect();
+                } catch (Exception $ex) {
+                    throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                }
+            } else
                 \Yii::$app->session->setFlash('error', "Client not updated sucessfully.");
             return $this->redirect(['index']);
         }

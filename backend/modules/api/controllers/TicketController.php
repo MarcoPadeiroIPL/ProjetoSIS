@@ -10,6 +10,8 @@ use common\models\Receipt;
 use common\models\Client;
 use Exception;
 
+use PhpMqtt\Client\MqttClient;
+
 class TicketController extends ActiveController
 {
     public $modelClass = 'common\models\Ticket';
@@ -59,7 +61,7 @@ class TicketController extends ActiveController
             ->with('receipt')
             ->one();
 
-        if($ticket)
+        if ($ticket)
             $this->checkAccess('view', $ticket);
 
         return $ticket ? $ticket : throw new \yii\web\NotFoundHttpException(sprintf('No tickets were found'));
@@ -94,10 +96,10 @@ class TicketController extends ActiveController
             $model->receipt_id = $receipt->id;
             $model->client_id = $receipt->client_id;
 
-            if($flight->status != 'Available')
+            if ($flight->status != 'Available')
                 throw new \yii\web\BadRequestHttpException(sprintf('Flight is not available'));
 
-            if(!$flight->checkIfSeatAvailable($model->seatCol, $model->seatLinha))
+            if (!$flight->checkIfSeatAvailable($model->seatCol, $model->seatLinha))
                 throw new \yii\web\BadRequestHttpException(sprintf('Seats are already taken!'));
 
 
@@ -175,13 +177,21 @@ class TicketController extends ActiveController
         if (!$model->save())
             throw new \yii\web\ServerErrorHttpException(sprintf('There was an error while trying to checkin!'));
 
+        try {
+            $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+            $client->connect();
+            $client->publish($model->client_id, 'ticket', 1);
+            $client->disconnect();
+        } catch (Exception $ex) {
+            throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+        }
         return $this->asJson(['name' => 'Success', 'message' => 'Ticket checkedin successfully', 'code' => 200, 'status' => 200]);
     }
 
     public function checkAccess($action, $model = null, $params = [])
     {
         return \Yii::$app->params['role'];
-        if($action == 'checkin' && \Yii::$app->params['role'] !== 'client')
+        if ($action == 'checkin' && \Yii::$app->params['role'] !== 'client')
             return true;
         if ($action !== 'create' && $action !== 'index' && $model->client_id != \Yii::$app->params['id'])
             throw new \yii\web\ForbiddenHttpException(sprintf('You only can manage your tickets'));
