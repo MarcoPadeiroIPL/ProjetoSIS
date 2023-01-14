@@ -15,7 +15,9 @@ return [
     'modules' => [],
     'components' => [
         'request' => [
-            'csrfParam' => '_csrf-backend',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -45,14 +47,14 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/user',
-                    'except' => ['create'],
-                    'extraPatterns' => ['GET me' => 'me'],
+                    'extraPatterns' => [
+                        'PUT change' => 'change',
+                    ],
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/flight',
                     'except' => ['create', 'delete'],
-                    'pluralize' => false,
                     'extraPatterns' => [
                         'GET <airportDeparture>/<airportArrival>' => 'find',
                     ],
@@ -65,36 +67,27 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/balance-req',
                     'pluralize' => false,
-                    'except' => ['update'],
-                    'extraPatterns' => ['GET decided' => 'decided']
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => ['api/luggages' => 'api/config'],
-                    'only' => ['index'],
-                ],
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/tariff'
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/user',
-                    'except' => ['create', 'view', 'delete'],
                     'pluralize' => false,
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/ticket',
                     'extraPatterns' => [
-                        'POST pay' => 'pay',
-                        'POST checkin' => 'checkin',
+                        'PUT pay/<id>' => 'pay',
+                        'PUT checkin/<id>' => 'checkin',
                     ]
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/login',
-                    'only' => ['index']
                 ],
             ],
         ],

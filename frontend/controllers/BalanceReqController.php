@@ -11,6 +11,8 @@ use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use common\models\Client;
 use yii\filters\AccessControl;
+use PhpMqtt\Client\MqttClient;
+use Exception;
 
 class BalanceReqController extends Controller
 {
@@ -53,7 +55,6 @@ class BalanceReqController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post'],
                     'delete' => ['POST'],
                 ],
             ],
@@ -118,6 +119,14 @@ class BalanceReqController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->client_id == \Yii::$app->user->identity->getId() && $model->save()) {
                 return $this->redirect(['index']);
+                try {
+                    $client = new MqttClient('127.0.0.1', 1883);
+                    $client->connect();
+                    $client->publish($model->client_id, 'request', 1);
+                    $client->disconnect();
+                } catch (Exception $ex) {
+                    throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                }
             }
         }
 
@@ -140,9 +149,17 @@ class BalanceReqController extends Controller
             return $this->redirect(['index']);
         }
 
-        if ($balanceReq->deleteBalanceReq())
+        if ($balanceReq->deleteBalanceReq()) {
             \Yii::$app->session->setFlash('success', "Balance requests succesfully deleted");
-        else
+            try {
+                $client = new MqttClient('127.0.0.1', 1883);
+                $client->connect();
+                $client->publish($balanceReq->client_id, 'request', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
+        } else
             \Yii::$app->session->setFlash('error', "There was an error while trying to delete the balance request");
 
         return $this->redirect(['index']);

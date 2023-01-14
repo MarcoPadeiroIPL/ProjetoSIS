@@ -88,7 +88,7 @@ class ConfigController extends Controller
             if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Config created successfully.");
                 try {
-                    $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+                    $client = new MqttClient('127.0.0.1', 1883);
                     $client->connect();
                     $client->publish('config', 'update', 1);
                     $client->disconnect();
@@ -119,7 +119,7 @@ class ConfigController extends Controller
             if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Config updated successfully.");
                 try {
-                    $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+                    $client = new MqttClient('127.0.0.1', 1883);
                     $client->connect();
                     $client->publish('config', 'update', 1);
                     $client->disconnect();
@@ -152,7 +152,7 @@ class ConfigController extends Controller
         if ($model->save()) {
             \Yii::$app->session->setFlash('success', "Config deleted successfully.");
             try {
-                $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+                $client = new MqttClient('127.0.0.1', 1883);
                 $client->connect();
                 $client->publish('config', 'update', 1);
                 $client->disconnect();

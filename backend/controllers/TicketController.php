@@ -87,7 +87,7 @@ class TicketController extends Controller
         if ($model->save()) {
             \Yii::$app->session->setFlash('success', "Ticket checked in successfully");
             try {
-                $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+                $client = new MqttClient('127.0.0.1', 1883);
                 $client->connect();
                 $client->publish($model->client_id, 'ticket', 1);
                 $client->disconnect();

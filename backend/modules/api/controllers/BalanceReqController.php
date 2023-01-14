@@ -35,16 +35,17 @@ class BalanceReqController extends ActiveController
     {
         $model = new $this->modelClass;
 
-        if ($this->request->isPost) {
-            $model->amount = $_POST['amount'];
-            $model->status = $_POST['status'];
-            $model->requestDate = $_POST['requestDate'];
-            $model->client_id = \Yii::$app->params['id'];
-            if ($model->save())
-                return $this->asJson(['name' => 'Success', 'message' => 'Balance Request created successfully', 'code' => 200, 'status' => 200]);
-            else
-                throw new \yii\web\BadRequestHttpException(sprintf('Bad request'));
-        } else
+        $data = \Yii::$app->request->getRawBody();
+        $data = json_decode($data);
+
+        $model->amount = $data->amount;
+        $model->status = 'Ongoing';
+        $model->requestDate = date('Y-m-d H:i:s');
+        $model->client_id = \Yii::$app->params['id'];
+
+        if ($model->save())
+            return $this->asJson(['name' => 'Success', 'message' => 'Balance Request created successfully', 'code' => 200, 'status' => 200]);
+        else
             throw new \yii\web\BadRequestHttpException(sprintf('Bad request'));
     }
 

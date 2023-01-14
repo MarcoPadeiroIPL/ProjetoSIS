@@ -14,6 +14,8 @@ use common\models\Flight;
 use common\models\Config;
 use common\models\Receipt;
 use yii\filters\AccessControl;
+use PhpMqtt\Client\MqttClient;
+use Exception;
 
 class TicketController extends Controller
 {
@@ -83,7 +85,7 @@ class TicketController extends Controller
         if (!\Yii::$app->user->can('listTicket')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
-            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])->andWhere('checkedIn IS NULL ')]);
+        $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])->andWhere('checkedIn IS NULL ')]);
 
 
         return $this->render('index', [
@@ -96,7 +98,7 @@ class TicketController extends Controller
         if (!\Yii::$app->user->can('listTicket')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
-            $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])->andWhere('checkedIn > 0')]);
+        $dataProvider = new ActiveDataProvider(['query' => Ticket::find()->where(['client_id' => \Yii::$app->user->identity->getId()])->andWhere('checkedIn > 0')]);
 
 
         return $this->render('history', [
@@ -133,6 +135,14 @@ class TicketController extends Controller
             // caso consiga criar o bilhete incrementa o current passanger
             if ($ticket->load($this->request->post()) && $ticket->generateTicket($receipt, $flight, $tariffType)) {
                 return $this->redirect(['receipt/pay', 'id' => $receipt->id]);
+                try {
+                    $client = new MqttClient('127.0.0.1', 1883);
+                    $client->connect();
+                    $client->publish($ticket->client_id, 'ticket', 1);
+                    $client->disconnect();
+                } catch (Exception $ex) {
+                    throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                }
             }
 
             // caso nao crie o bilhete apaga a fatura se nao tiver mais nenhum bilhete associado
@@ -163,9 +173,17 @@ class TicketController extends Controller
             $this->redirect(['ticket/index']);
         }
 
-        if ($ticket->shred())
+        if ($ticket->shred()) {
             \Yii::$app->session->setFlash('success', "Successfuly deleted ticket");
-        else
+            try {
+                $client = new MqttClient('127.0.0.1', 1883);
+                $client->connect();
+                $client->publish($ticket->client_id, 'ticket', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
+        } else
             \Yii::$app->session->setFlash('error', "There was an error while trying to delete the ticket");
 
         $this->redirect(['ticket/index']);

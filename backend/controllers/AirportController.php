@@ -9,6 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use PhpMqtt\Client\MqttClient;
+use Exception;
+
 class AirportController extends Controller
 {
     public function behaviors()
@@ -87,9 +90,17 @@ class AirportController extends Controller
         $model = new Airport();
 
         if ($this->request->isPost && $model->load(\Yii::$app->request->post())) {
-            if ($model->save())
+            if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Ariport created successfully.");
-            else
+                try {
+                    $client = new MqttClient('127.0.0.1', 1883);
+                    $client->connect();
+                    $client->publish('airport', 'update', 0);
+                    $client->disconnect();
+                } catch (Exception $ex) {
+                    throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                }
+            } else
                 \Yii::$app->session->setFlash('error', "Airport not saved.");
             return $this->redirect(['index']);
         }
@@ -110,9 +121,17 @@ class AirportController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(\Yii::$app->request->post())) {
-            if ($model->save())
+            if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Airport updated successfully.");
-            else
+                try {
+                    $client = new MqttClient('127.0.0.1', 1883);
+                    $client->connect();
+                    $client->publish('airport', 'update', 0);
+                    $client->disconnect();
+                } catch (Exception $ex) {
+                    throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                }
+            } else
                 \Yii::$app->session->setFlash('error', "Airport not updated sucessfully.");
             return $this->redirect(['index']);
         }
@@ -136,9 +155,17 @@ class AirportController extends Controller
         } else {
             $model->status = $model->status == "Operational" ? "Not Operational" : "Operational";
 
-            if ($model->save())
+            if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Airport deleted successfully.");
-            else
+                try {
+                    $client = new MqttClient('127.0.0.1', 1883);
+                    $client->connect();
+                    $client->publish('airport', 'update', 0);
+                    $client->disconnect();
+                } catch (Exception $ex) {
+                    throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                }
+            } else
                 \Yii::$app->session->setFlash('error', "Airport not deleted sucessfully.");
         }
 

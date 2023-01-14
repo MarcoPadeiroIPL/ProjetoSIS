@@ -110,7 +110,7 @@ class BalanceReqController extends Controller
             \Yii::$app->session->setFlash('success', "Accepted successfuly");
 
             try {
-                $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
+                $client = new MqttClient('127.0.0.1', 1883);
                 $client->connect();
                 $client->publish($balanceReq->client_id, 'request', 1);
                 $client->disconnect();
