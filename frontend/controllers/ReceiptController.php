@@ -13,6 +13,9 @@ use yii\filters\AccessControl;
 use common\models\BalanceReq;
 use common\models\Ticket;
 
+use PhpMqtt\Client\MqttClient;
+use Exception;
+
 class ReceiptController extends Controller
 {
     public function behaviors()
@@ -125,9 +128,17 @@ class ReceiptController extends Controller
             return $this->redirect(['index']);
         }
 
-        if ($receipt->shred())
+        if ($receipt->shred()) {
             \Yii::$app->session->setFlash('success', "Receipt deleted successfully!");
-        else
+            try {
+                $client = new MqttClient('127.0.0.1', 1883);
+                $client->connect();
+                $client->publish($receipt->client_id, 'ticket', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
+        } else
             \Yii::$app->session->setFlash('error', "The receipt couldn't be deleted because it's already completed.");
 
         return $this->redirect(['index']);
@@ -149,9 +160,17 @@ class ReceiptController extends Controller
             return $this->redirect(['index']);
         }
 
-        if ($ticket->shred())
+        if ($ticket->shred()) {
             \Yii::$app->session->setFlash('success', "Ticket deleted successfully!");
-        else
+            try {
+                $client = new MqttClient('127.0.0.1', 1883);
+                $client->connect();
+                $client->publish($receipt->client_id, 'ticket', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
+        } else
             \Yii::$app->session->setFlash('error', "The ticket couldn't be deleted.");
 
         if (count($receipt->tickets) > 0)
@@ -162,7 +181,8 @@ class ReceiptController extends Controller
         }
     }
 
-    public function actionPay($id) {
+    public function actionPay($id)
+    {
         if (!\Yii::$app->user->can('updateReceipt')) {
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
@@ -196,6 +216,14 @@ class ReceiptController extends Controller
 
                 // avisar o cliente se conseguiu guardar ou nao 
                 if ($client->save() && $receipt->save()) {
+                    try {
+                        $client = new MqttClient('127.0.0.1', 1883);
+                        $client->connect();
+                        $client->publish($receipt->client_id, 'ticket', 1);
+                        $client->disconnect();
+                    } catch (Exception $ex) {
+                        throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                    }
                     \Yii::$app->session->setFlash('success', "Purchase completed successfully!");
                     return $this->redirect(['view', 'id' => $receipt->id]);
                 } else
@@ -233,9 +261,17 @@ class ReceiptController extends Controller
         $req->client_id = $receipt->client_id;
         $req->amount = ($client->application ? $receipt->total - $receipt->total * 0.05 : $receipt->total) - $client->balance;
         $req->requestDate = date('Y-m-d H:i:s');
-        if ($req->save())
+        if ($req->save()) {
             \Yii::$app->session->setFlash('success', "Successfully requested " . $req->amount . "€");
-        else
+            try {
+                $client = new MqttClient('127.0.0.1', 1883);
+                $client->connect();
+                $client->publish($receipt->client_id, 'ticket', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
+        } else
             \Yii::$app->session->setFlash('error', "There was an error while completing the balance request, please try again later.");
 
         return $this->redirect(['pay', 'id' => $receipt->id]);

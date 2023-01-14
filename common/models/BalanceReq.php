@@ -38,10 +38,10 @@ class BalanceReq extends \yii\db\ActiveRecord
             [['status'], 'string'],
             ['status', 'in', 'range' => ['Accepted', 'Declined', 'Ongoing', 'Cancelled']],
             [['requestDate', 'decisionDate'], 'safe'],
-            [['requestDate', 'decisionDate'], DateValidator::class, 'format' => 'php:Y-m-d H:i:s'],
             [['client_id'], 'integer'],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'user_id']],
             ['decisionDate', 'compare', 'compareAttribute' => 'requestDate', 'operator' => '>'],
+            ['requestDate', 'compare', 'compareValue' => date('Y-m-d H:i:s'), 'operator' => '<='],
         ];
     }
 

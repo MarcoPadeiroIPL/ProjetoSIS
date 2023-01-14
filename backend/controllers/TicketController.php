@@ -8,6 +8,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use PhpMqtt\Client\MqttClient;
+use Exception;
 
 class TicketController extends Controller
 {
@@ -82,9 +84,17 @@ class TicketController extends Controller
 
         $model->checkedIn = \Yii::$app->user->identity->getId();
 
-        if ($model->save())
+        if ($model->save()) {
             \Yii::$app->session->setFlash('success', "Ticket checked in successfully");
-        else
+            try {
+                $client = new MqttClient('127.0.0.1', 1883);
+                $client->connect();
+                $client->publish($model->client_id, 'ticket', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
+        } else
             \Yii::$app->session->setFlash('error', "There was an error while trying to check in the ticket!");
 
         return $this->redirect(['index']);

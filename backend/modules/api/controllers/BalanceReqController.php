@@ -3,7 +3,8 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
-use common\models\BalanceReq;
+use backend\modules\api\components\CustomAuth;
+use Exception;
 
 class BalanceReqController extends ActiveController
 {
@@ -11,38 +12,70 @@ class BalanceReqController extends ActiveController
 
     public function behaviors()
     {
+        \Yii::$app->params['id'] = 0;
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => \yii\filters\auth\QueryParamAuth::class,
+            'class' => CustomAuth::class,
+            'auth' => [$this, 'authCustom'],
         ];
         return $behaviors;
-    }
-
-    public function actionMe()
-    {
-        return BalanceReq::find()
-            ->where('client_id = ' . \Yii::$app->user->getId())
-            ->all();
     }
 
     public function actions()
     {
         $actions = parent::actions();
 
-        unset($actions['update']);
+        unset($actions['update'], $actions['create'], $actions['delete']);
+
+        $actions['index']['prepareDataProvider'] = [$this, 'ownRequests'];
 
         return $actions;
     }
+    public function actionCreate()
+    {
+        $model = new $this->modelClass;
 
+        $data = \Yii::$app->request->getRawBody();
+        $data = json_decode($data);
+
+        $model->amount = $data->amount;
+        $model->status = 'Ongoing';
+        $model->requestDate = date('Y-m-d H:i:s');
+        $model->client_id = \Yii::$app->params['id'];
+
+        if ($model->save())
+            return $this->asJson(['name' => 'Success', 'message' => 'Balance Request created successfully', 'code' => 200, 'status' => 200]);
+        else
+            throw new \yii\web\BadRequestHttpException(sprintf('Bad request'));
+    }
+
+    public function actionDelete($id)
+    {
+        try {
+            $model = $this->modelClass::findOne([$id]);
+        } catch (Exception $ex) {
+            throw new \yii\web\BadRequestHttpException(sprintf('Bad request'));
+        }
+
+        $this->checkAccess('delete', $model);
+
+        if ($model->status != 'Ongoing')
+            throw new \yii\web\ForbiddenHttpException(sprintf('You cannot delete balance requests that are already decided!'));
+
+        if ($model->delete())
+            return $this->asJson(['name' => 'Success', 'message' => 'Balance Request deleted successfully', 'code' => 200, 'status' => 200]);
+        else
+            throw new \yii\web\ServerErrorHttpException(sprintf('There was an unexpected error while trying to delete the balance request!'));
+    }
+
+    public function ownRequests()
+    {
+        return \common\models\Client::findOne(['user_id' => \Yii::$app->params['id']])->requests;
+    }
 
     public function checkAccess($action, $model = null, $params = [])
     {
-        if ('admin' !== \Yii::$app->user->identity->authAssignment->item_name) {
-            if ($action === 'index') {
-                throw new \yii\web\ForbiddenHttpException(sprintf('You can only list your balance requests'));
-            }
-            if ($model->client_id !== \Yii::$app->user->id)
-                throw new \yii\web\ForbiddenHttpException(sprintf('You can only list your balance requests'));
-        }
+        if ($action == 'delete' && $model->client_id !== \Yii::$app->params['id'])
+            throw new \yii\web\ForbiddenHttpException(sprintf('You only can manage your balance requests!'));
     }
 }

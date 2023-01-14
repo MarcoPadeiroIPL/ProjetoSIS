@@ -8,6 +8,9 @@ use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Exception;
+
+use PhpMqtt\Client\MqttClient;
 
 class ConfigController extends Controller
 {
@@ -82,9 +85,17 @@ class ConfigController extends Controller
         $model = new Config();
 
         if ($this->request->isPost && $model->load(\Yii::$app->request->post())) {
-            if ($model->save())
+            if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Config created successfully.");
-            else
+                try {
+                    $client = new MqttClient('127.0.0.1', 1883);
+                    $client->connect();
+                    $client->publish('config', 'update', 1);
+                    $client->disconnect();
+                } catch (Exception $ex) {
+                    throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                }
+            } else
                 \Yii::$app->session->setFlash('error', "Config not saved.");
             return $this->redirect(['index']);
         }
@@ -105,9 +116,17 @@ class ConfigController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(\Yii::$app->request->post())) {
-            if ($model->save())
+            if ($model->save()) {
                 \Yii::$app->session->setFlash('success', "Config updated successfully.");
-            else
+                try {
+                    $client = new MqttClient('127.0.0.1', 1883);
+                    $client->connect();
+                    $client->publish('config', 'update', 1);
+                    $client->disconnect();
+                } catch (Exception $ex) {
+                    throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+                }
+            } else
                 \Yii::$app->session->setFlash('error', "Config not updated successfully.");
             return $this->redirect(['index']);
         }
@@ -130,9 +149,17 @@ class ConfigController extends Controller
         // nao funciona por algum motivo
         $model->active = $model->active ? 0 : 1;
 
-        if ($model->save())
+        if ($model->save()) {
             \Yii::$app->session->setFlash('success', "Config deleted successfully.");
-        else
+            try {
+                $client = new MqttClient('127.0.0.1', 1883);
+                $client->connect();
+                $client->publish('config', 'update', 1);
+                $client->disconnect();
+            } catch (Exception $ex) {
+                throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+            }
+        } else
             \Yii::$app->session->setFlash('error', "Config not deleted successfully.");
         return $this->redirect(['index']);
     }
