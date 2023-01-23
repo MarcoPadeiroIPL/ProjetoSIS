@@ -94,7 +94,8 @@ class AirportController extends Controller
                 \Yii::$app->session->setFlash('success', "Ariport created successfully.");
                 try {
                     $client = new MqttClient('127.0.0.1', 1883);
-                    $client->connect();
+                    $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                    $client->connect($connectionSettings);
                     $client->publish('airport', 'update', 0);
                     $client->disconnect();
                 } catch (Exception $ex) {
@@ -125,7 +126,8 @@ class AirportController extends Controller
                 \Yii::$app->session->setFlash('success', "Airport updated successfully.");
                 try {
                     $client = new MqttClient('127.0.0.1', 1883);
-                    $client->connect();
+                    $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                    $client->connect($connectionSettings);
                     $client->publish('airport', 'update', 0);
                     $client->disconnect();
                 } catch (Exception $ex) {
@@ -159,7 +161,8 @@ class AirportController extends Controller
                 \Yii::$app->session->setFlash('success', "Airport deleted successfully.");
                 try {
                     $client = new MqttClient('127.0.0.1', 1883);
-                    $client->connect();
+                    $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                    $client->connect($connectionSettings);
                     $client->publish('airport', 'update', 0);
                     $client->disconnect();
                 } catch (Exception $ex) {

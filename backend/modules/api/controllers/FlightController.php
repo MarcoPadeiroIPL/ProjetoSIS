@@ -39,10 +39,11 @@ class FlightController extends ActiveController
             ->where(['id' => $id])
             ->one();
 
-        return $flight ? $flight : throw new \yii\web\NotFoundHttpException(sprintf('No flights were found'));
+        $error = ['name' => 'Success', 'message' => 'No tickets were found', 'code' => 204, 'status' => 204];
+        return $flight ? $flight : json_encode($error);
     }
 
-    public function actionFind($airportDeparture, $airportArrival)
+    public function actionFind($airportDeparture, $airportArrival, $departureDate)
     {
         $flights = Flight::find()
             ->with('tariff')
@@ -51,6 +52,23 @@ class FlightController extends ActiveController
             ->andWhere('airportArrival_id = ' . $airportArrival)
             ->all();
 
-        return $flights ? $flights : throw new \yii\web\NotFoundHttpException(sprintf('No flights were found to these airports'));
+            if (count($flights) > 0) {
+                foreach ($flights as $flight) {
+                    $interval[$flight->id] = abs(strtotime($flight->departureDate) - strtotime($departureDate));
+                }
+                asort($interval);
+                $selectedFlight = Flight::findOne([key($interval)]);
+
+                // se esta action nao for chamada por post
+                $flights = Flight::find()
+                    ->where('airportDeparture_id = ' . $airportDeparture)
+                    ->andWhere('airportArrival_id = ' . $airportArrival)
+                    ->andWhere(['status' => 'Available'])
+                    ->orderBy('departureDate')
+                    ->one();
+            }
+
+        $error = ['name' => 'Success', 'message' => 'No tickets were found', 'code' => 204, 'status' => 204];
+        return $flights ? $flights : json_encode($error);
     }
 }

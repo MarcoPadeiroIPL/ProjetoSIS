@@ -56,7 +56,7 @@ return [
                     'controller' => 'api/flight',
                     'except' => ['create', 'delete'],
                     'extraPatterns' => [
-                        'GET <airportDeparture>/<airportArrival>' => 'find',
+                        'GET <airportDeparture>/<airportArrival>/<departureDate>' => 'find',
                     ],
                 ],
                 [
@@ -83,6 +83,9 @@ return [
                     'extraPatterns' => [
                         'PUT pay/<id>' => 'pay',
                         'PUT checkin/<id>' => 'checkin',
+                        'GET upcoming' => 'upcoming',
+                        'GET pending' => 'pending',
+                        'GET past' => 'past',
                     ]
                 ],
                 [

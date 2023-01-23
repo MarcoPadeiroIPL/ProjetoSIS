@@ -2,6 +2,7 @@
 
 namespace backend\modules\api\controllers;
 
+use HttpResponse;
 use yii\rest\ActiveController;
 use backend\modules\api\components\CustomAuth;
 use common\models\Ticket;
@@ -9,6 +10,7 @@ use common\models\Flight;
 use common\models\Receipt;
 use common\models\Client;
 use Exception;
+use DateTime;
 
 use PhpMqtt\Client\MqttClient;
 
@@ -32,17 +34,16 @@ class TicketController extends ActiveController
     {
         $actions = parent::actions();
 
-        $actions['index']['prepareDataProvider'] = [$this, 'sendTickets'];
 
-        unset($actions['view'], $actions['create'], $actions['delete']);
+        unset($actions['index'], $actions['view'], $actions['create'], $actions['delete']);
 
         return $actions;
     }
 
 
-    public function sendTickets()
+    public function actionUpcoming()
     {
-        $tickets = Ticket::find()->where(['client_id' => \Yii::$app->params['id']])
+        $temp = Ticket::find()->where(['client_id' => \Yii::$app->params['id']])
             ->with('tariff')
             ->with('flight')
             ->with('flight.airplane')
@@ -51,8 +52,55 @@ class TicketController extends ActiveController
             ->with('receipt')
             ->all();
 
-        return $tickets ? $tickets : throw new \yii\web\NotFoundHttpException(sprintf('No tickets were found'));
+        $tickets = [];
+        foreach ($temp as $ticket)
+            if ($ticket->receipt->status == 'Complete' && (new DateTime($ticket->flight->departureDate)) > date('Y-m-d H:i:s') && is_null($ticket->checkedIn))
+                $tickets[] = $ticket;
+
+        $error = ['name' => 'Success', 'message' => 'No tickets were found', 'code' => 204, 'status' => 204];
+        return $tickets ? $tickets : json_encode($error);
     }
+
+    public function actionPending()
+    {
+        $temp = Ticket::find()->where(['client_id' => \Yii::$app->params['id']])
+            ->with('tariff')
+            ->with('flight')
+            ->with('flight.airplane')
+            ->with('flight.airportDeparture')
+            ->with('flight.airportArrival')
+            ->with('receipt')
+            ->all();
+
+        $tickets = [];
+        foreach ($temp as $ticket)
+            if ($ticket->receipt->status == 'Pending')
+                $tickets[] = $ticket;
+
+        $error = ['name' => 'Success', 'message' => 'No tickets were found', 'code' => 204, 'status' => 204];
+        return $tickets ? $tickets : json_encode($error);
+    }
+
+    public function actionPast()
+    {
+        $temp = Ticket::find()->where(['client_id' => \Yii::$app->params['id']])
+            ->with('tariff')
+            ->with('flight')
+            ->with('flight.airplane')
+            ->with('flight.airportDeparture')
+            ->with('flight.airportArrival')
+            ->with('receipt')
+            ->all();
+
+        $tickets = [];
+        foreach ($temp as $ticket)
+            if ($ticket->receipt->status == 'Complete' && !is_null($ticket->checkedIn))
+                $tickets[] = $ticket;
+
+        $error = ['name' => 'Success', 'message' => 'No tickets were found', 'code' => 204, 'status' => 204];
+        return $tickets ? $tickets : json_encode($error);
+    }
+
     public function actionView($id)
     {
         $ticket = Ticket::find()->where(['id' => $id])
@@ -64,14 +112,17 @@ class TicketController extends ActiveController
         if ($ticket)
             $this->checkAccess('view', $ticket);
 
-        return $ticket ? $ticket : throw new \yii\web\NotFoundHttpException(sprintf('No tickets were found'));
+        $error = ['name' => 'Success', 'message' => 'No tickets were found', 'code' => 204, 'status' => 204];
+        return $ticket ? $ticket : json_encode($error);
     }
 
     public function actionDelete($id)
     {
         $model = $this->modelClass::findOne(['id' => $id]);
-        if (!$model)
-            throw new \yii\web\NotFoundHttpException(sprintf('Ticket not found'));
+        if (!$model) {
+            $error = ['name' => 'Success', 'message' => 'No tickets were found', 'code' => 204, 'status' => 204];
+            return $model ? $model : json_encode($error);
+        }
 
         $this->checkAccess('delete', $model);
 
@@ -164,6 +215,16 @@ class TicketController extends ActiveController
 
         $receipt->updateTicketPrices();
 
+        try {
+            $c= new MqttClient('127.0.0.1', 1883, "test-publisher");
+            $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+            $c->connect($connectionSettings);
+            $c->publish($model->client_id, 'ticket', 1);
+            $c->disconnect();
+        } catch (Exception $ex) {
+            throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
+        }
+
         // avisar o cliente se conseguiu guardar ou nao 
         if (!$client->save() || !$receipt->save())
             throw new \yii\web\ServerErrorHttpException(sprintf('There was an unexpected error while saving'));
@@ -192,8 +253,9 @@ class TicketController extends ActiveController
             throw new \yii\web\ServerErrorHttpException(sprintf('There was an error while trying to checkin!'));
 
         try {
-            $client = new MqttClient('127.0.0.1', 1883);
-            $client->connect();
+            $client = new MqttClient('127.0.0.1', 1883, "test-publisher");
+            $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+            $client->connect($connectionSettings);
             $client->publish($model->client_id, 'ticket', 1);
             $client->disconnect();
         } catch (Exception $ex) {

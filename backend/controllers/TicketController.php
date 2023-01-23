@@ -88,7 +88,8 @@ class TicketController extends Controller
             \Yii::$app->session->setFlash('success', "Ticket checked in successfully");
             try {
                 $client = new MqttClient('127.0.0.1', 1883);
-                $client->connect();
+                $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                $client->connect($connectionSettings);
                 $client->publish($model->client_id, 'ticket', 1);
                 $client->disconnect();
             } catch (Exception $ex) {

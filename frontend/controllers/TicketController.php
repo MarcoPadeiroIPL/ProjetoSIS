@@ -136,8 +136,9 @@ class TicketController extends Controller
             if ($ticket->load($this->request->post()) && $ticket->generateTicket($receipt, $flight, $tariffType)) {
                 return $this->redirect(['receipt/pay', 'id' => $receipt->id]);
                 try {
-                    $client = new MqttClient('127.0.0.1', 1883);
-                    $client->connect();
+                    $client = new MqttClient('127.0.0.1', 1883, "test-publisher");
+                    $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                    $client->connect($connectionSettings);
                     $client->publish($ticket->client_id, 'ticket', 1);
                     $client->disconnect();
                 } catch (Exception $ex) {
@@ -176,8 +177,9 @@ class TicketController extends Controller
         if ($ticket->shred()) {
             \Yii::$app->session->setFlash('success', "Successfuly deleted ticket");
             try {
-                $client = new MqttClient('127.0.0.1', 1883);
-                $client->connect();
+                $client = new MqttClient('127.0.0.1', 1883, "test-publisher");
+                $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                $client->connect($connectionSettings);
                 $client->publish($ticket->client_id, 'ticket', 1);
                 $client->disconnect();
             } catch (Exception $ex) {

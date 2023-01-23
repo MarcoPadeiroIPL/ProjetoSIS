@@ -101,7 +101,9 @@ class BalanceReqController extends Controller
         $client->addBalance($balanceReq->amount);
 
         // assign responsible employee
-        $balanceReqEmployee = new BalanceReqEmployee($id, $employee_id);
+        $balanceReqEmployee = new BalanceReqEmployee();
+        $balanceReqEmployee->balanceReq_id = $id;
+        $balanceReqEmployee->employee_id = $employee_id;
         $balanceReq->status = 'Accepted';
         $balanceReq->decisionDate = date('Y-m-d H:i:s');
 
@@ -110,8 +112,9 @@ class BalanceReqController extends Controller
             \Yii::$app->session->setFlash('success', "Accepted successfuly");
 
             try {
-                $client = new MqttClient('127.0.0.1', 1883);
-                $client->connect();
+                $client = new MqttClient('127.0.0.1', 1883, "test-publisher");
+                $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                $client->connect($connectionSettings);
                 $client->publish($balanceReq->client_id, 'request', 1);
                 $client->disconnect();
             } catch (Exception $ex) {
@@ -144,12 +147,14 @@ class BalanceReqController extends Controller
         $balanceReq->status = 'Declined';
         $balanceReq->decisionDate = date('Y-m-d H:i:s');
 
-        if (!$balanceReqEmployee->save() || !$balanceReq->save()){
+        if (!$balanceReqEmployee->save() || !$balanceReq->save()) {
             \Yii::$app->session->setFlash('error', "Error while trying to save");
             try {
                 $client = new MqttClient('127.0.0.1', 1883, 'balance-req');
-                $client->connect();
+                $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                $client->connect($connectionSettings);
                 $client->publish($balanceReq->client_id, 'request', 1);
+                $client->loop(true, true);
                 $client->disconnect();
             } catch (Exception $ex) {
                 throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');

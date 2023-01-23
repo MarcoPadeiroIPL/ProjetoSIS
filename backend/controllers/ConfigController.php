@@ -89,7 +89,8 @@ class ConfigController extends Controller
                 \Yii::$app->session->setFlash('success', "Config created successfully.");
                 try {
                     $client = new MqttClient('127.0.0.1', 1883);
-                    $client->connect();
+                    $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                    $client->connect($connectionSettings);
                     $client->publish('config', 'update', 1);
                     $client->disconnect();
                 } catch (Exception $ex) {
@@ -120,7 +121,8 @@ class ConfigController extends Controller
                 \Yii::$app->session->setFlash('success', "Config updated successfully.");
                 try {
                     $client = new MqttClient('127.0.0.1', 1883);
-                    $client->connect();
+                    $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                    $client->connect($connectionSettings);
                     $client->publish('config', 'update', 1);
                     $client->disconnect();
                 } catch (Exception $ex) {
@@ -153,7 +155,8 @@ class ConfigController extends Controller
             \Yii::$app->session->setFlash('success', "Config deleted successfully.");
             try {
                 $client = new MqttClient('127.0.0.1', 1883);
-                $client->connect();
+                $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                $client->connect($connectionSettings);
                 $client->publish('config', 'update', 1);
                 $client->disconnect();
             } catch (Exception $ex) {

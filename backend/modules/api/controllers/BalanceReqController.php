@@ -62,6 +62,11 @@ class BalanceReqController extends ActiveController
         if ($model->status != 'Ongoing')
             throw new \yii\web\ForbiddenHttpException(sprintf('You cannot delete balance requests that are already decided!'));
 
+        $balanceReqEmployee = \common\models\BalanceReqEmployee::find()->where(['balanceReq_id' => $model->id])->one();
+
+        if ($balanceReqEmployee)
+            $balanceReqEmployee->delete();
+
         if ($model->delete())
             return $this->asJson(['name' => 'Success', 'message' => 'Balance Request deleted successfully', 'code' => 200, 'status' => 200]);
         else

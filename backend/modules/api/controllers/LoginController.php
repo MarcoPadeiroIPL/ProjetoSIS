@@ -41,19 +41,22 @@ class LoginController extends \yii\web\Controller
 
     public function actionIndex()
     {
-        if(!$this->user->client->application){
-            $this->user->client->application = true;
-            $this->user->client->save();
+        if ($this->user->client) {
+            if (!$this->user->client->application) {
+                $this->user->client->application = true;
+                $this->user->client->save();
+            }
         }
 
         $response['id'] = $this->user->id;
+        $response['username'] = $this->user->username;
         $response['fName'] = $this->user->userData->fName;
         $response['surname'] = $this->user->userData->surname;
         $response['birthdate'] = $this->user->userData->birthdate;
         $response['gender'] = $this->user->userData->gender;
         $response['nif'] = $this->user->userData->nif;
         $response['phone'] = $this->user->userData->phone;
-        $response['balance'] = $this->user->client->balance;
+        $response['balance'] = $this->user->client->balance ?? 0;
         $response['role'] = $this->user->authAssignment->item_name;
         $response['token'] = $this->user->auth_key;
 

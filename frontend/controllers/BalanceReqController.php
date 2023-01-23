@@ -120,9 +120,11 @@ class BalanceReqController extends Controller
             if ($model->load($this->request->post()) && $model->client_id == \Yii::$app->user->identity->getId() && $model->save()) {
                 return $this->redirect(['index']);
                 try {
-                    $client = new MqttClient('127.0.0.1', 1883);
-                    $client->connect();
+                    $client = new MqttClient('127.0.0.1', 1883, "test-publisher");
+                    $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                    $client->connect($connectionSettings);
                     $client->publish($model->client_id, 'request', 1);
+                    $client->loop(true, true);
                     $client->disconnect();
                 } catch (Exception $ex) {
                     throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');
@@ -152,9 +154,11 @@ class BalanceReqController extends Controller
         if ($balanceReq->deleteBalanceReq()) {
             \Yii::$app->session->setFlash('success', "Balance requests succesfully deleted");
             try {
-                $client = new MqttClient('127.0.0.1', 1883);
-                $client->connect();
+                $client = new MqttClient('127.0.0.1', 1883, "test-publisher");
+                $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)->setUsername('android')->setPassword('a');
+                $client->connect($connectionSettings);
                 $client->publish($balanceReq->client_id, 'request', 1);
+                $client->loop(true, true);
                 $client->disconnect();
             } catch (Exception $ex) {
                 throw new \yii\web\ServerErrorHttpException('There was an error while sending the message');

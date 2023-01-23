@@ -19,10 +19,8 @@ class BalanceReqEmployee extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
 
-    function __construct($balanceReq_id, $employee_id)
+    function __construct()
     {
-        $this->balanceReq_id = $balanceReq_id;
-        $this->employee_id = $employee_id;
     }
     public static function tableName()
     {
@@ -53,7 +51,6 @@ class BalanceReqEmployee extends \yii\db\ActiveRecord
             'employee_id' => 'Employee ID',
         ];
     }
-
     /**
      * Gets query for [[BalanceReq]].
      *
